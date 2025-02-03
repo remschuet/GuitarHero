@@ -127,7 +127,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GuitareHeroPC.cpp" />
+    <ClCompile Include="Chanson.cpp" />
+    <ClCompile Include="ComBluetooth.cpp" />
+    <ClCompile Include="ComFichierTexte.cpp" />
+    <ClCompile Include="ComFilaire.cpp" />
+    <ClCompile Include="Gameplay.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Joueur.cpp" />
+    <ClCompile Include="Notes.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
+    <ClCompile Include="tests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Chanson.h" />
+    <ClInclude Include="ComBluetooth.h" />
+    <ClInclude Include="ComFichierTexte.h" />
+    <ClInclude Include="ComFilaire.h" />
+    <ClInclude Include="Enum.h" />
+    <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="Joueur.h" />
+    <ClInclude Include="json.hpp" />
+    <ClInclude Include="Notes.h" />
+    <ClInclude Include="SerialPort.h" />
+    <ClInclude Include="tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
