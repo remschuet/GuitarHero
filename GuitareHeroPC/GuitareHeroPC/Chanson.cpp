@@ -17,35 +17,38 @@ Chanson::Chanson(string nom)
 
 }
 
+void Chanson::startChrono() {
+    // Obtenir le temps actuel en millisecondes
+    chronoDemarrage = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
+}
+
+
 void Chanson::tick()
 {
-    // Obtenir le temps actuel en millisecondes
-    auto now = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
+    // Obtenir le temps actuel une seule fois
+    long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
 
     for (auto& note : vecteurRouge) {
-        if (now >= note.tempsDepart && note.etat == EN_ATTENTE) {
-            // Changer l'état de la note
+        if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
             note.etat = AFFICHER;
             vecteurEnCours.push_back(note);
-
-            // Afficher un message de debug
-            cout << "Note ROUGE activée à " << now << " ms\n";
+            cout << "Note ROUGE activée à " << tempsActuel << " ms\n";
         }
     }
 
     for (auto& note : vecteurVerte) {
-        if (now >= note.tempsDepart && note.etat == EN_ATTENTE) {
+        if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
             note.etat = AFFICHER;
             vecteurEnCours.push_back(note);
-            cout << "Note VERTE activée à " << now << " ms\n";
+            cout << "Note VERTE activée à " << tempsActuel << " ms\n";
         }
     }
 
     for (auto& note : vecteurBleu) {
-        if (now >= note.tempsDepart && note.etat == EN_ATTENTE) {
+        if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
             note.etat = AFFICHER;
             vecteurEnCours.push_back(note);
-            cout << "Note BLEUE activée à " << now << " ms\n";
+            cout << "Note BLEUE activée à " << tempsActuel << " ms\n";
         }
     }
 }

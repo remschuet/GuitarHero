@@ -15,8 +15,11 @@ class Chanson
 private:
 	void setUpVecteur(std::vector<Note> vecteur);
 	vector<Note> getVecteurNotesEnCours();
+	
 	string nomChanson = "";
 	float deltaEntreNote = 0;
+	long long chronoDemarrage;
+
 	vector<Note> vecteurRouge;
 	vector<Note> vecteurVerte;
 	vector<Note> vecteurBleu;
@@ -25,6 +28,7 @@ private:
 public:
 	Chanson(std::string nom);
 	void tick();
+	void startChrono();
 };
 
 
