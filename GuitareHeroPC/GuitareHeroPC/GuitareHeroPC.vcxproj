@@ -135,7 +135,7 @@
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Joueur.cpp" />
-    <ClCompile Include="Notes.cpp" />
+    <ClCompile Include="Note.cpp" />
     <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
@@ -149,7 +149,7 @@
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="json.hpp" />
-    <ClInclude Include="Notes.h" />
+    <ClInclude Include="Note.h" />
     <ClInclude Include="SerialPort.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
