@@ -151,6 +151,9 @@
     <ClInclude Include="SerialPort.h" />
     <ClInclude Include="tests.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="joueur.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
