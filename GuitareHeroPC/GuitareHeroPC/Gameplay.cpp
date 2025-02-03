@@ -45,7 +45,6 @@ void Gameplay::loopGame() {
 void Gameplay::loopMenu() {
     string nomJoueur = "";
     char voirScore;
-    char choixMusique = '0';
 
     system("cls"); // Efface l'écran avant d'afficher le menu
 
@@ -62,7 +61,8 @@ void Gameplay::loopMenu() {
     cout << "Nom du joueur: ";
     cin >> nomJoueur;
 
-    joueur = ComFichierTexte::setJoueur(nomJoueur);
+    gameStruct.joueur = ComFichierTexte::setJoueur(nomJoueur);
+
 
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
@@ -79,17 +79,15 @@ void Gameplay::loopMenu() {
     gotoxy(15, 12);
     cout << "1) Beatles";
     gotoxy(15, 13);
-    cout << "2) Intégration";
+    cout << "2) Integration";
     gotoxy(15, 14);
     cout << "3) Autre";
-
-
 
     do {
         gotoxy(12, 16);
         cout << "Votre choix: ";
-        cin >> choixMusique;
-    } while (choixMusique != '1' && choixMusique != '2' && choixMusique != '3');
+        cin >> gameStruct.chanson;
+    } while (gameStruct.chanson != "1" && gameStruct.chanson != "2" && gameStruct.chanson != "3");
 
     // Démarrage du jeu
     gotoxy(12, 18);

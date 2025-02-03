@@ -147,6 +147,7 @@
     <ClInclude Include="ComFilaire.h" />
     <ClInclude Include="Enum.h" />
     <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="GameStruct.h" />
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Note.h" />

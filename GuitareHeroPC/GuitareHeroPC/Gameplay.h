@@ -3,6 +3,7 @@
 #include "ComBluetooth.h"
 #include "ComFilaire.h"
 #include "Joueur.h"
+#include "GameStruct.h"
 
 class Gameplay
 {
@@ -24,5 +25,5 @@ private:
 	bool estBluetooth;
 	bool verbose;
 	bool admin;
-	Joueur* joueur;
+	GameStruct gameStruct;
 };

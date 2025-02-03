@@ -89,6 +89,9 @@
     <ClInclude Include="ComArduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="joueur.txt">
