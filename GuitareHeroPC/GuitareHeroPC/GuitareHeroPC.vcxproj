@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Chanson.cpp" />
+    <ClCompile Include="ComArduino.cpp" />
     <ClCompile Include="ComBluetooth.cpp" />
     <ClCompile Include="ComFichierTexte.cpp" />
     <ClCompile Include="ComFilaire.cpp" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Chanson.h" />
+    <ClInclude Include="ComArduino.h" />
     <ClInclude Include="ComBluetooth.h" />
     <ClInclude Include="ComFichierTexte.h" />
     <ClInclude Include="ComFilaire.h" />

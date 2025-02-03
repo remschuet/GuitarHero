@@ -2,12 +2,15 @@
 
 #include <windows.h>
 #include <iostream>
-
+#include "ComArduino.h"
 /* CLASSE GESTION DE COMMUNICATION PAR BLUETOOTH
 * Il faut activer le bluetooth à l'arduino
 * Il faut déjà être connecter par bluetooth au arduino
 * Il faut vérfier que la connection au HC-05 est stable
 * Si une chose n'est pas ok, c'est inutile de tester ce module
+* 
+* CETTE CLASSE DOIT HÉRITER DE ComArduino ET RESPECTER SON HÉRITAGE
+* 
 */
 
 class ComBluetooth {

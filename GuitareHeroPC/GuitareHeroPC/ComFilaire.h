@@ -5,10 +5,11 @@
 #include <string>
 #include "SerialPort.h"
 #include "json.hpp"
+#include "ComArduino.h"
 
 using json = nlohmann::json;
 
-class ComFilaire {
+class ComFilaire: public ComArduino {
 private:
     SerialPort* arduino;
     const int baudRate;
@@ -30,12 +31,12 @@ public:
         delete arduino;
     }
 
-    bool envoyerMessage(const json& j_msg) {
+    bool envoyerMessage(const json& j_msg) override {
         std::string msg = j_msg.dump();
         return arduino->writeSerialPort(msg.c_str(), msg.length());
     }
 
-    bool recevoirMessage(std::string& msg) {
+    bool recevoirMessage(std::string& msg) override {
         char charBuffer[1024];
         int bufferSize = arduino->readSerialPort(charBuffer, msgMaxSize);
         if (bufferSize > 0) {
