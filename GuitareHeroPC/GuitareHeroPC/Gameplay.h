@@ -5,6 +5,8 @@
 #include "Joueur.h"
 #include "GameStruct.h"
 
+
+
 class Gameplay
 {
 public:
@@ -18,6 +20,7 @@ public:
 	bool configBluetooth(std::string nomPort);
 	bool configFilaire(std::string nomPort);
 	void interpreterMsg(std::string);
+	CouleurBouton choixBouton();
 
 private:
 	ComBluetooth* comBluetooth;

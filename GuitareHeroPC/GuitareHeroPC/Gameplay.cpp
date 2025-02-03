@@ -44,21 +44,23 @@ void Gameplay::loopGame() {
 
 void Gameplay::loopMenu() {
     string nomJoueur = "";
+    string numChanson = "-1";
     char voirScore;
+    CouleurBouton choix = UNKNOWN;
 
     system("cls"); // Efface l'écran avant d'afficher le menu
 
     // Affichage du cadre
     gotoxy(10, 2);
-    cout << "**************************************";
+    std::cout << "**************************************";
     gotoxy(10, 3);
-    cout << "*        GUITAR HERO MENU           *";
+    std::cout << "*        GUITAR HERO MENU           *";
     gotoxy(10, 4);
-    cout << "**************************************";
+    std::cout << "**************************************";
 
     // Demander le nom du joueur
     gotoxy(12, 6);
-    cout << "Nom du joueur: ";
+    std::cout << "Nom du joueur: ";
     cin >> nomJoueur;
 
     gameStruct.joueur = ComFichierTexte::setJoueur(nomJoueur);
@@ -66,38 +68,51 @@ void Gameplay::loopMenu() {
 
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
-    cout << "Voulez-vous voir les meilleurs scores ? (O/N) ";
-    cin >> voirScore;
-
-    if (voirScore == 'O' || voirScore == 'o') {
-        voirMeilleurScore();
+    std::cout << "Voulez-vous voir les meilleurs scores ? (O/N) ";
+    while (choix == UNKNOWN) {
+        choix = choixBouton();
+        Sleep(20);
     }
+    if (choix == ROUGE)
+        voirMeilleurScore();
+
+    choix = UNKNOWN;
 
     // Choix de la musique
     gotoxy(12, 10);
-    cout << "Choisir une chanson:";
+    std::cout << "Choisir une chanson:";
     gotoxy(15, 12);
-    cout << "1) Beatles";
+    std::cout << "Rouge - Beatles";
     gotoxy(15, 13);
-    cout << "2) Integration";
+    std::cout << "Vert - Integration";
     gotoxy(15, 14);
-    cout << "3) Autre";
+    std::cout << "Bleu - Autre";
+    gotoxy(12, 16);
 
-    do {
-        gotoxy(12, 16);
-        cout << "Votre choix: ";
-        cin >> gameStruct.chanson;
-    } while (gameStruct.chanson != "1" && gameStruct.chanson != "2" && gameStruct.chanson != "3");
+    std::cout << "Votre choix: ";
+
+    while (choix == UNKNOWN) {
+        choix = choixBouton();
+        Sleep(20);
+    }
+    if (choix == ROUGE)
+        voirMeilleurScore();
+
+    if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson("Beatles");
+    else if (choix == VERT) gameStruct.chansonEnCours = new Chanson("Integration");
+    else                    gameStruct.chansonEnCours = new Chanson("Autre");
+
+    choix = UNKNOWN;
 
     // Démarrage du jeu
     gotoxy(12, 18);
-    cout << "Départ du jeu dans 3 secondes...";
+    std::cout << "Départ du jeu dans 3 secondes...";
     Sleep(1000);
     gotoxy(12, 18);
-    cout << "Départ du jeu dans 2 secondes...";
+    std::cout << "Départ du jeu dans 2 secondes...";
     Sleep(1000);
     gotoxy(12, 18);
-    cout << "Départ du jeu dans 1 secondes...";
+    std::cout << "Départ du jeu dans 1 secondes...";
     Sleep(1000);
     system("cls"); // Nettoyage de l'écran avant de lancer le jeu
     loopGame();
@@ -105,9 +120,9 @@ void Gameplay::loopMenu() {
 
 void Gameplay::voirMeilleurScore() {
     string attente;
-    cout << "Meilleur score: ";
+    std::cout << "Meilleur score: ";
 
-    cin >> attente;
+    std::cin >> attente;
 }
 
 bool Gameplay::configFilaire(std::string nomPort) {
@@ -122,10 +137,33 @@ void Gameplay::interpreterMsg(string msg) {
         if (it.key() == "message") {
             std::cout << it.value() << std::endl;
         }
-        if (it.key() == "bouton1" && it.value() == "released") {
+        if (it.key() == "btnBleu" && it.value() == "released") {
             std::cout << "note rouge appuyé" << std::endl;
         }
     }
+}
+
+CouleurBouton Gameplay::choixBouton(){
+    std::string msg;
+    if (! comFilaire->recevoirMessage(msg)) {
+        return CouleurBouton::UNKNOWN;
+    }
+
+    json j = json::parse(msg);
+
+    for (auto it = j.begin(); it != j.end(); ++it) {
+        if (it.key() == "btlBleu" && it.value() == "released") {
+            return CouleurBouton::BLEU;
+        }
+        else if (it.key() == "btnRouge" && it.value() == "released") {
+            return CouleurBouton::ROUGE;
+        }
+        else if (it.key() == "btnVert" && it.value() == "released") {
+            return CouleurBouton::VERT;
+        }
+    }
+
+    return CouleurBouton();
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {

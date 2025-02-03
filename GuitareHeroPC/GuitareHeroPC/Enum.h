@@ -9,5 +9,6 @@ enum CouleurBouton {
 	ROUGE,
 	VERT,
 	BLEU,
-	JAUNE
+	JAUNE,
+	UNKNOWN
 };
