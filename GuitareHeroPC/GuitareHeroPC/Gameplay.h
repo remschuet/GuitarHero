@@ -13,6 +13,7 @@ public:
 	Gameplay(std::string comPort = "COM5", bool bluetooth = true, bool verbose = false, bool admin = false);
 	void gotoxy(int x, int y);
 	void loopGame();
+	void demarrerPartie();
 	void loopMenu();
 
 	void voirMeilleurScore();
@@ -23,10 +24,12 @@ public:
 	CouleurBouton choixBouton();
 
 private:
-	ComBluetooth* comBluetooth;
-	ComFilaire* comFilaire;
+	ComArduino* comArduino;
+	// ComBluetooth* comBluetooth;
+	// ComFilaire* comFilaire;
 	bool estBluetooth;
 	bool verbose;
 	bool admin;
 	GameStruct gameStruct;
+	int tick = 0;
 };

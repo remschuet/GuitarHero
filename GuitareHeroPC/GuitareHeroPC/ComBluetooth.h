@@ -13,7 +13,7 @@
 * 
 */
 
-class ComBluetooth {
+class ComBluetooth: public ComArduino{
 private:
     HANDLE hSerial;
     std::string portName;
@@ -105,6 +105,9 @@ public:
     ~ComBluetooth() {
         fermerPort();
     }
+
+    bool envoyerMessage(const json& j_msg) override { std::cerr << "NON IMPLEMENTER"; return false; };
+    bool recevoirMessage(std::string& msg) override { std::cerr << "NON IMPLEMENTER"; return false; };
 };
 
 /*

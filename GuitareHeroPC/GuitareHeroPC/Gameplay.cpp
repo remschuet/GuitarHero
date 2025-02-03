@@ -26,19 +26,40 @@ void Gameplay::gotoxy(int x, int y) {
 }
 
 void Gameplay::loopGame() {
-    if (estBluetooth) {
-        std::string message;
-        if (comBluetooth->lireMessage(message)) {
-            std::cout << "Message reçu : " << message << std::endl;
-        }
+    tick++;
+    system("cls");
+    gotoxy(10, 4);
+    std::cout << "!! IN GAME !!";
+
+    gameStruct.chansonEnCours->tick();
+
+    // gameStruct.chansonEnCours.getVecteurCouleurs(); Recuperer les valeurs
+    // boucler dessus et les afficher
+    // get touches
+
+    std::string message;
+    if (comArduino->recevoirMessage(message)) {
+        interpreterMsg(message);
     }
-    else {
-        std::string message;
-        if (comFilaire->recevoirMessage(message)) {
-            interpreterMsg(message);
-        }
-    }
+
     Sleep(500);
+    loopGame();
+}
+
+void Gameplay::demarrerPartie() {
+    gotoxy(12, 18);
+    std::cout << "Départ du jeu dans 3 secondes...";
+    Sleep(1000);
+    gotoxy(12, 18);
+    std::cout << "Départ du jeu dans 2 secondes...";
+    Sleep(1000);
+    gotoxy(12, 18);
+    std::cout << "Départ du jeu dans 1 secondes...";
+    Sleep(1000);
+
+    system("cls");
+    tick = 0;
+    gameStruct.chansonEnCours->startChrono();
     loopGame();
 }
 
@@ -104,18 +125,7 @@ void Gameplay::loopMenu() {
 
     choix = UNKNOWN;
 
-    // Démarrage du jeu
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 3 secondes...";
-    Sleep(1000);
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 2 secondes...";
-    Sleep(1000);
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 1 secondes...";
-    Sleep(1000);
-    system("cls"); // Nettoyage de l'écran avant de lancer le jeu
-    loopGame();
+    demarrerPartie();
 }
 
 void Gameplay::voirMeilleurScore() {
@@ -126,7 +136,7 @@ void Gameplay::voirMeilleurScore() {
 }
 
 bool Gameplay::configFilaire(std::string nomPort) {
-    comFilaire = new ComFilaire(nomPort);
+    comArduino = new ComFilaire(nomPort);
     return true;
 }
 
@@ -145,7 +155,7 @@ void Gameplay::interpreterMsg(string msg) {
 
 CouleurBouton Gameplay::choixBouton(){
     std::string msg;
-    if (! comFilaire->recevoirMessage(msg)) {
+    if (!comArduino->recevoirMessage(msg)) {
         return CouleurBouton::UNKNOWN;
     }
 
@@ -167,15 +177,17 @@ CouleurBouton Gameplay::choixBouton(){
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {
-    comBluetooth = new ComBluetooth(nomPort);
-
-    if (comBluetooth->ouvrirPort()) {
-        bool isOk = comBluetooth->envoyerMessage("Hello HC-05!");
+    
+    comArduino = new ComBluetooth(nomPort);
+    /*
+    if (comArduino->ouvrirPort()) {
+        bool isOk = comArduino->envoyerMessage("Hello HC-05!");
         if (isOk) {
             if (verbose)
                 printf("message envoyé");
             return true;
         }
     }
+    */
     return false;
 }
