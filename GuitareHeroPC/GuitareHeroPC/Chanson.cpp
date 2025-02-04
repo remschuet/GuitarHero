@@ -22,12 +22,18 @@ void Chanson::startChrono() {
     chronoDemarrage = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
 }
 
+long long Chanson::getChrono()
+{
+    return duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
+}
+
 
 void Chanson::tick()
 {
     // Obtenir le temps actuel une seule fois
     long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
 
+    // REMI -> NE PAS OUBLIER DE SUPPRIMER la note de la listes actuelle
     for (auto& note : vecteurRouge) {
         if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
             note.etat = AFFICHER;

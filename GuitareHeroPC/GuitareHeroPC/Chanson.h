@@ -29,6 +29,7 @@ public:
 	Chanson(std::string nom);
 	void tick();
 	void startChrono();
+	long long getChrono();
 };
 
 

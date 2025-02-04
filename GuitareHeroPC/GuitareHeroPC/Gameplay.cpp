@@ -2,6 +2,7 @@
 #include "ComBluetooth.h"
 #include <iostream>
 #include "ComFichierTexte.h"
+#include <vector>
 
 using namespace std;
 
@@ -26,13 +27,34 @@ void Gameplay::gotoxy(int x, int y) {
 }
 
 void Gameplay::loopGame() {
+    vector<Note*> vecteur;
+    vecteur.push_back(new Note(5000, 10000, 15000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(15000, 10000, 17000, CouleurBouton::BLEU));
+    vecteur.push_back(new Note(7000, 10000, 23000, CouleurBouton::ROUGE));
+
     tick++;
     system("cls");
     gotoxy(10, 4);
     std::cout << "!! IN GAME !!";
 
     gameStruct.chansonEnCours->tick();
+    // Ne donne pas la bonne valeur
+    std::cout << gameStruct.chansonEnCours->getChrono();
 
+    /*
+    for (int i = 0; i < vecteur.size(); i++) {
+        int chrono = gameStruct.chansonEnCours->getChrono();
+        if (vecteur[i]->tempsDepart - 1 <= chrono && vecteur[i]->tempsFin >= chrono) {
+            // Affichage de plusieurs "X" pour la durée de la note
+            int startX = 5 + (chrono - vecteur[i]->tempsDepart);
+            int endX = 5 + (vecteur[i]->tempsFin - vecteur[i]->tempsDepart);
+            for (int y = startX; y <= endX; ++y) {
+                gotoxy(8, y);  // Placer les "X" à différentes positions en fonction du temps
+                std::cout << "X";
+            }
+        }
+    }
+    */
     // gameStruct.chansonEnCours.getVecteurCouleurs(); Recuperer les valeurs
     // boucler dessus et les afficher
     // get touches
@@ -42,7 +64,7 @@ void Gameplay::loopGame() {
         interpreterMsg(message);
     }
 
-    Sleep(500);
+    Sleep(1000);
     loopGame();
 }
 
@@ -90,14 +112,14 @@ void Gameplay::loopMenu() {
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
     std::cout << "Voulez-vous voir les meilleurs scores ? (O/N) ";
+    choix == UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
         Sleep(20);
     }
-    if (choix == ROUGE)
+    if (choix == JAUNE){
         voirMeilleurScore();
-
-    choix = UNKNOWN;
+    }
 
     // Choix de la musique
     gotoxy(12, 10);
@@ -111,13 +133,12 @@ void Gameplay::loopMenu() {
     gotoxy(12, 16);
 
     std::cout << "Votre choix: ";
+    choix = UNKNOWN;
 
     while (choix == UNKNOWN) {
         choix = choixBouton();
         Sleep(20);
     }
-    if (choix == ROUGE)
-        voirMeilleurScore();
 
     if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson("Beatles");
     else if (choix == VERT) gameStruct.chansonEnCours = new Chanson("Integration");
@@ -160,6 +181,9 @@ CouleurBouton Gameplay::choixBouton(){
     }
 
     json j = json::parse(msg);
+    if (verbose) {
+        std::cout << j;
+    }
 
     for (auto it = j.begin(); it != j.end(); ++it) {
         if (it.key() == "btlBleu" && it.value() == "released") {

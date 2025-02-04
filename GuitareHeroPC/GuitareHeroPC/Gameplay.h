@@ -4,8 +4,7 @@
 #include "ComFilaire.h"
 #include "Joueur.h"
 #include "GameStruct.h"
-
-
+#include <vector>
 
 class Gameplay
 {
