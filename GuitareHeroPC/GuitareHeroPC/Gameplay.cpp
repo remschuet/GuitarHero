@@ -28,41 +28,54 @@ void Gameplay::gotoxy(int x, int y) {
 
 void Gameplay::loopGame() {
     vector<Note*> vecteur;
-    vecteur.push_back(new Note(5000, 10000, 15000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(15000, 10000, 17000, CouleurBouton::BLEU));
-    vecteur.push_back(new Note(7000, 10000, 23000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(5000, 4000, 1000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(15000, 6000, 3000, CouleurBouton::BLEU));
+    vecteur.push_back(new Note(7000, 8000, 23000, CouleurBouton::ROUGE));
 
     tick++;
     system("cls");
     gotoxy(10, 4);
     std::cout << "!! IN GAME !!";
 
+    gotoxy(4, 25);
+    std::cout << "------------------------------------";
+
     gameStruct.chansonEnCours->tick();
     // Ne donne pas la bonne valeur
-    std::cout << gameStruct.chansonEnCours->getChrono();
+    // std::cout << gameStruct.chansonEnCours->getChrono();
 
-    /*
+    
     for (int i = 0; i < vecteur.size(); i++) {
-        int chrono = gameStruct.chansonEnCours->getChrono();
-        if (vecteur[i]->tempsDepart - 1 <= chrono && vecteur[i]->tempsFin >= chrono) {
-            // Affichage de plusieurs "X" pour la durée de la note
-            int startX = 5 + (chrono - vecteur[i]->tempsDepart);
-            int endX = 5 + (vecteur[i]->tempsFin - vecteur[i]->tempsDepart);
-            for (int y = startX; y <= endX; ++y) {
-                gotoxy(8, y);  // Placer les "X" à différentes positions en fonction du temps
+        long long chrono = 5000;
+        if (vecteur[i]->tempsDepart - 1000 <= chrono && vecteur[i]->durree >= chrono) {
+            int posX = 5;
+            switch (vecteur[i]->couleur)
+            {
+            case ROUGE:
+                posX = 7; break;
+            case BLEU:
+                posX = 9; break;
+            default:
+                posX = 0;
+                break;
+            }
+            for (int y = 10; y <= (vecteur[i]->durree /1000); ++y) {
+                gotoxy(posX, y);  // Placer les "X" à différentes positions en fonction du temps
                 std::cout << "X";
             }
         }
     }
-    */
+    
     // gameStruct.chansonEnCours.getVecteurCouleurs(); Recuperer les valeurs
     // boucler dessus et les afficher
     // get touches
 
-    std::string message;
-    if (comArduino->recevoirMessage(message)) {
-        interpreterMsg(message);
-    }
+    CouleurBouton choix = choixBouton();
+
+    //std::string message;
+    //if (comArduino->recevoirMessage(message)) {
+//        interpreterMsg(message);
+  //  }
 
     Sleep(1000);
     loopGame();

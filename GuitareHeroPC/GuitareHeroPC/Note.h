@@ -4,12 +4,12 @@
 struct Note {
 	const int tempsAffichage;
 	const int tempsDepart;
-	const int tempsFin;
+	const int durree;
 	const CouleurBouton couleur;
 	NotesEtats etat = EN_ATTENTE;
 
-	Note(int tAffichage, int tDepart, int tFin, CouleurBouton couleurBouton)
-		: tempsAffichage(tAffichage), tempsDepart(tDepart), tempsFin(tFin), couleur(couleurBouton) {
+	Note(int tAffichage, int tDepart, int tdurree, CouleurBouton couleurBouton)
+		: tempsAffichage(tAffichage), tempsDepart(tDepart), durree(tdurree), couleur(couleurBouton) {
 	}
 
 };
