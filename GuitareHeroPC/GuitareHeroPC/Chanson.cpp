@@ -11,10 +11,8 @@ vector<Note> Chanson::getVecteurNotesEnCours()
 
 
 
-Chanson::Chanson(string nom)
-{
+Chanson::Chanson(string nom) {
     nomChanson = nom;
-
 }
 
 void Chanson::startChrono() {
