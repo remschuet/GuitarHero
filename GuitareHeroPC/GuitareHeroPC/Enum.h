@@ -12,3 +12,15 @@ enum CouleurBouton {
 	JAUNE,
 	UNKNOWN
 };
+
+enum NotesAction {
+	APPUYE,
+	RELACHE,
+	INITIALE
+};
+
+enum ComMode {
+	BLUETOOTH,
+	FILAIRE,
+	CLAVIER
+};

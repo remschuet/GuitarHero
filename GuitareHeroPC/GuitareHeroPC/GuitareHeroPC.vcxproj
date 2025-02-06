@@ -130,6 +130,7 @@
     <ClCompile Include="Chanson.cpp" />
     <ClCompile Include="ComArduino.cpp" />
     <ClCompile Include="ComBluetooth.cpp" />
+    <ClCompile Include="ComClavier.cpp" />
     <ClCompile Include="ComFichierTexte.cpp" />
     <ClCompile Include="ComFilaire.cpp" />
     <ClCompile Include="Gameplay.cpp" />
@@ -143,8 +144,10 @@
     <ClInclude Include="Chanson.h" />
     <ClInclude Include="ComArduino.h" />
     <ClInclude Include="ComBluetooth.h" />
+    <ClInclude Include="ComClavier.h" />
     <ClInclude Include="ComFichierTexte.h" />
     <ClInclude Include="ComFilaire.h" />
+    <ClInclude Include="CONST.h" />
     <ClInclude Include="Enum.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="GameStruct.h" />

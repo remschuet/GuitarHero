@@ -1,15 +1,16 @@
 #include "ComBluetooth.h"
 #include "Gameplay.h"
+
 /*
     FICHIER MAIN
 */
 
 
 int main() {
-    const bool EST_BLUETOOTH = false;
+    const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM5";
 
-    Gameplay gameplay(NOM_PORT, EST_BLUETOOTH);
+    Gameplay gameplay(NOM_PORT, MODE);
     gameplay.loopMenu();
     return 0;
 }

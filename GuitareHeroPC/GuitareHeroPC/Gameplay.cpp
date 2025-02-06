@@ -1,21 +1,25 @@
 #include "Gameplay.h"
 #include "ComBluetooth.h"
-#include <iostream>
 #include "ComFichierTexte.h"
+#include "ComClavier.h"
+#include <iostream>
 #include <vector>
 
 using namespace std;
 
-Gameplay::Gameplay(string nomPort, bool bluetooth, bool verbose, bool admin) {
-    this->estBluetooth = bluetooth;
+Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool admin) {
+    this->modeCommunication = modeCommunication;
     this->verbose = verbose;
     this->admin = admin;
 
-    if (this->estBluetooth) {
+    if (modeCommunication == BLUETOOTH) {
         configBluetooth(nomPort);
     }
-    else {
+    else if (modeCommunication == FILAIRE){
         configFilaire(nomPort);
+    }
+    else {
+        comArduino = new ComClavier();
     }
 }
 
@@ -28,56 +32,43 @@ void Gameplay::gotoxy(int x, int y) {
 
 void Gameplay::loopGame() {
     vector<Note*> vecteur;
-    vecteur.push_back(new Note(5000, 4000, 1000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(15000, 6000, 3000, CouleurBouton::BLEU));
-    vecteur.push_back(new Note(7000, 8000, 23000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(0, 8000, 2000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(0, 2000, 2000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(0, 3000, 3000, CouleurBouton::BLEU));
+    // vecteur.push_back(new Note(0, 7000, 3000, CouleurBouton::BLEU));
+    // vecteur.push_back(new Note(0, 3000, 1000, CouleurBouton::BLEU));
+
+    int delaiAffichage = 6000;
+    long long chrono = 5000;
 
     tick++;
     system("cls");
     gotoxy(10, 4);
     std::cout << "!! IN GAME !!";
 
+    // Barre en bas
     gotoxy(4, 25);
     std::cout << "------------------------------------";
 
     gameStruct.chansonEnCours->tick();
-    // Ne donne pas la bonne valeur
-    // std::cout << gameStruct.chansonEnCours->getChrono();
 
-    
-    for (int i = 0; i < vecteur.size(); i++) {
-        long long chrono = 5000;
-        if (vecteur[i]->tempsDepart - 1000 <= chrono && vecteur[i]->durree >= chrono) {
-            int posX = 5;
-            switch (vecteur[i]->couleur)
-            {
-            case ROUGE:
-                posX = 7; break;
-            case BLEU:
-                posX = 9; break;
-            default:
-                posX = 0;
-                break;
-            }
-            for (int y = 10; y <= (vecteur[i]->durree /1000); ++y) {
-                gotoxy(posX, y);  // Placer les "X" à différentes positions en fonction du temps
-                std::cout << "X";
+    for (auto& note : vecteur) {
+        if (note->tempsDepart <= chrono + delaiAffichage && note->tempsDepart + note->durree >= chrono) {
+            int posX = (note->couleur == ROUGE) ? 7 : (note->couleur == BLEU) ? 9 : 0;
+
+            int hauteurNote = note->durree / 1000;
+            int positionY = 25 - ((note->tempsDepart - chrono) / 1000);
+
+            for (int y = 0; y < hauteurNote; y++) {
+                if (positionY - y <= 25) { // Empêcher d'afficher hors écran
+                    gotoxy(posX, positionY - y);
+                    std::cout << "X";
+                }
             }
         }
     }
-    
-    // gameStruct.chansonEnCours.getVecteurCouleurs(); Recuperer les valeurs
-    // boucler dessus et les afficher
-    // get touches
-
-    CouleurBouton choix = choixBouton();
-
-    //std::string message;
-    //if (comArduino->recevoirMessage(message)) {
-//        interpreterMsg(message);
-  //  }
-
-    Sleep(1000);
+Sleep(1000);
     loopGame();
 }
 

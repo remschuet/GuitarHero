@@ -7,6 +7,7 @@ struct Note {
 	const int durree;
 	const CouleurBouton couleur;
 	NotesEtats etat = EN_ATTENTE;
+	NotesAction action = INITIALE;
 
 	Note(int tAffichage, int tDepart, int tdurree, CouleurBouton couleurBouton)
 		: tempsAffichage(tAffichage), tempsDepart(tDepart), durree(tdurree), couleur(couleurBouton) {

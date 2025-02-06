@@ -9,7 +9,7 @@
 class Gameplay
 {
 public:
-	Gameplay(std::string comPort = "COM5", bool bluetooth = true, bool verbose = false, bool admin = false);
+	Gameplay(std::string comPort = "COM5", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
 	void gotoxy(int x, int y);
 	void loopGame();
 	void demarrerPartie();
@@ -24,9 +24,7 @@ public:
 
 private:
 	ComArduino* comArduino;
-	// ComBluetooth* comBluetooth;
-	// ComFilaire* comFilaire;
-	bool estBluetooth;
+	ComMode modeCommunication;
 	bool verbose;
 	bool admin;
 	GameStruct gameStruct;

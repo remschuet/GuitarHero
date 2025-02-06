@@ -51,6 +51,9 @@
     <ClCompile Include="ComArduino.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComClavier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tests.h">
@@ -90,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CONST.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ComClavier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
