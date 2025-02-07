@@ -1,4 +1,5 @@
 #include "ComClavier.h"
+#include <CONST.h>
 
 bool ComClavier::recevoirMessage(std::string& msg)
 {
@@ -9,11 +10,17 @@ bool ComClavier::recevoirMessage(std::string& msg)
     // Création du JSON avec la clé "btnRouge" et la valeur entrée
     nlohmann::json jsonMessage;
 
-    if (valeur == "1") {
-        valeur = "released";
-    }
+    if (valeur == "1")
+        jsonMessage[BTN_ROUGE] = BTN_RELACHE;
+    else if (valeur == "2")
+        jsonMessage[BTN_BLEU] = BTN_RELACHE;
+    else if (valeur == "3")
+        jsonMessage[BTN_VERT] = BTN_RELACHE;
+    else if (valeur == "4")
+        jsonMessage[BTN_JAUNE] = BTN_RELACHE;
+    else if (valeur == "5")
+        jsonMessage[BTN_MAUVE] = BTN_RELACHE;
 
-    jsonMessage["btnRouge"] = valeur;  // Ajoute la valeur entrée sous la clé "btnRouge"
     msg = jsonMessage.dump();  // La méthode dump() convertit le JSON en une chaîne de caractères
 
     return true;

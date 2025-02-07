@@ -2,8 +2,10 @@
 #include "ComBluetooth.h"
 #include "ComFichierTexte.h"
 #include "ComClavier.h"
+#include "DAOSqlite.h"
 #include <iostream>
 #include <vector>
+#include <CONST.h>
 
 using namespace std;
 
@@ -141,17 +143,18 @@ void Gameplay::loopMenu() {
     std::cout << "Nom du joueur: ";
     cin >> nomJoueur;
 
-    gameStruct.joueur = ComFichierTexte::setJoueur(nomJoueur);
+    DAOSqlite* dao = DAOSqlite::getInstance();
+    gameStruct.joueur = dao->getJoueur(nomJoueur);
 
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
-    std::cout << "Voulez-vous voir les meilleurs scores ? (O/N) ";
+    std::cout << "Voulez-vous voir les meilleurs scores ? (ROUGE = OUI) ";
     choix == UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
         Sleep(20);
     }
-    if (choix == JAUNE){
+    if (choix == ROUGE){
         voirMeilleurScore();
     }
 
@@ -163,7 +166,7 @@ void Gameplay::loopMenu() {
     gotoxy(15, 13);
     std::cout << "Vert - Integration";
     gotoxy(15, 14);
-    std::cout << "Bleu - Autre";
+    std::cout << "Bleu - Pink floyd";
     gotoxy(12, 16);
 
     std::cout << "Votre choix: ";
@@ -176,7 +179,7 @@ void Gameplay::loopMenu() {
 
     if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson("Beatles");
     else if (choix == VERT) gameStruct.chansonEnCours = new Chanson("Integration");
-    else                    gameStruct.chansonEnCours = new Chanson("Autre");
+    else                    gameStruct.chansonEnCours = new Chanson("Pink floyd");
 
     choix = UNKNOWN;
 
@@ -220,18 +223,25 @@ CouleurBouton Gameplay::choixBouton(){
     }
 
     for (auto it = j.begin(); it != j.end(); ++it) {
-        if (it.key() == "btlBleu" && it.value() == "released") {
+
+        if (it.key() == BTN_BLEU && it.value() == BTN_RELACHE) {
             return CouleurBouton::BLEU;
         }
-        else if (it.key() == "btnRouge" && it.value() == "released") {
+        else if (it.key() == BTN_ROUGE && it.value() == BTN_RELACHE) {
             return CouleurBouton::ROUGE;
         }
-        else if (it.key() == "btnVert" && it.value() == "released") {
+        else if (it.key() == BTN_VERT && it.value() == BTN_RELACHE) {
             return CouleurBouton::VERT;
+        }
+        else if (it.key() == BTN_JAUNE && it.value() == BTN_RELACHE) {
+            return CouleurBouton::JAUNE;
+        }
+        else if (it.key() == BTN_MAUVE && it.value() == BTN_RELACHE) {
+            return CouleurBouton::MAUVE;
         }
     }
 
-    return CouleurBouton();
+    return CouleurBouton::UNKNOWN;
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {
