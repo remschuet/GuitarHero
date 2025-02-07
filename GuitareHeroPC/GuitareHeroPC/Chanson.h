@@ -6,6 +6,7 @@
 #include "Note.h"
 #include <ctime> 
 #include <chrono>
+#include <mmsystem.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -13,23 +14,28 @@ using namespace std::chrono;
 class Chanson
 {
 private:
-	void setUpVecteur(std::vector<Note> vecteur);
-	vector<Note> getVecteurNotesEnCours();
-	
 	string nomChanson = "";
 	float deltaEntreNote = 0;
 	long long chronoDemarrage;
-
 	vector<Note> vecteurRouge;
 	vector<Note> vecteurVerte;
 	vector<Note> vecteurBleu;
 	vector<Note> vecteurEnCours;
+	void departMusique();
+	const char* chanson1Nom = "son1.mp3";
+
 
 public:
+	string getNomChanson();
+	long long getChrono();
+	vector<Note> getVecteurNotesEnCours();
+	long long getTempsRestantChanson();
+	
+	void setUpVecteur(std::vector<Note> vecteur);
 	Chanson(std::string nom);
 	void tick();
 	void startChrono();
-	long long getChrono();
+	void arretMusique();
 };
 
 

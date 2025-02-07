@@ -33,29 +33,60 @@ void Gameplay::gotoxy(int x, int y) {
 void Gameplay::loopGame() {
     vector<Note*> vecteur;
     vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(0, 8000, 2000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(0, 8000, 5000, CouleurBouton::ROUGE));
+    vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::VERT));
+    vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::MAUVE));
+    vecteur.push_back(new Note(0, 6000, 3000, CouleurBouton::BLEU));
+    vecteur.push_back(new Note(0, 5000, 2000, CouleurBouton::JAUNE));
     vecteur.push_back(new Note(0, 2000, 2000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(0, 3000, 3000, CouleurBouton::BLEU));
-    // vecteur.push_back(new Note(0, 7000, 3000, CouleurBouton::BLEU));
-    // vecteur.push_back(new Note(0, 3000, 1000, CouleurBouton::BLEU));
+    vecteur.push_back(new Note(0, 8000, 3000, CouleurBouton::BLEU));
 
     int delaiAffichage = 6000;
     long long chrono = 5000;
 
     tick++;
     system("cls");
+    // Titre du jeu
+    gotoxy(10, 2);
+    std::cout << "===========================";
+    gotoxy(15, 3);
+    std::cout << "!! GUITAR HERO !!";
     gotoxy(10, 4);
-    std::cout << "!! IN GAME !!";
+    std::cout << "===========================";
+
+    // std::cout << "[";
+    // int progression = gameStruct.chansonEnCours->getChrono();  // Simulation d'une progression
+    // int tempsRestant = gameStruct.chansonEnCours->getTempsRestant();  // Simulation d'une progression
+    /*
+    for (int i = 0; i < 20; i++) {
+        if (i <= progression)
+            std::cout << "=";
+        else
+            std::cout << " ";
+    }
+    std::cout << "]";
+    */
 
     // Barre en bas
     gotoxy(4, 25);
     std::cout << "------------------------------------";
+    gotoxy(6, 26);
+    std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
 
     gameStruct.chansonEnCours->tick();
 
     for (auto& note : vecteur) {
         if (note->tempsDepart <= chrono + delaiAffichage && note->tempsDepart + note->durree >= chrono) {
-            int posX = (note->couleur == ROUGE) ? 7 : (note->couleur == BLEU) ? 9 : 0;
+
+            int posX = 0;
+
+            switch (note->couleur) {
+                case ROUGE: posX = 8; break;
+                case BLEU: posX = 15; break;
+                case VERT: posX =21; break;
+                case JAUNE: posX = 27; break;
+                case MAUVE: posX = 34; break;
+            }
 
             int hauteurNote = note->durree / 1000;
             int positionY = 25 - ((note->tempsDepart - chrono) / 1000);
@@ -111,7 +142,6 @@ void Gameplay::loopMenu() {
     cin >> nomJoueur;
 
     gameStruct.joueur = ComFichierTexte::setJoueur(nomJoueur);
-
 
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
