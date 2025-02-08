@@ -29,4 +29,5 @@ private:
 	bool admin;
 	GameStruct gameStruct;
 	int tick = 0;
+	void modifierLeProfile();
 };

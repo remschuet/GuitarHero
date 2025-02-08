@@ -69,6 +69,23 @@ void Gameplay::loopGame() {
     std::cout << "]";
     */
 
+    //CouleurBouton btn = choixBouton();
+
+    //switch (btn)
+    //{
+    //case ROUGE:
+    //    // if (qqch = rouge) note.appuyé
+    //    break;
+    //case VERT:
+    //    break;
+    //case BLEU:
+    //    break;
+    //case JAUNE:
+    //    break;
+    //case MAUVE:
+    //    break;
+    //}
+
     // Barre en bas
     gotoxy(4, 25);
     std::cout << "------------------------------------";
@@ -101,7 +118,7 @@ void Gameplay::loopGame() {
             }
         }
     }
-Sleep(1000);
+    Sleep(1000);
     loopGame();
 }
 
@@ -148,7 +165,7 @@ void Gameplay::loopMenu() {
 
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
-    std::cout << "Voulez-vous voir les meilleurs scores ? (ROUGE = OUI) ";
+    std::cout << "Options: \n \t\tRouge:\tVoir les meilleurs scores\n\t\tBleu:\tmodifier le joueurs\n\t\tAutre:\tLancer une partie";
     choix == UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
@@ -156,6 +173,9 @@ void Gameplay::loopMenu() {
     }
     if (choix == ROUGE){
         voirMeilleurScore();
+    }
+    else if (choix == BLEU) {
+        modifierLeProfile();
     }
 
     // Choix de la musique
@@ -187,10 +207,33 @@ void Gameplay::loopMenu() {
 }
 
 void Gameplay::voirMeilleurScore() {
-    string attente;
-    std::cout << "Meilleur score: ";
+    system("cls");
+    gotoxy(10, 2);
+    std::cout << "**************************************";
+    gotoxy(10, 3);
+    std::cout << "*        GUITAR HERO MENU           *";
+    gotoxy(10, 4);
+    std::cout << "**************************************";
+    gotoxy(5, 7);
+    std::cout << "Fonctionnement à programmer...";
 
-    std::cin >> attente;
+    std::string bob;
+    cin >> bob;
+}
+
+void Gameplay::modifierLeProfile() {
+    system("cls");
+    gotoxy(10, 2);
+    std::cout << "**************************************";
+    gotoxy(10, 3);
+    std::cout << "*        GUITAR HERO MENU           *";
+    gotoxy(10, 4);
+    std::cout << "**************************************";
+    gotoxy(5, 7);
+    std::cout << "Fonctionnement à programmer...";
+
+    std::string bob;
+    cin >> bob;
 }
 
 bool Gameplay::configFilaire(std::string nomPort) {
