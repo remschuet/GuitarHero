@@ -1,19 +1,9 @@
 #include "Chanson.h"
+#include "ComFichierTexte.h"
 #pragma comment(lib, "winmm.lib")
 
 void Chanson::setUpVecteur() {
-    // vector<Note*> vecteur;
-    vecteurRouge.push_back(Note(0, 8000, 5000, CouleurBouton::ROUGE));
-    vecteurRouge.push_back(Note(0, 2000, 2000, CouleurBouton::ROUGE));
-
-    vecteurVerte.push_back(Note(0, 2000, 3000, CouleurBouton::VERT));
-    vecteurVerte.push_back(Note(0, 6000, 2000, CouleurBouton::VERT));
-    vecteurVerte.push_back(Note(0, 10000, 3000, CouleurBouton::VERT));
-
-    // vecteurRouge.push_back(Note(0, 5000, 1000, CouleurBouton::MAUVE));
-    // vecteurBleu.push_back(Note(0, 5000, 2000, CouleurBouton::JAUNE));
-    vecteurBleu.push_back(Note(0, 6000, 3000, CouleurBouton::BLEU));
-    vecteurBleu.push_back(Note(0, 3000, 1000, CouleurBouton::BLEU));
+    ComFichierTexte::setListeNotes("Notesyesterdayles_beatles.txt", vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
 }
 
 vector<Note> Chanson::getVecteurNotesEnCours() {

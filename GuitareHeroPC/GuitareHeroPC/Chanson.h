@@ -20,9 +20,11 @@ private:
 	vector<Note> vecteurRouge;
 	vector<Note> vecteurVerte;
 	vector<Note> vecteurBleu;
+	vector<Note> vecteurJaune;
+	vector<Note> vecteurMauve;
 	vector<Note> vecteurEnCours;
 	void departMusique();
-	const char* chanson1Nom = "son1.mp3";
+	const char* chanson1Nom = "psycho.mp3";
 
 public:
 	string getNomChanson();

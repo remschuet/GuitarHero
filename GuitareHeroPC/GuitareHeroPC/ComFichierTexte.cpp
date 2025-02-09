@@ -5,7 +5,14 @@ Joueur* ComFichierTexte::setJoueur(std::string nom)
 {
 	// Lire fichier texte et trouver les valeurs associé au nom
 	// Si aucun joueur appeler creer joueur
-	
+	int maxScore = 0;
+	std::string image = "";
+	if (image != "") {
+		return new Joueur(nom, maxScore, image);
+	}
+	else {
+		return new Joueur(nom, maxScore);
+	}
 }
 
 bool ComFichierTexte::setNouveauNomJoueur(std::string ancienNom, std::string nouveauNom)
@@ -20,28 +27,21 @@ bool ComFichierTexte::setNouveauMaxScoreJoueur(std::string nom)
 	return false;
 }
 
-std::vector<Note>* ComFichierTexte::setListeNotes(char* nomFichier, std::vector<Note>& vrouge, std::vector<Note>& vvert, std::vector<Note>& vjaune, std::vector<Note>& vbleu, std::vector<Note>& vmauve)
+std::vector<Note>* ComFichierTexte::setListeNotes(std::string nomFichier, std::vector<Note>& vrouge, std::vector<Note>& vvert, std::vector<Note>& vjaune, std::vector<Note>& vbleu, std::vector<Note>& vmauve)
 {
 	FILE* fichierEntree;
-	if ((fichierEntree = fopen(nomFichier, "r")) == NULL)
+	fopen_s(&fichierEntree, nomFichier.c_str(), "r");
+	if (!fichierEntree || fichierEntree == NULL)
 	{
 		fclose(fichierEntree);
-		return 0;
+		return nullptr;
 	}
-	
 	int chose, bien, inutile;
 	int couleurTemp, débutTemp, duréeTemp;
-	int i = 0;
-	while (!feof)
+	while (!feof(fichierEntree))
 	{
-		if(i == 0 || i==1)
-		{
-			fscanf(fichierEntree, "%d %d %d", chose, bien, inutile);
-			i++;
-		}
-		else 
-		{
-			fscanf(fichierEntree, "%d %d %d", couleurTemp,débutTemp,duréeTemp);
+
+			fscanf_s(fichierEntree, "%i %i %i", &couleurTemp, &débutTemp, &duréeTemp);
 			if (couleurTemp == 1)
 			{
 				vrouge.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::ROUGE));
@@ -62,10 +62,9 @@ std::vector<Note>* ComFichierTexte::setListeNotes(char* nomFichier, std::vector<
 			{
 				vmauve.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::MAUVE));
 			}
-			i++;
-		}
 	}
 
+	fclose(fichierEntree);
 	return nullptr;
 }
 
