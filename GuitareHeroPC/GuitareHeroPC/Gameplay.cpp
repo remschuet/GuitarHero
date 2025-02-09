@@ -88,8 +88,8 @@ void Gameplay::loopGame() {
                 case MAUVE: posX = 34; break;
             }
 
-            int hauteurNote = note.durree / 1000;
-            int positionY = 25 - ((note.tempsDepart - chrono) / 1000);
+            int hauteurNote = note.durree / 250;
+            int positionY = 25 - ((note.tempsDepart - chrono) / 250);
 
             for (int y = 0; y < hauteurNote; y++) {
                 if (positionY - y <= 25) { // Empêcher d'afficher hors écran
@@ -102,23 +102,24 @@ void Gameplay::loopGame() {
 
     CouleurBouton btn = choixBouton();
 
-    switch (btn)
-    {
-    case ROUGE:
-        exit(1);
-        // if (qqch = rouge) note.appuyé
-        break;
-    case VERT:
-        break;
-    case BLEU:
-        break;
-    case JAUNE:
-        break;
-    case MAUVE:
-        break;
+    for (auto& note : vecteur) {
+        if (note.couleur == btn &&
+            std::abs((note.tempsDepart + note.durree) - chrono) <= 100) {
+            note.action = APPUYE;
+            break;
+        }
     }
 
-    Sleep(350);
+    /*
+    for (auto& note : vecteur) {
+        if (chrono > note.tempsDepart + 500) {
+            exit(1);
+            break;
+        }
+    }
+    */
+
+    Sleep(120);
     loopGame();
 }
 
