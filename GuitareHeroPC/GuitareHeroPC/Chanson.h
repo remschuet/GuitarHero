@@ -24,7 +24,6 @@ private:
 	void departMusique();
 	const char* chanson1Nom = "son1.mp3";
 
-
 public:
 	string getNomChanson();
 	long long getChrono();
