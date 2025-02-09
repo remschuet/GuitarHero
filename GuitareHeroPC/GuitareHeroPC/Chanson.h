@@ -31,9 +31,9 @@ public:
 	vector<Note> getVecteurNotesEnCours();
 	long long getTempsRestantChanson();
 	
-	void setUpVecteur(std::vector<Note> vecteur);
+	void setUpVecteur();
 	Chanson(std::string nom);
-	void tick();
+	void tick(int delaiAffichage);
 	void startChrono();
 	void arretMusique();
 };

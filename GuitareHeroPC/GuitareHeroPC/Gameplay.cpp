@@ -32,30 +32,17 @@ void Gameplay::gotoxy(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
 
-void Gameplay::loopGame() {
-    vector<Note*> vecteur;
-    vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(0, 8000, 5000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::VERT));
-    vecteur.push_back(new Note(0, 5000, 1000, CouleurBouton::MAUVE));
-    vecteur.push_back(new Note(0, 6000, 3000, CouleurBouton::BLEU));
-    vecteur.push_back(new Note(0, 5000, 2000, CouleurBouton::JAUNE));
-    vecteur.push_back(new Note(0, 2000, 2000, CouleurBouton::ROUGE));
-    vecteur.push_back(new Note(0, 8000, 3000, CouleurBouton::BLEU));
-
-    int delaiAffichage = 6000;
-    long long chrono = 5000;
-
-    tick++;
+void Gameplay::affichageTitre() {
     system("cls");
-    // Titre du jeu
     gotoxy(10, 2);
     std::cout << "===========================";
     gotoxy(15, 3);
     std::cout << "!! GUITAR HERO !!";
     gotoxy(10, 4);
     std::cout << "===========================";
+}
 
+void Gameplay::affichageProgression() {
     // std::cout << "[";
     // int progression = gameStruct.chansonEnCours->getChrono();  // Simulation d'une progression
     // int tempsRestant = gameStruct.chansonEnCours->getTempsRestant();  // Simulation d'une progression
@@ -68,23 +55,13 @@ void Gameplay::loopGame() {
     }
     std::cout << "]";
     */
+}
 
-    //CouleurBouton btn = choixBouton();
-
-    //switch (btn)
-    //{
-    //case ROUGE:
-    //    // if (qqch = rouge) note.appuyé
-    //    break;
-    //case VERT:
-    //    break;
-    //case BLEU:
-    //    break;
-    //case JAUNE:
-    //    break;
-    //case MAUVE:
-    //    break;
-    //}
+void Gameplay::loopGame() {
+    int delaiAffichage = 10000;
+    affichageTitre();
+    affichageProgression();
+    tick++;
 
     // Barre en bas
     gotoxy(4, 25);
@@ -92,23 +69,27 @@ void Gameplay::loopGame() {
     gotoxy(6, 26);
     std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
 
-    gameStruct.chansonEnCours->tick();
+    gameStruct.chansonEnCours->tick(delaiAffichage);
+
+    vector<Note> vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
+
+    long long chrono = gameStruct.chansonEnCours->getChrono();
 
     for (auto& note : vecteur) {
-        if (note->tempsDepart <= chrono + delaiAffichage && note->tempsDepart + note->durree >= chrono) {
+        if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.durree >= chrono) {
 
             int posX = 0;
 
-            switch (note->couleur) {
+            switch (note.couleur) {
                 case ROUGE: posX = 8; break;
                 case BLEU: posX = 15; break;
-                case VERT: posX =21; break;
+                case VERT: posX = 21; break;
                 case JAUNE: posX = 27; break;
                 case MAUVE: posX = 34; break;
             }
 
-            int hauteurNote = note->durree / 1000;
-            int positionY = 25 - ((note->tempsDepart - chrono) / 1000);
+            int hauteurNote = note.durree / 1000;
+            int positionY = 25 - ((note.tempsDepart - chrono) / 1000);
 
             for (int y = 0; y < hauteurNote; y++) {
                 if (positionY - y <= 25) { // Empêcher d'afficher hors écran
@@ -118,7 +99,26 @@ void Gameplay::loopGame() {
             }
         }
     }
-    Sleep(1000);
+
+    CouleurBouton btn = choixBouton();
+
+    switch (btn)
+    {
+    case ROUGE:
+        exit(1);
+        // if (qqch = rouge) note.appuyé
+        break;
+    case VERT:
+        break;
+    case BLEU:
+        break;
+    case JAUNE:
+        break;
+    case MAUVE:
+        break;
+    }
+
+    Sleep(350);
     loopGame();
 }
 
@@ -177,6 +177,16 @@ void Gameplay::loopMenu() {
     else if (choix == BLEU) {
         modifierLeProfile();
     }
+
+    system("cls"); // Efface l'écran avant d'afficher le menu
+
+    // Affichage du cadre
+    gotoxy(10, 2);
+    std::cout << "**************************************";
+    gotoxy(10, 3);
+    std::cout << "*        GUITAR HERO MENU           *";
+    gotoxy(10, 4);
+    std::cout << "**************************************";
 
     // Choix de la musique
     gotoxy(12, 10);

@@ -11,6 +11,8 @@ class Gameplay
 public:
 	Gameplay(std::string comPort = "COM5", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
 	void gotoxy(int x, int y);
+	void affichageTitre();
+	void affichageProgression();
 	void loopGame();
 	void demarrerPartie();
 	void loopMenu();

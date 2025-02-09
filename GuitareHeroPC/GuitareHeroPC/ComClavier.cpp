@@ -1,27 +1,32 @@
 #include "ComClavier.h"
 #include <CONST.h>
+#include <iostream>
+#include <string>
+#include <json.hpp>
+#include <conio.h> // Pour _kbhit() et _getch()
 
-bool ComClavier::recevoirMessage(std::string& msg)
-{
-    // Lecture du message via cin
-    std::string valeur;
-    std::cin >> valeur;
-
+bool ComClavier::recevoirMessage(std::string& msg) {
     // Création du JSON avec la clé "btnRouge" et la valeur entrée
     nlohmann::json jsonMessage;
 
-    if (valeur == "1")
-        jsonMessage[BTN_ROUGE] = BTN_RELACHE;
-    else if (valeur == "2")
-        jsonMessage[BTN_BLEU] = BTN_RELACHE;
-    else if (valeur == "3")
-        jsonMessage[BTN_VERT] = BTN_RELACHE;
-    else if (valeur == "4")
-        jsonMessage[BTN_JAUNE] = BTN_RELACHE;
-    else if (valeur == "5")
-        jsonMessage[BTN_MAUVE] = BTN_RELACHE;
+    if (_kbhit()) {  // Vérifie si une touche est pressée sans bloquer l'exécution
+        char valeur = _getch();  // Récupère la touche sans bloquer
 
-    msg = jsonMessage.dump();  // La méthode dump() convertit le JSON en une chaîne de caractères
+        // Traitement de la touche pressée
+        if (valeur == '1')
+            jsonMessage[BTN_ROUGE] = BTN_RELACHE;
+        else if (valeur == '2')
+            jsonMessage[BTN_BLEU] = BTN_RELACHE;
+        else if (valeur == '3')
+            jsonMessage[BTN_VERT] = BTN_RELACHE;
+        else if (valeur == '4')
+            jsonMessage[BTN_JAUNE] = BTN_RELACHE;
+        else if (valeur == '5')
+            jsonMessage[BTN_MAUVE] = BTN_RELACHE;
 
-    return true;
+        msg = jsonMessage.dump();  // La méthode dump() convertit le JSON en une chaîne de caractères
+        return true;  // Retourne true si une touche a été pressée et traitée
+    }
+
+    return false;  // Retourne false si aucune touche n'a été pressée
 }

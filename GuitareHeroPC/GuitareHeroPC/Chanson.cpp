@@ -1,7 +1,19 @@
 #include "Chanson.h"
 #pragma comment(lib, "winmm.lib")
 
-void Chanson::setUpVecteur(vector<Note> vecteur) {
+void Chanson::setUpVecteur() {
+    // vector<Note*> vecteur;
+    vecteurRouge.push_back(Note(0, 8000, 5000, CouleurBouton::ROUGE));
+    vecteurRouge.push_back(Note(0, 2000, 2000, CouleurBouton::ROUGE));
+
+    vecteurVerte.push_back(Note(0, 2000, 3000, CouleurBouton::VERT));
+    vecteurVerte.push_back(Note(0, 6000, 2000, CouleurBouton::VERT));
+    vecteurVerte.push_back(Note(0, 10000, 3000, CouleurBouton::VERT));
+
+    // vecteurRouge.push_back(Note(0, 5000, 1000, CouleurBouton::MAUVE));
+    // vecteurBleu.push_back(Note(0, 5000, 2000, CouleurBouton::JAUNE));
+    vecteurBleu.push_back(Note(0, 6000, 3000, CouleurBouton::BLEU));
+    vecteurBleu.push_back(Note(0, 3000, 1000, CouleurBouton::BLEU));
 }
 
 vector<Note> Chanson::getVecteurNotesEnCours() {
@@ -15,6 +27,7 @@ long long Chanson::getTempsRestantChanson() {
 
 Chanson::Chanson(string nom) {
     nomChanson = nom;
+    setUpVecteur();
 }
 
 void Chanson::startChrono() {
@@ -43,12 +56,52 @@ string Chanson::getNomChanson()
     return nomChanson;
 }
 
-long long Chanson::getChrono()
-{
+long long Chanson::getChrono() {
     return duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - chronoDemarrage;
 }
 
+void Chanson::tick(int delaiAffichage) {
+    long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
 
+    // Utilisation d'itérateurs pour supprimer les éléments tout en les parcourant
+    for (auto it = vecteurRouge.begin(); it != vecteurRouge.end(); ) {
+        if (tempsActuel >= (chronoDemarrage + it->tempsDepart - delaiAffichage) && it->etat == EN_ATTENTE) {
+            it->etat = AFFICHER;
+            vecteurEnCours.push_back(*it);
+            it = vecteurRouge.erase(it); // Supprime l'élément et met à jour l'itérateur
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    for (auto it = vecteurVerte.begin(); it != vecteurVerte.end(); ) {
+        if (tempsActuel >= (chronoDemarrage + it->tempsDepart - delaiAffichage) && it->etat == EN_ATTENTE) {
+            it->etat = AFFICHER;
+            vecteurEnCours.push_back(*it);
+            it = vecteurVerte.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    for (auto it = vecteurBleu.begin(); it != vecteurBleu.end(); ) {
+        if (tempsActuel >= (chronoDemarrage + it->tempsDepart - delaiAffichage) && it->etat == EN_ATTENTE) {
+            it->etat = AFFICHER;
+            vecteurEnCours.push_back(*it);
+            it = vecteurBleu.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
+/*
 void Chanson::tick()
 {
     // Obtenir le temps actuel une seule fois
@@ -79,7 +132,7 @@ void Chanson::tick()
         }
     }
 }
-
+*/
 /*
 void Chanson::tick()
 {
