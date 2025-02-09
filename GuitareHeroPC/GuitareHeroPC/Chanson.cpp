@@ -3,7 +3,7 @@
 #pragma comment(lib, "winmm.lib")
 
 void Chanson::setUpVecteur() {
-    ComFichierTexte::setListeNotes("Notesyesterdayles_beatles.txt", vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
+    ComFichierTexte::setListeNotes("psycho.txt", vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
 }
 
 vector<Note> Chanson::getVecteurNotesEnCours() {
