@@ -89,6 +89,30 @@ void Chanson::tick(int delaiAffichage) {
             ++it;
         }
     }
+
+    for (auto it = vecteurJaune.begin(); it != vecteurJaune.end(); ) {
+        if (tempsActuel >= (chronoDemarrage + it->tempsDepart - delaiAffichage) && it->etat == EN_ATTENTE) {
+            it->etat = AFFICHER;
+            vecteurEnCours.push_back(*it);
+            it = vecteurJaune.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    for (auto it = vecteurMauve.begin(); it != vecteurMauve.end(); ) {
+        if (tempsActuel >= (chronoDemarrage + it->tempsDepart - delaiAffichage) && it->etat == EN_ATTENTE) {
+            it->etat = AFFICHER;
+            vecteurEnCours.push_back(*it);
+            it = vecteurMauve.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }
 
 /*

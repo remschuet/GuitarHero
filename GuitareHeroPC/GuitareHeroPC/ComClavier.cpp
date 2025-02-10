@@ -5,6 +5,7 @@
 #include <json.hpp>
 #include <conio.h> // Pour _kbhit() et _getch()
 
+
 bool ComClavier::recevoirMessage(std::string& msg) {
     // Création du JSON avec la clé "btnRouge" et la valeur entrée
     nlohmann::json jsonMessage;
@@ -32,49 +33,57 @@ bool ComClavier::recevoirMessage(std::string& msg) {
 }
 
 
+
+
 /*
-#include "ComClavier.h"
-#include <CONST.h>
-#include <iostream>
-#include <string>
-#include <json.hpp>
-#include <conio.h>
-#include <unordered_map>
-
-std::unordered_map<char, bool> touchesActives;  // État des touches
-
 bool ComClavier::recevoirMessage(std::string& msg) {
     nlohmann::json jsonMessage;
+    bool modification = false;
 
-    while (_kbhit()) {  // Vérifie s'il y a des touches pressées
-        char valeur = _getch();  // Récupère la touche
+    std::unordered_map<char, std::string> correspondance = {
+        {'1', BTN_ROUGE}, {'2', BTN_BLEU}, {'3', BTN_VERT},
+        {'4', BTN_JAUNE}, {'5', BTN_MAUVE}
+    };
 
-        // Vérifie si c'est une touche de note
-        if (valeur >= '1' && valeur <= '5') {
-            if (touchesActives[valeur] == false) {
-                // Si elle n'était pas pressée avant, c'est un appui
-                jsonMessage[valeur] = BTN_APPUYE;
-                touchesActives[valeur] = true;
+    char valeur = 0;  // Initialisation pour éviter une variable non définie
+
+    if (_kbhit()) {
+        valeur = _getch();
+
+        if (correspondance.find(valeur) != correspondance.end()) {
+            std::string bouton = correspondance[valeur];
+
+            // Vérifie si la touche était déjà enfoncée
+            if (!toucheEnfoncee[valeur]) {
+                etatBoutons[bouton] = true;  // Passe en mode APPUYÉ
+                jsonMessage[bouton] = BTN_APPUYE;
+                modification = true;
             }
+
+            toucheEnfoncee[valeur] = true;  // Marque la touche comme enfoncée
         }
     }
 
-    // Vérifie si une touche a été relâchée
-    for (auto& [touche, etat] : touchesActives) {
-        if (etat && !_kbhit()) {  // Si elle était pressée mais qu'aucune touche n'est actuellement détectée
-            jsonMessage[touche] = BTN_RELACHE;
-            etat = false;  // Réinitialise l'état
+    // Vérifier les touches qui ne sont plus détectées et les passer en mode relâché
+    for (auto it = toucheEnfoncee.begin(); it != toucheEnfoncee.end(); ) {
+        char touche = it->first;
+        if (!(_kbhit() && _getch() == touche)) {  // Vérifie si la touche n'est plus pressée
+            std::string bouton = correspondance[touche];
+            jsonMessage[bouton] = BTN_RELACHE;
+            etatBoutons[bouton] = false;
+            it = toucheEnfoncee.erase(it);  // Supprime la touche de la map
+            modification = true;
+        }
+        else {
+            ++it;
         }
     }
 
-    if (!jsonMessage.empty()) {
+    if (modification) {
         msg = jsonMessage.dump();
         return true;
     }
 
     return false;
 }
-
-
-
 */

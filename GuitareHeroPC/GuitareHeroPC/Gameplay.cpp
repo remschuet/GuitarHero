@@ -293,6 +293,9 @@ CouleurBouton Gameplay::choixBouton(){
         else if (it.key() == BTN_MAUVE && it.value() == BTN_RELACHE) {
             return CouleurBouton::MAUVE;
         }
+        else {
+            return CouleurBouton::UNKNOWN;
+        }
     }
 
     return CouleurBouton::UNKNOWN;
