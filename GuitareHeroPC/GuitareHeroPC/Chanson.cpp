@@ -6,8 +6,8 @@ void Chanson::setUpVecteur() {
     ComFichierTexte::setListeNotes("psycho.txt", vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
 }
 
-vector<Note> Chanson::getVecteurNotesEnCours() {
-    return vecteurEnCours;
+vector<Note>* Chanson::getVecteurNotesEnCours() {
+    return &vecteurEnCours; // ERREUR ! temp est détruit en sortie de fonction
 }
 
 long long Chanson::getTempsRestantChanson() {

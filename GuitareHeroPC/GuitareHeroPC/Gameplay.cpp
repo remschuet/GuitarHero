@@ -63,6 +63,9 @@ void Gameplay::loopGame() {
     affichageProgression();
     tick++;
 
+    gotoxy(40, 3);
+    cout << "SCORE: " << gameStruct.score;
+
     // Barre en bas
     gotoxy(4, 25);
     std::cout << "------------------------------------";
@@ -71,11 +74,15 @@ void Gameplay::loopGame() {
 
     gameStruct.chansonEnCours->tick(delaiAffichage);
 
-    vector<Note> vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
+    vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
 
+    if (!vecteur) {
+        Sleep(120);
+        loopGame();
+    }
     long long chrono = gameStruct.chansonEnCours->getChrono();
 
-    for (auto& note : vecteur) {
+    for (auto& note : *vecteur) {
         if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.durree >= chrono) {
 
             int posX = 0;
@@ -102,22 +109,28 @@ void Gameplay::loopGame() {
 
     CouleurBouton btn = choixBouton();
 
-    for (auto& note : vecteur) {
-        if (note.couleur == btn &&
-            std::abs((note.tempsDepart + note.durree) - chrono) <= 100) {
-            note.action = APPUYE;
-            break;
+    // Appuyé sur une touche
+    if (btn != UNKNOWN){
+        bool aTouche = false;
+        for (auto& note : *vecteur) {
+            if (note.couleur == btn &&
+                std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
+                note.action = APPUYE;
+                aTouche = true;
+                gameStruct.score++;
+                break;
+            }
+        }
+        if (!aTouche) {
+            // std::cerr << "Perdre point";
         }
     }
 
-    /*
-    for (auto& note : vecteur) {
-        if (chrono > note.tempsDepart + 500) {
-            exit(1);
-            break;
+    for (auto& note : *vecteur) {
+        if (chrono > note.tempsDepart + 1000 && note.action == INITIALE) {
+            cout << "";
         }
     }
-    */
 
     Sleep(120);
     loopGame();

@@ -29,7 +29,7 @@ private:
 public:
 	string getNomChanson();
 	long long getChrono();
-	vector<Note> getVecteurNotesEnCours();
+	vector<Note>* getVecteurNotesEnCours();
 	long long getTempsRestantChanson();
 	
 	void setUpVecteur();
