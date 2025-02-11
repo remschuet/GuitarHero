@@ -122,18 +122,27 @@ void Gameplay::loopGame() {
             }
         }
         if (!aTouche) {
-            // std::cerr << "Perdre point";
+            // Faire quelque chose !
+            gameStruct.score = 0;
         }
     }
 
     for (auto& note : *vecteur) {
-        if (chrono > note.tempsDepart + 1000 && note.action == INITIALE) {
-            cout << "";
+        if (chrono > note.tempsDepart + note.durree + 400 && 
+            chrono < note.tempsDepart + note.durree + 200 &&
+            note.action == INITIALE) {
+            // Desendre le score a un max
+            gameStruct.score--;
         }
     }
 
     Sleep(120);
-    loopGame();
+    if (btn != QUITTER) {
+        loopGame();
+    }
+    else {
+        finPartie();
+    }
 }
 
 void Gameplay::demarrerPartie() {
@@ -151,6 +160,11 @@ void Gameplay::demarrerPartie() {
     tick = 0;
     gameStruct.chansonEnCours->startChrono();
     loopGame();
+}
+
+void Gameplay::finPartie() {
+    affichageTitre();
+
 }
 
 void Gameplay::loopMenu() {
@@ -306,6 +320,10 @@ CouleurBouton Gameplay::choixBouton(){
         else if (it.key() == BTN_MAUVE && it.value() == BTN_RELACHE) {
             return CouleurBouton::MAUVE;
         }
+        else if (it.key() == BTN_QUITTER && it.value() == BTN_RELACHE) {
+            return CouleurBouton::QUITTER;
+        }
+
         else {
             return CouleurBouton::UNKNOWN;
         }

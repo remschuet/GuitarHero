@@ -20,3 +20,5 @@ const std::string BTN_BLEU = "btnBleu";
 const std::string BTN_VERT = "btnVert";
 const std::string BTN_JAUNE = "btnJaune";
 const std::string BTN_MAUVE = "btnMauve";
+
+const std::string BTN_QUITTER = "btnQuitter";

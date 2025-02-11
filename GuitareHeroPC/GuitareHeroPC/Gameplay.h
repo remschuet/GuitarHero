@@ -15,6 +15,7 @@ public:
 	void affichageProgression();
 	void loopGame();
 	void demarrerPartie();
+	void finPartie();
 	void loopMenu();
 
 	void voirMeilleurScore();
