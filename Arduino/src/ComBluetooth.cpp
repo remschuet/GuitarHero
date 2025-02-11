@@ -1,6 +1,6 @@
 #include "ComBluetooth.h"
-/*---------------------------- Classe ComBluetooth ----------------------------*/
 
+/*---------------------------- Classe ComBluetooth ----------------------------*/
     ComBluetooth::ComBluetooth(long baudRate)//9600 le baudRate par défaut a voir si on garde ca
         : bluetooth(bluetoothRx, bluetoothTx)
     {

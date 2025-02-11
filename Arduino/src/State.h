@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "Com.h"
 
+/*------------------------------ Constantes ---------------------------------*/
 static constexpr int bt = 8;
 static constexpr int ai = 2;
 static constexpr int diPins[bt] = {12, 11, 10, 9, 8, 7, 6, 5};
@@ -13,30 +14,12 @@ static constexpr const char* aiName[] = {"Accelerometre", "Joystick"};
 static constexpr const char* change[] = {"Appuye", "Relacher","Erreur"};
 static constexpr const char* axe[] = {"X:", "Y:","Z:"};
 
-/*enum{
-    AucunChangement,
-    Appuye,
-    Relache,
-    Bouger,
-    Erreur
-};
-*/
 enum{
     OFF,
     ON,
     ERROR,
     INIT
 };
-
-struct StateAI
-{
-    int AccX;
-    int AccY;
-    int AccZ;
-    int JoystickH;
-    int JoystickV;
-};
-
 
 /*---------------------------- Classe State ----------------------------*/
 class State {
@@ -51,7 +34,6 @@ class State {
         int diState[bt] = {INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT};
         int aiState[ai]={INIT,INIT};
 
-        //StateAI AI;
         int* GetStateDI();
         void UpdateStateDI();
         int* GetStateAI();

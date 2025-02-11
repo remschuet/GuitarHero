@@ -1,5 +1,6 @@
 #include "ComFilaire.h"
 
+/*---------------------------- Classe ComFilaire ----------------------------*/
 ComFilaire::ComFilaire(long baudRate)//9600 le baudRate par défaut a voir si on garde ca
 {
     Serial.begin(baudRate);

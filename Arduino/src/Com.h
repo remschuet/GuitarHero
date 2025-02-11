@@ -5,7 +5,7 @@
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 
-/*---------------------------- Classe ComBluetooth ----------------------------*/
+/*---------------------------- Classe Comunication ----------------------------*/
 class Com {
     public:
         Com();

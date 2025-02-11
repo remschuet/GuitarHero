@@ -1,5 +1,6 @@
 #include "State.h"
 
+/*---------------------------- Classe State ----------------------------*/
 State::State()
 {
     UpdateStateDI();
@@ -12,14 +13,17 @@ void State::GetState(Com* comDevice)
     int i;
     int* stateTempDI= GetStateDI();
     int* stateTempAI= GetStateAI();
+    //Boutons
     for (i=0;i<bt;i++)
     {
         comDevice->envoyerMessageString(diName[i],String(stateTempDI[i]));
     }
+    //Joystick
      for (i=0;i<2;i++)
     {
         comDevice->envoyerMessageString(aiName[0],axe[1-i]+String(stateTempAI[i]));
     }
+    //Accelerometre
     for (i=2;i<5;i++)
     {
         comDevice->envoyerMessageString(aiName[1],axe[4-i]+String(stateTempAI[i]));
@@ -51,9 +55,6 @@ void State::GetChange(Com* comDevice)
             {
                 comDevice->envoyerMessageString(diName[i],change[3]);
             }
-        }
-        else
-        {
         }
     }
     //Boutons Joystick
