@@ -1,24 +1,37 @@
 /*------------------------------ Librairies ---------------------------------*/
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <SoftwareSerial.h>
 #include "ComFilaire.h"
+#include "ComBluetooth.h"
+#include "State.h"
 /*------------------------------ Constantes ---------------------------------*/
-#define BAUD 115200        // Fréquence de transmission série
-#define PIN_LED 7          // Broche de la LED
-#define PIN_POT A0         // Broche du potentiomètre
-ComFilaire com(BAUD);
-int ledState = LOW;
+#define BAUD 115200      // Fréquence de transmission série ## à définir selon le mode je crois
+  State state;
+  ComFilaire comFilaire(9600);
+  ComBluetooth comBluetooth(9600);
+
+
+
+
 
 /*---------------------------- Fonctions principales ------------------------*/
 void setup() {
-  Serial.begin(115200);
-  delay(2000);
+  //Serial.begin(115200); ###fait direcement dans le constructeur
+  //delay(2000);
 }
 
-void loop() {
-    com.envoyerMessageString("message", "coucou message du arduino");
-    com.envoyerMessageString("bouton1", "released");
-    // if (com.lireMessage(ledState)) {
-    //    digitalWrite(PIN_LED, ledState);
-    // }
+void loop() 
+{
+  bool bluetooth=true;
+
+  if (bluetooth)
+  {
+    state.GetChange(&comBluetooth);
+  }
+  else
+  {
+    state.GetChange(&comFilaire);
+  }
+  state.UpdateState();
 }
