@@ -1,7 +1,7 @@
 #include "State.h"
 
 /*---------------------------- Classe State ----------------------------*/
-State::State()
+State::State():timer(millis())
 {
     UpdateStateDI();
     UpdateStateAI();
@@ -17,63 +17,73 @@ void State::GetState(Com* comDevice)
     for (i=0;i<bt;i++)
     {
         comDevice->envoyerMessageString(diName[i],String(stateTempDI[i]));
+        diState[i]=stateTempDI[i];
     }
     //Joystick
-     for (i=0;i<2;i++)
+    /* for (i=0;i<2;i++)
     {
         comDevice->envoyerMessageString(aiName[0],axe[1-i]+String(stateTempAI[i]));
+        aiState[i]=stateTempAI[i];
     }
     //Accelerometre
     for (i=2;i<5;i++)
     {
         comDevice->envoyerMessageString(aiName[1],axe[4-i]+String(stateTempAI[i]));
-    }
+        aiState[i]=stateTempAI[i];
+    }*/
     delete[] stateTempDI;
     delete[] stateTempAI;
 }
 void State::GetChange(Com* comDevice)
-
 {
     int* stateTempDI= GetStateDI();
     int* stateTempAI= GetStateAI();
     int i;
 
     //Boutons
-    for (i=0;i<bt;i++)
-    {
-        if (diState[i]!= stateTempDI[i])
+    if(millis()>timer+timerFilter){
+        timer=millis();
+        for (i=0;i<bt;i++)
         {
-            if (diState[i]==0)
+            if (diState[i]!= stateTempDI[i])
             {
-                comDevice->envoyerMessageString(diName[i],change[1]);
+                if (diState[i]==0)
+                {
+                    comDevice->envoyerMessageString(diName[i],change[0]);
+                }
+                else if(diState[i]==1)
+                {
+                    comDevice->envoyerMessageString(diName[i],change[1]);
+                }
+                else
+                {
+                    comDevice->envoyerMessageString(diName[i],change[3]);
+                }
+                diState[i]=stateTempDI[i];
             }
-            else if(diState[i]==1)
-            {
-                comDevice->envoyerMessageString(diName[i],change[0]);
-            }
-            else
-            {
-                comDevice->envoyerMessageString(diName[i],change[3]);
-            }
+            
         }
-    }
-    //Boutons Joystick
-     for (i=0;i<2;i++)
-    {
-        if ((aiState[i]>stateTempAI[i]+500 || aiState[i]<stateTempAI[i]-500) && stateTempAI[i]-500 > 0) //doit avoir un mouvement soit en x ou en y et ne pas être au milieu
+        //Boutons Joystick
+        /* for (i=0;i<2;i++)
         {
-                comDevice->envoyerMessageString(aiName[0],change[2]);
-                break;
+            if ((aiState[i]>stateTempAI[i]+500 || aiState[i]<stateTempAI[i]-500) && stateTempAI[i]-500 > 0) //doit avoir un mouvement soit en x ou en y et ne pas être au milieu
+            {
+                    comDevice->envoyerMessageString(aiName[0],change[2]);
+                    break;
+            }
+            aiState[i]=stateTempAI[i];
         }
-    }
-    //Boutons Accelerometre
-    for (i=2;i<5;i++)
-    {
-        if (aiState[i]>stateTempAI[i]+500 || aiState[i]<stateTempAI[i]-500) //doit avoir un mouvement soit en, en y ou en Z
+        //Boutons Accelerometre
+        for (i=2;i<5;i++)
         {
-                comDevice->envoyerMessageString(aiName[1],change[2]);
-                break;
+            if (aiState[i]>stateTempAI[i]+500 || aiState[i]<stateTempAI[i]-500) //doit avoir un mouvement soit en, en y ou en Z
+            {
+                    comDevice->envoyerMessageString(aiName[1],change[2]);
+                    break;
+            }
+            aiState[i]=stateTempAI[i];
         }
+        */
     }
     delete[] stateTempDI;
     delete[] stateTempAI;

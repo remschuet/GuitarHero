@@ -5,15 +5,12 @@
 #include "ComFilaire.h"
 #include "ComBluetooth.h"
 #include "State.h"
+
 /*------------------------------ Constantes ---------------------------------*/
 #define BAUD 115200      // Fréquence de transmission série ## à définir selon le mode je crois
   State state;
   ComFilaire comFilaire(9600);
   ComBluetooth comBluetooth(9600);
-
-
-
-
 
 /*---------------------------- Fonctions principales ------------------------*/
 void setup() {
@@ -24,7 +21,6 @@ void setup() {
 void loop() 
 {
   bool bluetooth=true;
-
   if (bluetooth)
   {
     state.GetChange(&comBluetooth);
@@ -33,5 +29,4 @@ void loop()
   {
     state.GetChange(&comFilaire);
   }
-  state.UpdateState();
 }

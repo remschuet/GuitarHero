@@ -18,7 +18,7 @@
         doc[key] = message;
         serializeJson(doc, bluetooth);
         bluetooth.println();
-        delay(1000); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
+        delay(100); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
         return true;
     }
 

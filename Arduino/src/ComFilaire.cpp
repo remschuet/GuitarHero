@@ -16,7 +16,7 @@ bool ComFilaire::envoyerMessageString(const String &key, const String &message) 
     doc[key] = message;
     serializeJson(doc, Serial);
     Serial.println();
-    delay(1000); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
+    delay(100); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
     return true;
 }
 

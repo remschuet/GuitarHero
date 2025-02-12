@@ -36,7 +36,6 @@ std::vector<Note>* ComFichierTexte::setListeNotes(std::string nomFichier, std::v
 		fclose(fichierEntree);
 		return nullptr;
 	}
-	int chose, bien, inutile;
 	int couleurTemp, débutTemp, duréeTemp;
 	while (!feof(fichierEntree))
 	{
