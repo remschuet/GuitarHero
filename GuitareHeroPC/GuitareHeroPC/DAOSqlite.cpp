@@ -1,4 +1,4 @@
-#include "DAOSqlite.h"
+﻿#include "DAOSqlite.h"
 #include <cstdio>
 #include <string>
 #include <iostream>
@@ -8,14 +8,19 @@ const char* DAOSqlite::nomFichier = "database.db";  // Initialisation de la vari
 
 DAOSqlite* DAOSqlite::getInstance() {
     if (instance == nullptr) {
-        // Cr�e une instance si elle n'existe pas encore
+        // Crée une instance si elle n'existe pas encore
         instance = new DAOSqlite();
     }
     return instance;
 }
 
 DAOSqlite::DAOSqlite() {
-    sqlite3_open(nomFichier, &db);
+    if (sqlite3_open(nomFichier, &db) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (open) : " << sqlite3_errmsg(db) << std::endl;
+    }
+    else {
+        creationTableJoueur();
+    }
 }
 
 DAOSqlite::~DAOSqlite() {
@@ -23,8 +28,18 @@ DAOSqlite::~DAOSqlite() {
 }
 
 void DAOSqlite::creationTableJoueur() {
-    std::string createTableQuery = "CREATE TABLE IF NOT EXISTS JOUEUR(id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT NOT NULL UNIQUE, score INTEGER DEFAULT 0, photo TEXT DEFAULT 'none');";
-    sqlite3_exec(db, createTableQuery.c_str(), nullptr, nullptr, nullptr);
+    std::string createTableQuery =
+        "CREATE TABLE IF NOT EXISTS JOUEUR("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "nom TEXT NOT NULL UNIQUE, "
+        "score INTEGER DEFAULT 0, "
+        "photo TEXT DEFAULT 'none');";
+
+    char* errMsg = nullptr;
+    if (sqlite3_exec(db, createTableQuery.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (create table) : " << errMsg << std::endl;
+        sqlite3_free(errMsg);
+    }
 }
 
 void DAOSqlite::fermerConnection() {
@@ -48,24 +63,56 @@ void DAOSqlite::ajouterJoueur(std::string nom, int score, std::string photoChemi
 }
 
 Joueur* DAOSqlite::getJoueur(std::string nom) {
-    std::string query = "SELECT id, nom, score, photo FROM JOUEUR WHERE nom = '" + nom + "';";
+    std::string query = "SELECT id, nom, score, photo FROM JOUEUR WHERE nom = ?;";
     sqlite3_stmt* stmt;
     Joueur* joueur = nullptr;
 
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            joueur = new Joueur(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
-                sqlite3_column_int(stmt, 2),
-                reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)));
+    // Préparer la requête pour éviter l'injection SQL
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (prepare) : " << sqlite3_errmsg(db) << std::endl;
+        return nullptr;
+    }
+
+    // Lier le paramètre 'nom' à la requête
+    if (sqlite3_bind_text(stmt, 1, nom.c_str(), -1, SQLITE_STATIC) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (bind) : " << sqlite3_errmsg(db) << std::endl;
+        sqlite3_finalize(stmt);
+        return nullptr;
+    }
+
+    // Exécuter la requête
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        const char* nomJoueur = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        int scoreJoueur = sqlite3_column_int(stmt, 2);
+        const char* photoJoueur = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+
+        joueur = new Joueur(nomJoueur ? nomJoueur : "", scoreJoueur, photoJoueur ? photoJoueur : "");
+    }
+
+    // Finaliser la requête
+    sqlite3_finalize(stmt);
+
+    // Si le joueur n'existe pas, l'insérer
+    if (!joueur) {
+        std::string insertQuery = "INSERT INTO JOUEUR (nom) VALUES (?);";
+        sqlite3_stmt* insertStmt;
+
+        if (sqlite3_prepare_v2(db, insertQuery.c_str(), -1, &insertStmt, nullptr) == SQLITE_OK) {
+            sqlite3_bind_text(insertStmt, 1, nom.c_str(), -1, SQLITE_STATIC);
+            if (sqlite3_step(insertStmt) != SQLITE_DONE) {
+                std::cerr << "Erreur SQLite (insert) : " << sqlite3_errmsg(db) << std::endl;
+            }
         }
         else {
-            sqlite3_finalize(stmt);
-            std::string insertQuery = "INSERT INTO JOUEUR (nom) VALUES ('" + nom + ");";
-            sqlite3_exec(db, insertQuery.c_str(), nullptr, nullptr, nullptr);
-            return getJoueur(nom);
+            std::cerr << "Erreur SQLite (prepare insert) : " << sqlite3_errmsg(db) << std::endl;
         }
+
+        sqlite3_finalize(insertStmt);
+
+        // Réessayer de récupérer le joueur après insertion
+        return getJoueur(nom);
     }
-    sqlite3_finalize(stmt);
+
     return joueur;
 }
 

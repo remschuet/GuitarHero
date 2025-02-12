@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <CONST.h>
+#include <conio.h> // Pour _getch()
 
 using namespace std;
 
@@ -205,7 +206,7 @@ void Gameplay::loopMenu() {
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
     std::cout << "Options: \n \t\tRouge:\tVoir les meilleurs scores\n\t\tBleu:\tmodifier le joueurs\n\t\tAutre:\tLancer une partie";
-    choix == UNKNOWN;
+    choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
         Sleep(20);
@@ -272,17 +273,71 @@ void Gameplay::voirMeilleurScore() {
 
 void Gameplay::modifierLeProfile() {
     system("cls");
+
+    // Affichage du titre
     gotoxy(10, 2);
     std::cout << "**************************************";
     gotoxy(10, 3);
     std::cout << "*        GUITAR HERO MENU           *";
     gotoxy(10, 4);
     std::cout << "**************************************";
-    gotoxy(5, 7);
-    std::cout << "Fonctionnement à programmer...";
 
-    std::string bob;
-    cin >> bob;
+    // Affichage des informations du joueur
+    gotoxy(5, 7);
+    std::cout << "========= Parametres du joueur =========";
+
+    gotoxy(5, 9);
+    std::cout << "Nom           : " << gameStruct.joueur->getNomJoueur();
+
+    gotoxy(5, 10);
+    std::cout << "Meilleur Score: " << gameStruct.joueur->getMeilleurScore();
+
+    gotoxy(5, 11);
+    std::cout << "Image         : " << gameStruct.joueur->getImage();
+
+    gotoxy(5, 13);
+    std::cout << "========= Modification du joueur =========";
+
+    gotoxy(5, 15);
+    std::cout << "[1] Modifier le nom";
+
+    gotoxy(5, 16);
+    std::cout << "[2] Modifier l'image";
+
+    gotoxy(5, 17);
+    std::cout << "[3] Retour au menu principal";
+
+    gotoxy(5, 18);
+    std::cout << "Choix: ";
+
+    CouleurBouton choix = UNKNOWN;
+    while (choix == UNKNOWN) {
+        choix = choixBouton();
+        Sleep(20);
+    }
+
+    switch (choix) {
+    case ROUGE: {
+        gotoxy(5, 19);
+        std::cout << "Nouveau nom: ";
+        std::string nouveauNom;
+        std::getline(std::cin, nouveauNom);
+        gameStruct.joueur->setNouveauNomJoueur(nouveauNom);
+        break;
+    }
+    case BLEU: {
+        gotoxy(5, 19);
+        std::cout << "Nouvelle image: ";
+        std::string nouvelleImage;
+        std::getline(std::cin, nouvelleImage);
+        gameStruct.joueur->setNouvelleImage(nouvelleImage);
+        break;
+    }
+    default:
+        return;
+    }
+
+    modifierLeProfile();
 }
 
 bool Gameplay::configFilaire(std::string nomPort) {

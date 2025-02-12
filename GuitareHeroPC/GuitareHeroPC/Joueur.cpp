@@ -12,7 +12,7 @@ Joueur::~Joueur()
 {
 }
 
-bool Joueur::setNouveauNomJoueur(std::string AncienNom, std::string NouveauNom)
+bool Joueur::setNouveauNomJoueur(std::string NouveauNom)
 {
 	return false;
 }
@@ -27,9 +27,14 @@ std::string Joueur::getNomJoueur()
 	return nomJoueur;
 }
 
-int Joueur::getMeilleurScore(int ScoreMax)
+int Joueur::getMeilleurScore()
 {
-	return 0;
+	return ScoreMax;
+}
+
+std::string Joueur::getImage()
+{
+	return Icone;
 }
 
 int Joueur::ScorePartie(int ScoreActuel, int augmentation)
@@ -37,4 +42,8 @@ int Joueur::ScorePartie(int ScoreActuel, int augmentation)
 	//augmentation = nbr de pts de plus lors de la partie
 	ScoreActuel += augmentation;
 	return ScoreActuel;
+}
+
+void Joueur::setNouvelleImage(std::string imagePath)
+{
 }
