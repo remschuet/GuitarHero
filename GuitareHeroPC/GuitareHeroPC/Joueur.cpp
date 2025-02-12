@@ -22,9 +22,9 @@ bool Joueur::setMeilleurScore(int ScoreMax, int ScoreActuel)
 	return false;
 }
 
-std::string Joueur::getNomJoueur(std::string nom)
+std::string Joueur::getNomJoueur()
 {
-	return std::string();
+	return nomJoueur;
 }
 
 int Joueur::getMeilleurScore(int ScoreMax)

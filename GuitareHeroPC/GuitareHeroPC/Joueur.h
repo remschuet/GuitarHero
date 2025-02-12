@@ -22,7 +22,7 @@ public:
 	bool setNouveauNomJoueur(std::string AncienNom, std::string NouveauNom);	//True -> le nouveau nom est unique et a été modifié
 	bool setMeilleurScore(int ScoreMax, int ScoreActuel);						//True -> le meilleur score a été modifié si le scoreActuel est > que le scoreMax
 
-	std::string getNomJoueur(std::string nomJoueur);
+	std::string getNomJoueur();
 	int getMeilleurScore(int ScoreMax);
 
 	int ScorePartie(int ScoreActuel, int augmentation);							//Augmente le ScoreActuel durant la partie lorsque des pts sont fait
