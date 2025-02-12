@@ -169,9 +169,10 @@ void Gameplay::demarrerPartie() {
 }
 
 void Gameplay::finPartie() {
-    affichageTitre();
-    gotoxy(30, 15);
-
+    system("cls");
+    std::cout << "\n=====================================\n";
+    std::cout << "            FIN DE PARTIE            \n";
+    std::cout << "=====================================\n\n";
     std::cout << gameStruct.joueur->getNomJoueur() << "  SCORE: " << gameStruct.score;
 
     if (gameStruct.joueur->ScoreMax < gameStruct.score) {
@@ -179,9 +180,15 @@ void Gameplay::finPartie() {
         DAOSqlite* sqlite = DAOSqlite::getInstance();
         sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
     }
+    gameStruct.chansonEnCours->arretMusique();
     
-    Sleep(4000);
+    CouleurBouton btn = UNKNOWN;
+    while(btn == UNKNOWN) {
+        btn = choixBouton();
+        Sleep(50);
+    }
     loopMenu();
+
 }
 
 void Gameplay::loopMenu() {
