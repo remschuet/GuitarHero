@@ -129,7 +129,7 @@ void Gameplay::loopGame() {
         }
         if (!aTouche) {
             // Faire quelque chose !
-            gameStruct.score = 0;
+            gameStruct.score--;
         }
     }
 
@@ -171,9 +171,14 @@ void Gameplay::demarrerPartie() {
 void Gameplay::finPartie() {
     affichageTitre();
     gotoxy(30, 15);
-    
+
     std::cout << gameStruct.joueur->getNomJoueur() << "  SCORE: " << gameStruct.score;
-    // sauvegarder le score
+
+    if (gameStruct.joueur->ScoreMax < gameStruct.score) {
+        // sauvegarder le score
+        DAOSqlite* sqlite = DAOSqlite::getInstance();
+        sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
+    }
     
     Sleep(4000);
     loopMenu();

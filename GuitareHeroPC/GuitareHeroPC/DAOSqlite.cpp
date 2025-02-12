@@ -116,13 +116,93 @@ Joueur* DAOSqlite::getJoueur(std::string nom) {
     return joueur;
 }
 
-void DAOSqlite::updateJoueur(std::string nom, std::string nouveauNom) {
-    std::string query = "UPDATE JOUEUR SET nom = '" + nouveauNom + "' WHERE nom = '" + nom + "';";
-    sqlite3_exec(db, query.c_str(), nullptr, nullptr, nullptr);
+bool DAOSqlite::updateJoueur(std::string nom, std::string nouveauNom) {
+    // Vérifier si le nouveau nom existe déjà
+    std::string checkQuery = "SELECT COUNT(*) FROM JOUEUR WHERE nom = ?;";
+    sqlite3_stmt* checkStmt;
+
+    if (sqlite3_prepare_v2(db, checkQuery.c_str(), -1, &checkStmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (prepare check) : " << sqlite3_errmsg(db) << std::endl;
+        return false;
+    }
+
+    sqlite3_bind_text(checkStmt, 1, nouveauNom.c_str(), -1, SQLITE_STATIC);
+
+    bool exists = false;
+    if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+        exists = (sqlite3_column_int(checkStmt, 0) > 0);
+    }
+    sqlite3_finalize(checkStmt);
+
+    if (exists) {
+        return false;  // 🔴 Nom déjà existant
+    }
+
+    // Effectuer la mise à jour
+    std::string updateQuery = "UPDATE JOUEUR SET nom = ? WHERE nom = ?;";
+    sqlite3_stmt* updateStmt;
+
+    if (sqlite3_prepare_v2(db, updateQuery.c_str(), -1, &updateStmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (prepare update) : " << sqlite3_errmsg(db) << std::endl;
+        return false;
+    }
+
+    sqlite3_bind_text(updateStmt, 1, nouveauNom.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(updateStmt, 2, nom.c_str(), -1, SQLITE_STATIC);
+
+    bool success = (sqlite3_step(updateStmt) == SQLITE_DONE);
+    sqlite3_finalize(updateStmt);
+
+    return success;
 }
 
-void DAOSqlite::updateImageJoueur(std::string nom, std::string imageChemin)
-{
+
+bool DAOSqlite::updateImageJoueur(std::string nom, std::string imageChemin) {
+    // Créer la requête SQL pour mettre à jour le chemin de l'image
+    std::string updateQuery = "UPDATE JOUEUR SET photo = ? WHERE nom = ?;";
+    sqlite3_stmt* stmt;
+
+    // Préparer la requête
+    if (sqlite3_prepare_v2(db, updateQuery.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (prepare update image) : " << sqlite3_errmsg(db) << std::endl;
+        return false;  // Erreur de préparation
+    }
+
+    // Lier les paramètres à la requête
+    sqlite3_bind_text(stmt, 1, imageChemin.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, nom.c_str(), -1, SQLITE_STATIC);
+
+    // Exécuter la requête
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+    // Finaliser la requête
+    sqlite3_finalize(stmt);
+
+    return success;
+}
+
+bool DAOSqlite::updateScoreJoueur(std::string nom, int meilleurScore) {
+    // Créer la requête SQL pour mettre à jour le chemin de l'image
+    std::string updateQuery = "UPDATE JOUEUR SET score = ? WHERE nom = ?;";
+    sqlite3_stmt* stmt;
+
+    // Préparer la requête
+    if (sqlite3_prepare_v2(db, updateQuery.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Erreur SQLite (prepare update image) : " << sqlite3_errmsg(db) << std::endl;
+        return false;  // Erreur de préparation
+    }
+
+    // Lier les paramètres à la requête
+    sqlite3_bind_int(stmt, 1, meilleurScore);
+    sqlite3_bind_text(stmt, 2, nom.c_str(), -1, SQLITE_STATIC);
+
+    // Exécuter la requête
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+    // Finaliser la requête
+    sqlite3_finalize(stmt);
+
+    return success;
 }
 
 void DAOSqlite::ajouterValeurAleatoire()

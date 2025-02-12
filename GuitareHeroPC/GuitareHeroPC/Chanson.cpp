@@ -13,7 +13,6 @@ void Chanson::setUpVecteur() {
     else if (nomChansonMp3 == CHANSON_2_MP3) {
         ComFichierTexte::setListeNotes(CHANSON_3_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
     }
-
 }
 
 vector<Note>* Chanson::getVecteurNotesEnCours() {
