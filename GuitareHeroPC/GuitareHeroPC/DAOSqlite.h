@@ -35,7 +35,7 @@ public:
     
     void ajouterValeurAleatoire(); // permet de populer la base de donnee avec des valeurs aleatoire
 
-    Joueur* getMeilleurScore(); // retourne un tableau de joueurs avec meilleurs scores
+    Joueur* getMeilleurScore(std::pair < std::string, int >(&scores)[10]); // retourne un tableau de joueurs avec meilleurs scores
 
 private:
     DAOSqlite();
