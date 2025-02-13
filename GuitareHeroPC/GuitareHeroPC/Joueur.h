@@ -28,6 +28,6 @@ public:
 
 	int ScorePartie(int ScoreActuel, int augmentation);							//Augmente le ScoreActuel durant la partie lorsque des pts sont fait
 
-	void setNouvelleImage(std::string imagePath);
+	void setNouvelleImage();
 	//retour lorsqu'on cherche dans les fichiers sur le perso : Joueur() = ("nom", maxScore, image = "DefaultJoueur.png";
 };

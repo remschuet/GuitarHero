@@ -6,10 +6,15 @@
 #include "GameStruct.h"
 #include <vector>
 
+#include <opencv2/opencv.hpp>
+#include <iostream>
+
 class Gameplay
 {
 public:
 	Gameplay(std::string comPort = "COM5", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
+	void afficherImage();
+	void PrendreImage();
 	void gotoxy(int x, int y);
 	void affichageTitre();
 	void affichageProgression();

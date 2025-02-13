@@ -33,7 +33,7 @@ void DAOSqlite::creationTableJoueur() {
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "nom TEXT NOT NULL UNIQUE, "
         "score INTEGER DEFAULT 0, "
-        "photo TEXT DEFAULT 'none');";
+        "photo TEXT DEFAULT 'Icone.jpeg');";
 
     char* errMsg = nullptr;
     if (sqlite3_exec(db, createTableQuery.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
