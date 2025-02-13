@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chanson.cpp" />
     <ClCompile Include="ComArduino.cpp" />
     <ClCompile Include="ComBluetooth.cpp" />
