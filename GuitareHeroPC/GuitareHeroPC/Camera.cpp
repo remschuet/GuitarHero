@@ -33,7 +33,7 @@ void fluxVideoEnDirect(cv::VideoCapture& cap) {
         capturerFrame(cap, frame);
         cv::imshow("En direct", frame);
         if (cv::waitKey(30) >= 0) {
-            enregistrerFrame(frame, "avatar.jpeg");
+            enregistrerFrame(frame, "Icone.jpeg");
             break;
         }
     }
