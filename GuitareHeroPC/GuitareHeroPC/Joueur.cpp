@@ -56,6 +56,6 @@ void Joueur::setNouvelleImage(std::string imagePath) {
 
 	if (retour) {
 		Joueur* j = sqlite->getJoueur(nomJoueur);
-		this->nomJoueur = j->getNomJoueur();
+		this->Icone = j->getImage();
 	}
 }
