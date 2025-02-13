@@ -2,8 +2,8 @@
 #include "Gameplay.h"
 
 int main() {
-    const ComMode MODE = CLAVIER;
-    const std::string NOM_PORT = "COM5";
+    const ComMode MODE = BLUETOOTH;
+    const std::string NOM_PORT = "COM3";
 
     Gameplay gameplay(NOM_PORT, MODE);
     gameplay.SelectionJoueur();

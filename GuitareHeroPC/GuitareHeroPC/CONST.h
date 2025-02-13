@@ -17,13 +17,13 @@ const std::string CHANSON_3_TXT = "autre.txt";
 /*  MESSAGE ENTRE ARDUINO  */
 /***************************/
 
-const std::string BTN_APPUYE = "btnAppuye";
-const std::string BTN_RELACHE = "btnrelache";
+const std::string BTN_APPUYE = "Appuye";
+const std::string BTN_RELACHE = "Relache";
 
-const std::string BTN_ROUGE = "btnRouge";
-const std::string BTN_BLEU = "btnBleu";
-const std::string BTN_VERT = "btnVert";
-const std::string BTN_JAUNE = "btnJaune";
-const std::string BTN_MAUVE = "btnMauve";
+const std::string BTN_ROUGE = "BtRouge";
+const std::string BTN_BLEU = "BtBleu";
+const std::string BTN_VERT = "BtVert";
+const std::string BTN_JAUNE = "BtJaune";
+const std::string BTN_MAUVE = "BtMauve";
 
 const std::string BTN_QUITTER = "btnQuitter";

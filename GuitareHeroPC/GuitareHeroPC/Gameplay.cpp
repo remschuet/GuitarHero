@@ -548,17 +548,6 @@ CouleurBouton Gameplay::choixBouton(){
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {
-    
     comArduino = new ComBluetooth(nomPort);
-    /*
-    if (comArduino->ouvrirPort()) {
-        bool isOk = comArduino->envoyerMessage("Hello HC-05!");
-        if (isOk) {
-            if (verbose)
-                printf("message envoyé");
-            return true;
-        }
-    }
-    */
-    return false;
+    return true;
 }
