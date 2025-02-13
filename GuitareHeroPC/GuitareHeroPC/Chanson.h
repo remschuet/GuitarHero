@@ -14,7 +14,7 @@ using namespace std::chrono;
 class Chanson
 {
 private:
-	string nomChanson = "";
+	string nomChansonMp3 = "";
 	float deltaEntreNote = 0;
 	long long chronoDemarrage;
 	vector<Note> vecteurRouge;
@@ -28,6 +28,7 @@ private:
 
 public:
 	string getNomChanson();
+	long long getDureeChanson();
 	long long getChrono();
 	vector<Note>* getVecteurNotesEnCours();
 	long long getTempsRestantChanson();

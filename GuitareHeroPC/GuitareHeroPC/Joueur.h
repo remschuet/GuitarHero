@@ -19,14 +19,15 @@ public:
 	//fct Augmenter score pendant la partie
 	//fct BetterScore (Est-ce que ScoreActuel est meilleur que ScoreMax à la fin de la partie)
 
-	bool setNouveauNomJoueur(std::string AncienNom, std::string NouveauNom);	//True -> le nouveau nom est unique et a été modifié
+	bool setNouveauNomJoueur(std::string NouveauNom);	//True -> le nouveau nom est unique et a été modifié
 	bool setMeilleurScore(int ScoreMax, int ScoreActuel);						//True -> le meilleur score a été modifié si le scoreActuel est > que le scoreMax
 
-	std::string getNomJoueur(std::string nomJoueur);
-	int getMeilleurScore(int ScoreMax);
+	std::string getNomJoueur();
+	int getMeilleurScore();
+	std::string getImage();
 
 	int ScorePartie(int ScoreActuel, int augmentation);							//Augmente le ScoreActuel durant la partie lorsque des pts sont fait
 
-
+	void setNouvelleImage(std::string imagePath);
 	//retour lorsqu'on cherche dans les fichiers sur le perso : Joueur() = ("nom", maxScore, image = "DefaultJoueur.png";
 };

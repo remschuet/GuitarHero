@@ -1,9 +1,18 @@
 #include "Chanson.h"
 #include "ComFichierTexte.h"
+#include "CONST.h"
 #pragma comment(lib, "winmm.lib")
 
 void Chanson::setUpVecteur() {
-    ComFichierTexte::setListeNotes("psycho.txt", vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
+    if (nomChansonMp3 == CHANSON_1_MP3) {
+        ComFichierTexte::setListeNotes(CHANSON_1_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
+    }
+    else if (nomChansonMp3 == CHANSON_2_MP3) {
+        ComFichierTexte::setListeNotes(CHANSON_2_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
+    }
+    else if (nomChansonMp3 == CHANSON_2_MP3) {
+        ComFichierTexte::setListeNotes(CHANSON_3_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
+    }
 }
 
 vector<Note>* Chanson::getVecteurNotesEnCours() {
@@ -16,7 +25,7 @@ long long Chanson::getTempsRestantChanson() {
 }
 
 Chanson::Chanson(string nom) {
-    nomChanson = nom;
+    nomChansonMp3 = nom;
     setUpVecteur();
 }
 
@@ -28,7 +37,9 @@ void Chanson::startChrono() {
 
 void Chanson::departMusique() {
     // Ouvrir le fichier MP3 en mode asynchrone
-    std::string command = "open \"" + std::string(chanson1Nom) + "\" type mpegvideo alias myMP3";
+
+
+    std::string command = "open \"" + nomChansonMp3 + "\" type mpegvideo alias myMP3";
     mciSendStringA(command.c_str(), NULL, 0, NULL);
 
     // Jouer la musique en arrière-plan
@@ -43,12 +54,26 @@ void Chanson::arretMusique() {
 
 string Chanson::getNomChanson()
 {
-    return nomChanson;
+    return nomChansonMp3;
 }
 
-long long Chanson::getChrono() {
-    return duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - chronoDemarrage;
+long long Chanson::getDureeChanson() {
+    char buffer[128];
+    mciSendStringA("status myMP3 length", buffer, sizeof(buffer), NULL);
+    return atoll(buffer); // Convertit la durée en millisecondes
 }
+
+
+// Chrono de la chanson et non du chrono
+long long Chanson::getChrono() {
+    char buffer[128];
+    mciSendStringA("status myMP3 position", buffer, sizeof(buffer), NULL);
+    return atoll(buffer);
+}
+
+//long long Chanson::getChrono() {
+  //  return duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - chronoDemarrage;
+//}
 
 void Chanson::tick(int delaiAffichage) {
     long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
@@ -114,80 +139,3 @@ void Chanson::tick(int delaiAffichage) {
         }
     }
 }
-
-/*
-void Chanson::tick()
-{
-    // Obtenir le temps actuel une seule fois
-    long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
-
-    // REMI -> NE PAS OUBLIER DE SUPPRIMER la note de la listes actuelle
-    for (auto& note : vecteurRouge) {
-        if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
-            note.etat = AFFICHER;
-            vecteurEnCours.push_back(note);
-            cout << "Note ROUGE activée à " << tempsActuel << " ms\n";
-        }
-    }
-
-    for (auto& note : vecteurVerte) {
-        if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
-            note.etat = AFFICHER;
-            vecteurEnCours.push_back(note);
-            cout << "Note VERTE activée à " << tempsActuel << " ms\n";
-        }
-    }
-
-    for (auto& note : vecteurBleu) {
-        if (tempsActuel >= chronoDemarrage + note.tempsDepart && note.etat == EN_ATTENTE) {
-            note.etat = AFFICHER;
-            vecteurEnCours.push_back(note);
-            cout << "Note BLEUE activée à " << tempsActuel << " ms\n";
-        }
-    }
-}
-*/
-/*
-void Chanson::tick()
-{
-    // Obtenir le temps actuel une seule fois
-    long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
-
-    // Traitement des notes rouges
-    for (auto it = vecteurRouge.begin(); it != vecteurRouge.end(); ) {
-        if (tempsActuel >= chronoDemarrage + it->tempsDepart && it->etat == EN_ATTENTE) {
-            it->etat = AFFICHER;
-            vecteurEnCours.push_back(it);
-            it = vecteurRouge.erase(it); // Erase et obtient le nouvel itérateur
-            cout << "Note ROUGE activée à " << tempsActuel << " ms\n";
-        } else {
-            ++it;
-        }
-    }
-
-    // Traitement des notes vertes
-    for (auto it = vecteurVerte.begin(); it != vecteurVerte.end(); ) {
-        if (tempsActuel >= chronoDemarrage + it->tempsDepart && it->etat == EN_ATTENTE) {
-            it->etat = AFFICHER;
-            vecteurEnCours.push_back(it);
-            it = vecteurVerte.erase(it); // Erase et obtient le nouvel itérateur
-            cout << "Note VERTE activée à " << tempsActuel << " ms\n";
-        } else {
-            ++it;
-        }
-    }
-
-    // Traitement des notes bleues
-    for (auto it = vecteurBleu.begin(); it != vecteurBleu.end(); ) {
-        if (tempsActuel >= chronoDemarrage + it->tempsDepart && it->etat == EN_ATTENTE) {
-            it->etat = AFFICHER;
-            vecteurEnCours.push_back(*it);
-            it = vecteurBleu.erase(it); // Erase et obtient le nouvel itérateur
-            cout << "Note BLEUE activée à " << tempsActuel << " ms\n";
-        } else {
-            ++it;
-        }
-    }
-}
-*/
-

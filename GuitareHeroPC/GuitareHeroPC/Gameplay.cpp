@@ -1,4 +1,4 @@
-#include "Gameplay.h"
+ï»¿#include "Gameplay.h"
 #include "ComBluetooth.h"
 #include "ComFichierTexte.h"
 #include "ComClavier.h"
@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <CONST.h>
+#include <conio.h> // Pour _getch()
 
 using namespace std;
 
@@ -43,18 +44,23 @@ void Gameplay::affichageTitre() {
 }
 
 void Gameplay::affichageProgression() {
-    // std::cout << "[";
-    // int progression = gameStruct.chansonEnCours->getChrono();  // Simulation d'une progression
-    // int tempsRestant = gameStruct.chansonEnCours->getTempsRestant();  // Simulation d'une progression
-    /*
+    long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+    long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+
+    if (dureeTotale <= 0) return; // Ã‰vite la division par zÃ©ro
+
+    int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
+    progression = (progression > 20) ? 20 : progression; // Limite Ã  20 blocs
+
+    gotoxy(10, 29);
+    std::cout << "[";
     for (int i = 0; i < 20; i++) {
-        if (i <= progression)
-            std::cout << "=";
+        if (i < progression)
+            std::cout << "X";  // Bloc plein
         else
-            std::cout << " ";
+            std::cout << "-";  // Bloc vide
     }
-    std::cout << "]";
-    */
+    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s" << std::endl;
 }
 
 void Gameplay::loopGame() {
@@ -99,7 +105,7 @@ void Gameplay::loopGame() {
             int positionY = 25 - ((note.tempsDepart - chrono) / 250);
 
             for (int y = 0; y < hauteurNote; y++) {
-                if (positionY - y <= 25) { // Empêcher d'afficher hors écran
+                if (positionY - y <= 25) { // EmpÃªcher d'afficher hors Ã©cran
                     gotoxy(posX, positionY - y);
                     std::cout << "X";
                 }
@@ -109,7 +115,7 @@ void Gameplay::loopGame() {
 
     CouleurBouton btn = choixBouton();
 
-    // Appuyé sur une touche
+    // AppuyÃ© sur une touche
     if (btn != UNKNOWN){
         bool aTouche = false;
         for (auto& note : *vecteur) {
@@ -123,14 +129,14 @@ void Gameplay::loopGame() {
         }
         if (!aTouche) {
             // Faire quelque chose !
-            gameStruct.score = 0;
+            gameStruct.score--;
         }
     }
 
     for (auto& note : *vecteur) {
         if (chrono > note.tempsDepart + note.durree + 400 && 
-            chrono < note.tempsDepart + note.durree + 200 &&
             note.action == INITIALE) {
+            note.action = MORTE;
             // Desendre le score a un max
             gameStruct.score--;
         }
@@ -147,13 +153,13 @@ void Gameplay::loopGame() {
 
 void Gameplay::demarrerPartie() {
     gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 3 secondes...";
+    std::cout << "DÃ©part du jeu dans 3 secondes...";
     Sleep(1000);
     gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 2 secondes...";
+    std::cout << "DÃ©part du jeu dans 2 secondes...";
     Sleep(1000);
     gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 1 secondes...";
+    std::cout << "DÃ©part du jeu dans 1 secondes...";
     Sleep(1000);
 
     system("cls");
@@ -163,7 +169,25 @@ void Gameplay::demarrerPartie() {
 }
 
 void Gameplay::finPartie() {
-    affichageTitre();
+    system("cls");
+    std::cout << "\n=====================================\n";
+    std::cout << "            FIN DE PARTIE            \n";
+    std::cout << "=====================================\n\n";
+    std::cout << gameStruct.joueur->getNomJoueur() << "  SCORE: " << gameStruct.score;
+
+    if (gameStruct.joueur->ScoreMax < gameStruct.score) {
+        // sauvegarder le score
+        DAOSqlite* sqlite = DAOSqlite::getInstance();
+        sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
+    }
+    gameStruct.chansonEnCours->arretMusique();
+    
+    CouleurBouton btn = UNKNOWN;
+    while(btn == UNKNOWN) {
+        btn = choixBouton();
+        Sleep(50);
+    }
+    loopMenu();
 
 }
 
@@ -173,7 +197,7 @@ void Gameplay::loopMenu() {
     char voirScore;
     CouleurBouton choix = UNKNOWN;
 
-    system("cls"); // Efface l'écran avant d'afficher le menu
+    system("cls"); // Efface l'Ã©cran avant d'afficher le menu
 
     // Affichage du cadre
     gotoxy(10, 2);
@@ -194,7 +218,7 @@ void Gameplay::loopMenu() {
     // Demander si l'utilisateur veut voir les meilleurs scores
     gotoxy(12, 8);
     std::cout << "Options: \n \t\tRouge:\tVoir les meilleurs scores\n\t\tBleu:\tmodifier le joueurs\n\t\tAutre:\tLancer une partie";
-    choix == UNKNOWN;
+    choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
         Sleep(20);
@@ -206,7 +230,7 @@ void Gameplay::loopMenu() {
         modifierLeProfile();
     }
 
-    system("cls"); // Efface l'écran avant d'afficher le menu
+    system("cls"); // Efface l'Ã©cran avant d'afficher le menu
 
     // Affichage du cadre
     gotoxy(10, 2);
@@ -235,9 +259,9 @@ void Gameplay::loopMenu() {
         Sleep(20);
     }
 
-    if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson("Beatles");
-    else if (choix == VERT) gameStruct.chansonEnCours = new Chanson("Integration");
-    else                    gameStruct.chansonEnCours = new Chanson("Pink floyd");
+    if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson(CHANSON_1_MP3);
+    else if (choix == VERT) gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
+    else                    gameStruct.chansonEnCours = new Chanson(CHANSON_3_MP3);
 
     choix = UNKNOWN;
 
@@ -253,7 +277,7 @@ void Gameplay::voirMeilleurScore() {
     gotoxy(10, 4);
     std::cout << "**************************************";
     gotoxy(5, 7);
-    std::cout << "Fonctionnement à programmer...";
+    std::cout << "Fonctionnement Ã  programmer...";
 
     std::string bob;
     cin >> bob;
@@ -261,17 +285,71 @@ void Gameplay::voirMeilleurScore() {
 
 void Gameplay::modifierLeProfile() {
     system("cls");
+
+    // Affichage du titre
     gotoxy(10, 2);
     std::cout << "**************************************";
     gotoxy(10, 3);
     std::cout << "*        GUITAR HERO MENU           *";
     gotoxy(10, 4);
     std::cout << "**************************************";
-    gotoxy(5, 7);
-    std::cout << "Fonctionnement à programmer...";
 
-    std::string bob;
-    cin >> bob;
+    // Affichage des informations du joueur
+    gotoxy(5, 7);
+    std::cout << "========= Parametres du joueur =========";
+
+    gotoxy(5, 9);
+    std::cout << "Nom           : " << gameStruct.joueur->getNomJoueur();
+
+    gotoxy(5, 10);
+    std::cout << "Meilleur Score: " << gameStruct.joueur->getMeilleurScore();
+
+    gotoxy(5, 11);
+    std::cout << "Image         : " << gameStruct.joueur->getImage();
+
+    gotoxy(5, 13);
+    std::cout << "========= Modification du joueur =========";
+
+    gotoxy(5, 15);
+    std::cout << "[1] Modifier le nom";
+
+    gotoxy(5, 16);
+    std::cout << "[2] Modifier l'image";
+
+    gotoxy(5, 17);
+    std::cout << "[3] Retour au menu principal";
+
+    gotoxy(5, 18);
+    std::cout << "Choix: ";
+
+    CouleurBouton choix = UNKNOWN;
+    while (choix == UNKNOWN) {
+        choix = choixBouton();
+        Sleep(20);
+    }
+
+    switch (choix) {
+    case ROUGE: {
+        gotoxy(5, 19);
+        std::cout << "Nouveau nom: ";
+        std::string nouveauNom;
+        std::getline(std::cin, nouveauNom);
+        gameStruct.joueur->setNouveauNomJoueur(nouveauNom);
+        break;
+    }
+    case BLEU: {
+        gotoxy(5, 19);
+        std::cout << "Nouvelle image: ";
+        std::string nouvelleImage;
+        std::getline(std::cin, nouvelleImage);
+        gameStruct.joueur->setNouvelleImage(nouvelleImage);
+        break;
+    }
+    default:
+        return;
+    }
+
+    modifierLeProfile();
 }
 
 bool Gameplay::configFilaire(std::string nomPort) {
@@ -287,7 +365,7 @@ void Gameplay::interpreterMsg(string msg) {
             std::cout << it.value() << std::endl;
         }
         if (it.key() == "btnBleu" && it.value() == "released") {
-            std::cout << "note rouge appuyé" << std::endl;
+            std::cout << "note rouge appuyÃ©" << std::endl;
         }
     }
 }
@@ -340,7 +418,7 @@ bool Gameplay::configBluetooth(std::string nomPort) {
         bool isOk = comArduino->envoyerMessage("Hello HC-05!");
         if (isOk) {
             if (verbose)
-                printf("message envoyé");
+                printf("message envoyÃ©");
             return true;
         }
     }

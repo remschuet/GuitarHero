@@ -2,7 +2,7 @@
 
 enum NotesEtats {
 	AFFICHER,
-	EN_ATTENTE
+	EN_ATTENTE,
 };
 
 enum CouleurBouton {
@@ -18,7 +18,8 @@ enum CouleurBouton {
 enum NotesAction {
 	APPUYE,
 	RELACHE,
-	INITIALE
+	INITIALE,
+	MORTE
 };
 
 enum ComMode {
