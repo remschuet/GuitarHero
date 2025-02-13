@@ -43,7 +43,8 @@ void State::GetChange(Com* comDevice)
     int i;
 
     //Boutons
-    if(millis()>timer+timerFilter){
+    if(millis()>timer+timerFilter)
+    {
         timer=millis();
         for (i=0;i<bt;i++)
         {
@@ -64,38 +65,40 @@ void State::GetChange(Com* comDevice)
                 }
                 diState[i]=stateTempDI[i];
             }
-            
         }
         //Joystick
-        movedJoy=0;
-        for (i=0;i<2;i++)
+        movedJoy=false;
+        movedAcc=false;
+        for (i=0;i<5;i++)
         {
-            if (stateTempAI[i]< defaultValueJoy[i]+50)
+            if ((stateTempAI[i]< defaultValueAI[i]+50 || stateTempAI[i] > defaultValueAI[i]-50)
+                && (i<2))
             {
-            returned[i]=1;
+                returned[i]=1;
             }
+
+            //Joystick
             //doit avoir un mouvement soit en x ou en y et ne pas être au milieu
-            if (((aiState[i]>stateTempAI[i]+150 || aiState[i]<stateTempAI[i]-150))
-                &&(stateTempAI[i] > defaultValueJoy[i]+150 || stateTempAI[i] < defaultValueJoy[i]-150)
+            if ((aiState[i]>stateTempAI[i]+150 || aiState[i]<stateTempAI[i]-150)
+                && (stateTempAI[i] > defaultValueAI[i]+150 || stateTempAI[i] < defaultValueAI[i]-150)
                 && (movedJoy==0)
-                &&((returned[0]==1)&&returned[1]==1)) 
+                && (returned[0]==1 && returned[1]==1)
+                && (i<2)) 
             {
                     comDevice->envoyerMessageString(aiName[1],change[2]);
                     movedJoy=1;
-                    returned[0]=1;
-                    returned[1]=1;
+                    returned[0]=0;
+                    returned[1]=0;
             }
-            aiState[i]=stateTempAI[i];
-        }
-        //Boutons Accelerometre
-        movedAcc=0;
-        for (i=2;i<5;i++)
-        {
-            if ((aiState[i]>defaultValueAcc[i-2]+150 || aiState[i]<defaultValueAcc[i-2]-150)
-                && (movedAcc==0)) //doit avoir un mouvement soit en, en y ou en Z
+
+            //Accelerometre
+            //doit avoir un mouvement soit en, en y ou en Z
+            if ((aiState[i]>defaultValueAI[i]+50 || aiState[i]<defaultValueAI[i]-50)
+            && (movedAcc==0)
+            && (i>=2))
             {
-                    comDevice->envoyerMessageString(aiName[0],change[2]);
-                    movedAcc=1;
+                comDevice->envoyerMessageString(aiName[0],change[2]);
+                movedAcc=1;
             }
             aiState[i]=stateTempAI[i];
         }

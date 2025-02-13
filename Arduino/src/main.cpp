@@ -28,7 +28,6 @@ void loop()
   {
     //state.GetChange(&comBluetooth);
     state.GetChange(&comBluetooth);
-    //delay(2000);
   }
   else
   {
