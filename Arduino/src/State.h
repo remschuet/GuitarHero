@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "Com.h"
+#include "Global.h"
 
 /*------------------------------ Constantes ---------------------------------*/
 static constexpr int bt = 8;
@@ -13,6 +14,9 @@ static int constexpr aiPins[5]= {0, 1, 3, 4, 5};
 static constexpr const char* aiName[] = {"Accelerometre", "Joystick"};
 static constexpr const char* change[] = {"Appuye", "Relacher","Bouger","Erreur"};
 static constexpr const char* axe[] = {"X:", "Y:","Z:"};
+static constexpr short defaultValueAcc[3] = {412,335,340};
+static constexpr short defaultValueJoy[2] = {500,500};
+static constexpr short timerFilter=100;//temps de filtre pour ne pas faire de fausse detection
 
 enum{
     OFF,
@@ -34,7 +38,7 @@ class State {
         int diState[bt] = {INIT, INIT, INIT, INIT, INIT, INIT, INIT, INIT};
         int aiState[ai]={INIT,INIT};
         unsigned long timer=0;//pour get le temps du dernier scan
-        short timerFilter=100;//temps de filtre pour ne pas faire de fausse detection
+        bool returned[2]{true,true};
 
         int* GetStateDI();
         void UpdateStateDI();
