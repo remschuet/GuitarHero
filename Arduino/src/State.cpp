@@ -43,7 +43,7 @@ void State::GetChange(Com* comDevice)
     int i;
 
     //Boutons
-    if(millis()>timer+timerFilter)
+    if(millis()>timer+timerFilterGen)
     {
         timer=millis();
         for (i=0;i<bt;i++)
@@ -83,22 +83,26 @@ void State::GetChange(Com* comDevice)
                 && (stateTempAI[i] > defaultValueAI[i]+150 || stateTempAI[i] < defaultValueAI[i]-150)
                 && (movedJoy==0)
                 && (returned[0]==1 && returned[1]==1)
-                && (i<2)) 
+                && (i<2)
+                && (timerJoy+timerFilterJoy<=millis()))
             {
                     comDevice->envoyerMessageString(aiName[1],change[2]);
                     movedJoy=1;
                     returned[0]=0;
                     returned[1]=0;
+                    timerJoy=millis();
             }
 
             //Accelerometre
             //doit avoir un mouvement soit en, en y ou en Z
             if ((aiState[i]>defaultValueAI[i]+50 || aiState[i]<defaultValueAI[i]-50)
             && (movedAcc==0)
-            && (i>=2))
+            && (i>=2)
+            && (timerAcc+timerFilterAcc<=millis()))
             {
                 comDevice->envoyerMessageString(aiName[0],change[2]);
                 movedAcc=1;
+                timerAcc=millis();
             }
             aiState[i]=stateTempAI[i];
         }

@@ -23,7 +23,7 @@ void setup()
 }
 void loop() 
 {
-  bool bluetooth=true;
+  bool bluetooth=false;
   if (bluetooth)
   {
     //state.GetChange(&comBluetooth);
@@ -33,4 +33,5 @@ void loop()
   {
     state.GetChange(&comFilaire);
   }
+  //delay(500);
 }
