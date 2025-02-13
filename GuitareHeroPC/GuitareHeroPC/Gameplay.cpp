@@ -26,6 +26,49 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     }
 }
 
+void Gameplay::afficherImage() {
+    //Montrer l'image àprès la capture
+    cv::Mat image = cv::imread(gameStruct.joueur->getImage());
+    cv::namedWindow("Image", cv::WINDOW_NORMAL);
+    cv::imshow("Image", image);
+    cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre
+    cv::destroyWindow("Image");
+}
+
+void Gameplay::PrendreImage() {
+    Sleep(1000);
+ 	cv::VideoCapture cap(0);	//ouvre la caméra de base
+	if (!cap.isOpened()) {
+		std::cerr << "Error: Could not open camera" << std::endl;
+	}
+
+	cv::namedWindow("En direct", cv::WINDOW_AUTOSIZE);	//Crée la fenêtre pour la caméra
+
+	while (true) {
+		cv::Mat frame;	//Matrice de frame pour le live feed
+		cap >> frame;	//Capture une nouvelle frame
+
+		if (frame.empty()) {
+			std::cerr << "Error : Could not capture frame" << std::endl;
+			break;
+		}
+
+		cv::flip(frame, frame, 1);
+
+		cv::imshow("En direct", frame);	//Montre la vidéo
+
+		if (cv::waitKey(30) >= 0) {	//Sauvegarde la frame choisi (bouton) dans un fichier avec le nom suivant 
+            gameStruct.joueur->setNouvelleImage();
+
+            cv::imwrite(gameStruct.joueur->getImage(), frame);	//changer la ligne, car ça change le nom de la frame. En faire pour chaque Joueur
+            break;
+		}
+	}
+
+	cap.release();	//ferme la caméra
+	cv::destroyAllWindows();
+}
+
 void Gameplay::gotoxy(int x, int y) {
     COORD c;
     c.X = x;
@@ -214,7 +257,6 @@ void Gameplay::finPartie() {
 
 }
 
-
 void Gameplay::SelectionJoueur()
 {
     string nomJoueur = "";
@@ -236,6 +278,7 @@ void Gameplay::SelectionJoueur()
 
     DAOSqlite* dao = DAOSqlite::getInstance();
     gameStruct.joueur = dao->getJoueur(nomJoueur);
+
     loopMenu();
 }
 
@@ -372,6 +415,7 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
 
 void Gameplay::modifierLeProfile() {
     system("cls");
+    afficherImage();
 
     // Affichage du titre
     gotoxy(10, 2);
@@ -427,9 +471,11 @@ void Gameplay::modifierLeProfile() {
     case BLEU: {
         gotoxy(5, 19);
         std::cout << "Nouvelle image: ";
-        std::string nouvelleImage;
-        std::getline(std::cin, nouvelleImage);
-        gameStruct.joueur->setNouvelleImage(nouvelleImage);
+
+        PrendreImage();
+
+        // std::string nouvelleImage;
+        // std::getline(std::cin, nouvelleImage);
         break;
     }
     default:
