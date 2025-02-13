@@ -2,6 +2,7 @@
 #define COM_FILAIRE_H
 
 #include <Com.h>
+#include "Global.h"
 
 /*---------------------------- Classe ComFilaire ----------------------------*/
 class ComFilaire:public Com {

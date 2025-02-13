@@ -12,6 +12,6 @@ int main()
     const std::string NOM_PORT = "COM5";
 
     Gameplay gameplay(NOM_PORT, MODE);
-    gameplay.loopMenu();
+    gameplay.SelectionJoueur();
     return 0;
 }
