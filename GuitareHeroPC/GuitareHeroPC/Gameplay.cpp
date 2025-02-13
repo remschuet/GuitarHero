@@ -46,6 +46,7 @@ void Gameplay::affichageTitre() {
 void Gameplay::affichageProgression() {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+    long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
     if (dureeTotale <= 0) return; // Évite la division par zéro
 
@@ -60,7 +61,8 @@ void Gameplay::affichageProgression() {
         else
             std::cout << "-";  // Bloc vide
     }
-    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s" << std::endl;
+    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s    " << pourcentage << "%"<<endl;
+
 }
 
 void Gameplay::loopGame() {
@@ -69,8 +71,16 @@ void Gameplay::loopGame() {
     affichageProgression();
     tick++;
 
+    //Barre d'infos du joueur
     gotoxy(40, 3);
     cout << "SCORE: " << gameStruct.score;
+    gotoxy(40, 2);
+    cout << "MAX_SCORE: " << gameStruct.joueur->getMeilleurScore();
+    gotoxy(40, 1);
+    cout << "PLAYER: " << gameStruct.joueur->getNomJoueur();
+
+    
+
 
     // Barre en bas
     gotoxy(4, 25);
@@ -147,6 +157,7 @@ void Gameplay::loopGame() {
         loopGame();
     }
     else {
+        gameStruct.score ++ ;
         finPartie();
     }
 }
@@ -169,18 +180,30 @@ void Gameplay::demarrerPartie() {
 }
 
 void Gameplay::finPartie() {
-    system("cls");
-    std::cout << "\n=====================================\n";
-    std::cout << "            FIN DE PARTIE            \n";
-    std::cout << "=====================================\n\n";
-    std::cout << gameStruct.joueur->getNomJoueur() << "  SCORE: " << gameStruct.score;
+   long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+   long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+   long long pourcentage = (tempsEcoule*100 / dureeTotale);
+
+   system("cls");
+   std::cout << "\n=====================================\n";
+   std::cout << "            FIN DE PARTIE            \n";
+   std::cout << "=====================================\n\n";
+
+   if (gameStruct.joueur->getMeilleurScore() < gameStruct.score) {
+       cout << "Felicitations vous avez battu votre meilleur score !!! \n\n";
+   }
+   std::cout << "Name:  " << gameStruct.joueur->getNomJoueur() << "           SCORE: " << gameStruct.score << "\n\n";
+
+   std::cout << "Vous avez completer :  " << pourcentage << "% de la chanson";
+
+    gameStruct.chansonEnCours->arretMusique();
+
 
     if (gameStruct.joueur->ScoreMax < gameStruct.score) {
         // sauvegarder le score
         DAOSqlite* sqlite = DAOSqlite::getInstance();
         sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
     }
-    gameStruct.chansonEnCours->arretMusique();
     
     CouleurBouton btn = UNKNOWN;
     while(btn == UNKNOWN) {
