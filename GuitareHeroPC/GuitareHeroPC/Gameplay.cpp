@@ -415,6 +415,8 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
 
 void Gameplay::modifierLeProfile() {
     system("cls");
+    Sleep(1000);
+    std::cout << "Nom           : " << gameStruct.joueur->getNomJoueur();
     afficherImage();
 
     // Affichage du titre
@@ -430,7 +432,6 @@ void Gameplay::modifierLeProfile() {
     std::cout << "========= Parametres du joueur =========";
 
     gotoxy(5, 9);
-    std::cout << "Nom           : " << gameStruct.joueur->getNomJoueur();
 
     gotoxy(5, 10);
     std::cout << "Meilleur Score: " << gameStruct.joueur->getMeilleurScore();
