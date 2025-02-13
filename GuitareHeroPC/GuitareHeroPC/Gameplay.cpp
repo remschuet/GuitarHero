@@ -191,11 +191,10 @@ void Gameplay::finPartie() {
 
 }
 
-void Gameplay::loopMenu() {
+
+void Gameplay::SelectionJoueur()
+{
     string nomJoueur = "";
-    string numChanson = "-1";
-    char voirScore;
-    CouleurBouton choix = UNKNOWN;
 
     system("cls"); // Efface l'écran avant d'afficher le menu
 
@@ -214,9 +213,27 @@ void Gameplay::loopMenu() {
 
     DAOSqlite* dao = DAOSqlite::getInstance();
     gameStruct.joueur = dao->getJoueur(nomJoueur);
+    loopMenu();
+}
+
+void Gameplay::loopMenu() {
+    string numChanson = "-1";
+    char voirScore;
+    CouleurBouton choix = UNKNOWN;
+
+    system("cls"); // Efface l'écran avant d'afficher le menu
+
+    // Affichage du cadre
+    gotoxy(10, 2);
+    std::cout << "**************************************";
+    gotoxy(10, 3);
+    std::cout << "*        GUITAR HERO MENU           *";
+    gotoxy(10, 4);
+    std::cout << "**************************************";
+
 
     // Demander si l'utilisateur veut voir les meilleurs scores
-    gotoxy(12, 8);
+    gotoxy(12, 6);
     std::cout << "Options: \n \t\tRouge:\tVoir les meilleurs scores\n\t\tBleu:\tmodifier le joueurs\n\t\tAutre:\tLancer une partie";
     choix = UNKNOWN;
     while (choix == UNKNOWN) {
@@ -225,9 +242,13 @@ void Gameplay::loopMenu() {
     }
     if (choix == ROUGE){
         voirMeilleurScore();
+        loopMenu();
+        return;
     }
     else if (choix == BLEU) {
         modifierLeProfile();
+        loopMenu();
+        return;
     }
 
     system("cls"); // Efface l'écran avant d'afficher le menu
@@ -289,7 +310,26 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
     std::cout << "2e  : " << scores[1].first << " - " << scores[1].second;        //afficher en très gros et argent/bleu?
     gotoxy(10, 13);
     std::cout << "3e  : " << scores[2].first << " - " << scores[2].second;        //afficher en gros et bronze/orange?
-    gotoxy(10, 15);
+
+    int y = 15;
+
+    for (int i = 3; i < 10; i++)
+    {
+        if (scores[i].first != "")
+        {
+            gotoxy(10, y);
+            std::cout << i + 1 << "e : " << scores[i].first << " - " << scores[i].second;
+            y += 2;
+        }
+    }
+
+    CouleurBouton choix = UNKNOWN;
+    while (choix == UNKNOWN) {
+        choix = choixBouton();
+        Sleep(20);
+    }
+
+    /*gotoxy(10, 15);
     std::cout << "4e  : " << scores[3].first << " - " << scores[3].second;
     gotoxy(10, 17);
     std::cout << "5e  : " << scores[4].first << " - " << scores[4].second;
@@ -303,8 +343,8 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
     std::cout << "9e  : " << scores[8].first << " - " << scores[8].second;
     gotoxy(10, 27);
     std::cout << "10e : " << scores[9].first << " - " << scores[9].second;
-    std::string bob;
-    cin >> bob;
+    //std::string bob;
+    //cin >> bob;*/
 }
 
 void Gameplay::modifierLeProfile() {
