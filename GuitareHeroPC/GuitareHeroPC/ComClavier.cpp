@@ -14,6 +14,7 @@ bool ComClavier::recevoirMessage(std::string& msg) {
         char valeur = _getch();  // Récupère la touche sans bloquer
 
         // Traitement de la touche pressée
+
         if (valeur == '1')
             jsonMessage[BTN_ROUGE] = BTN_RELACHE;
         else if (valeur == '2')

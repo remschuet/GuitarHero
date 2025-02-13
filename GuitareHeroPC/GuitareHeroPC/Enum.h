@@ -7,8 +7,8 @@ enum NotesEtats {
 
 enum CouleurBouton {
 	ROUGE,
-	VERT,
 	BLEU,
+	VERT,
 	JAUNE,
 	MAUVE,
 	QUITTER,

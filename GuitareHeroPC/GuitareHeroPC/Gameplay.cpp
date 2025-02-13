@@ -206,6 +206,8 @@ void Gameplay::loopGame() {
 }
 
 void Gameplay::demarrerPartie() {
+    gameStruct.score = 0;
+
     gotoxy(12, 18);
     std::cout << "Départ du jeu dans 3 secondes...";
     Sleep(1000);
@@ -246,6 +248,7 @@ void Gameplay::finPartie() {
         // sauvegarder le score
         DAOSqlite* sqlite = DAOSqlite::getInstance();
         sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
+        gameStruct.joueur->ScoreMax = gameStruct.score;
     }
     
     CouleurBouton btn = UNKNOWN;
