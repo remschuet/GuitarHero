@@ -23,15 +23,15 @@ void setup()
 }
 void loop() 
 {
-  bool bluetooth=true;
+  bool bluetooth=false;
   if (bluetooth)
   {
     //state.GetChange(&comBluetooth);
     state.GetChange(&comBluetooth);
-    //delay(2000);
   }
   else
   {
     state.GetChange(&comFilaire);
   }
+  //delay(500);
 }
