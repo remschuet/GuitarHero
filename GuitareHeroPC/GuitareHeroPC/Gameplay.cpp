@@ -28,45 +28,66 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
 
 void Gameplay::afficherImage() {
     //Montrer l'image àprès la capture
+    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_SILENT);
+
     cv::Mat image = cv::imread(gameStruct.joueur->getImage());
     cv::namedWindow("Image", cv::WINDOW_NORMAL);
+
+    cv::setWindowProperty("Image", cv::WND_PROP_TOPMOST, 1);
+    HWND hwnd = FindWindowA(NULL, "Image");
+    if (hwnd != NULL)
+    {
+        SetForegroundWindow(hwnd);
+    }
+
+
     cv::imshow("Image", image);
+
+    //CouleurBouton btn = UNKNOWN;
+    //while (btn == UNKNOWN) {
+    //    btn = choixBouton();
+    //    Sleep(50);
+    //}
     cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre
     cv::destroyWindow("Image");
 }
 
 void Gameplay::PrendreImage() {
+    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_SILENT);
+
     Sleep(1000);
- 	cv::VideoCapture cap(0);	//ouvre la caméra de base
-	if (!cap.isOpened()) {
-		std::cerr << "Error: Could not open camera" << std::endl;
-	}
+    cv::VideoCapture cap(0);	//ouvre la caméra de base
+    if (!cap.isOpened()) {
+        std::cerr << "Error: Could not open camera" << std::endl;
+    }
 
-	cv::namedWindow("En direct", cv::WINDOW_AUTOSIZE);	//Crée la fenêtre pour la caméra
+    cv::namedWindow("En direct", cv::WINDOW_AUTOSIZE);	//Crée la fenêtre pour la caméra
 
-	while (true) {
-		cv::Mat frame;	//Matrice de frame pour le live feed
-		cap >> frame;	//Capture une nouvelle frame
+    cv::setWindowProperty("En direct", cv::WND_PROP_TOPMOST, 1);
 
-		if (frame.empty()) {
-			std::cerr << "Error : Could not capture frame" << std::endl;
-			break;
-		}
+    while (true) {
+        cv::Mat frame;	//Matrice de frame pour le live feed
+        cap >> frame;	//Capture une nouvelle frame
 
-		cv::flip(frame, frame, 1);
+        if (frame.empty()) {
+            std::cerr << "Error : Could not capture frame" << std::endl;
+            break;
+        }
 
-		cv::imshow("En direct", frame);	//Montre la vidéo
+        cv::flip(frame, frame, 1);
 
-		if (cv::waitKey(30) >= 0) {	//Sauvegarde la frame choisi (bouton) dans un fichier avec le nom suivant 
+        cv::imshow("En direct", frame);	//Montre la vidéo
+
+        if (cv::waitKey(30) >= 0) {	//Sauvegarde la frame choisi (bouton) dans un fichier avec le nom suivant 
             gameStruct.joueur->setNouvelleImage();
 
             cv::imwrite(gameStruct.joueur->getImage(), frame);	//changer la ligne, car ça change le nom de la frame. En faire pour chaque Joueur
             break;
-		}
-	}
+        }
+    }
 
-	cap.release();	//ferme la caméra
-	cv::destroyAllWindows();
+    cap.release();	//ferme la caméra
+    cv::destroyAllWindows();
 }
 
 void Gameplay::gotoxy(int x, int y) {
