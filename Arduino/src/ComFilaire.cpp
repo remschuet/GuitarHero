@@ -10,7 +10,8 @@ ComFilaire::~ComFilaire()
 {
 }
 
-bool ComFilaire::envoyerMessageString(const String &key, const String &message) {
+bool ComFilaire::envoyerMessageString(const String &key, const String &message) 
+{
     StaticJsonDocument<500> doc;
     doc["time"] = millis();
     doc[key] = message;
@@ -20,7 +21,8 @@ bool ComFilaire::envoyerMessageString(const String &key, const String &message) 
     return true;
 }
 
-bool ComFilaire::envoyerMessage(int potValue) {
+bool ComFilaire::envoyerMessage(int potValue) 
+{
     StaticJsonDocument<500> doc;
     doc["time"] = millis();
     doc["analog"] = potValue;
@@ -29,7 +31,8 @@ bool ComFilaire::envoyerMessage(int potValue) {
     return true;
 }
 
-bool ComFilaire::lireMessage(int &ledState) {
+bool ComFilaire::lireMessage(int &ledState) 
+{
     if (Serial.available()) {
         StaticJsonDocument<500> doc;
         DeserializationError error = deserializeJson(doc, Serial);
@@ -45,5 +48,6 @@ bool ComFilaire::lireMessage(int &ledState) {
             return true;
         }
     }
+    errorLogger.AddError("Erreur Lire Message Filaire",1);
     return false;
 }

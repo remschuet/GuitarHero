@@ -2,6 +2,7 @@
 #define COM_BLUETOOTH_H
 
 #include <Com.h>
+#include "Global.h"
 
 /*---------------------------- Classe ComBluetooth ----------------------------*/
 class ComBluetooth:public Com{

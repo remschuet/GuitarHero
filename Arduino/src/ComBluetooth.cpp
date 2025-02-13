@@ -49,5 +49,6 @@
                 return true;
             }
         }
+        errorLogger.AddError("Erreur Lire Message Bluetooth",1);
         return false;
     }

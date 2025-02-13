@@ -209,7 +209,26 @@ void DAOSqlite::ajouterValeurAleatoire()
 {
 }
 
-Joueur* DAOSqlite::getMeilleurScore()
+Joueur* DAOSqlite::getMeilleurScore(std::pair < std::string,int>(&scores)[10])
 {
+    const char* sql = "SELECT nom, score FROM JOUEUR ORDER BY score DESC LIMIT 10;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) == SQLITE_OK)
+    {
+        int index = 0;
+        while (sqlite3_step(stmt) == SQLITE_ROW && index < 10)
+        {
+            scores[index].first = reinterpret_cast <const char*> (sqlite3_column_text(stmt, 0));
+            scores[index].second = sqlite3_column_int(stmt, 1);
+            index++;
+        }
+        sqlite3_finalize(stmt);
+    }
+    else
+    {
+        std::cerr << "Error, impossible d'executer le statement (getMeilleurScore) : " << sqlite3_errmsg(db) << std::endl;
+    }
+
     return nullptr;
 }
