@@ -16,21 +16,21 @@ void State::GetState(Com* comDevice)
     //Boutons
     for (i=0;i<bt;i++)
     {
-        comDevice->envoyerMessageString(diName[i],String(stateTempDI[i]));
+        //comDevice->envoyerMessageString(diName[i],String(stateTempDI[i]));
         diState[i]=stateTempDI[i];
     }
     //Joystick
-    /* for (i=0;i<2;i++)
+    for (i=0;i<2;i++)
     {
-        comDevice->envoyerMessageString(aiName[0],axe[1-i]+String(stateTempAI[i]));
+        //comDevice->envoyerMessageString(aiName[1],axe[1-i]+String(stateTempAI[i]));
         aiState[i]=stateTempAI[i];
     }
     //Accelerometre
     for (i=2;i<5;i++)
     {
-        comDevice->envoyerMessageString(aiName[1],axe[4-i]+String(stateTempAI[i]));
-        aiState[i]=stateTempAI[i];
-    }*/
+        comDevice->envoyerMessageString(aiName[0],axe[4-i]+String(stateTempAI[i]));
+        //aiState[i]=stateTempAI[i];
+    }
     delete[] stateTempDI;
     delete[] stateTempAI;
 }
@@ -38,6 +38,8 @@ void State::GetChange(Com* comDevice)
 {
     int* stateTempDI= GetStateDI();
     int* stateTempAI= GetStateAI();
+    bool movedJoy=0;
+    bool movedAcc=0;
     int i;
 
     //Boutons
@@ -58,32 +60,45 @@ void State::GetChange(Com* comDevice)
                 else
                 {
                     comDevice->envoyerMessageString(diName[i],change[3]);
+                    errorLogger.AddError("Erreur Etat Boutons invalide",2);
                 }
                 diState[i]=stateTempDI[i];
             }
             
         }
-        //Boutons Joystick
-        /* for (i=0;i<2;i++)
+        //Joystick
+        movedJoy=0;
+        for (i=0;i<2;i++)
         {
-            if ((aiState[i]>stateTempAI[i]+500 || aiState[i]<stateTempAI[i]-500) && stateTempAI[i]-500 > 0) //doit avoir un mouvement soit en x ou en y et ne pas être au milieu
+            if (stateTempAI[i]< defaultValueJoy[i]+50)
             {
-                    comDevice->envoyerMessageString(aiName[0],change[2]);
-                    break;
+            returned[i]=1;
+            }
+            //doit avoir un mouvement soit en x ou en y et ne pas être au milieu
+            if (((aiState[i]>stateTempAI[i]+150 || aiState[i]<stateTempAI[i]-150))
+                &&(stateTempAI[i] > defaultValueJoy[i]+150 || stateTempAI[i] < defaultValueJoy[i]-150)
+                && (movedJoy==0)
+                &&((returned[0]==1)&&returned[1]==1)) 
+            {
+                    comDevice->envoyerMessageString(aiName[1],change[2]);
+                    movedJoy=1;
+                    returned[0]=1;
+                    returned[1]=1;
             }
             aiState[i]=stateTempAI[i];
         }
         //Boutons Accelerometre
+        movedAcc=0;
         for (i=2;i<5;i++)
         {
-            if (aiState[i]>stateTempAI[i]+500 || aiState[i]<stateTempAI[i]-500) //doit avoir un mouvement soit en, en y ou en Z
+            if ((aiState[i]>defaultValueAcc[i-2]+150 || aiState[i]<defaultValueAcc[i-2]-150)
+                && (movedAcc==0)) //doit avoir un mouvement soit en, en y ou en Z
             {
-                    comDevice->envoyerMessageString(aiName[1],change[2]);
-                    break;
+                    comDevice->envoyerMessageString(aiName[0],change[2]);
+                    movedAcc=1;
             }
             aiState[i]=stateTempAI[i];
         }
-        */
     }
     delete[] stateTempDI;
     delete[] stateTempAI;

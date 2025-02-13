@@ -29,10 +29,12 @@ public:
     Joueur* getJoueur(std::string nom);
 
     // Permet de renommer un joueur
-    void updateJoueur(std::string nom, std::string nouveauNom);
+    bool updateJoueur(std::string nom, std::string nouveauNom);
 
-    void updateImageJoueur(std::string nom, std::string imageChemin);
+    bool updateImageJoueur(std::string nom, std::string imageChemin);
     
+    bool updateScoreJoueur(std::string nom, int meilleurScore);
+
     void ajouterValeurAleatoire(); // permet de populer la base de donnee avec des valeurs aleatoire
 
     Joueur* getMeilleurScore(std::pair < std::string, int >(&scores)[10]); // retourne un tableau de joueurs avec meilleurs scores
