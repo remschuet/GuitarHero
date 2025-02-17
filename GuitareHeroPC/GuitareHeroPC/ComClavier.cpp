@@ -28,6 +28,8 @@ bool ComClavier::recevoirMessage(std::string& msg) {
         
         else if (valeur == 'q')
             jsonMessage[BTN_QUITTER] = BTN_RELACHE;
+        else if (valeur == 'w')
+            jsonMessage[BTN_JOYSTICK] = BTN_RELACHE;
 
         msg = jsonMessage.dump();  // La méthode dump() convertit le JSON en une chaîne de caractères
         return true;  // Retourne true si une touche a été pressée et traitée

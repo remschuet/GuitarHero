@@ -121,26 +121,27 @@ void Gameplay::loopGame() {
     cout << "MAX_SCORE: " << gameStruct.joueur->getMeilleurScore();
     gotoxy(40, 1);
     cout << "PLAYER: " << gameStruct.joueur->getNomJoueur();
-
-    
-
-
     // Barre en bas
     gotoxy(4, 25);
     std::cout << "------------------------------------";
     gotoxy(6, 26);
     std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
 
+    // mettre à jours les vecteurs
     gameStruct.chansonEnCours->tick(delaiAffichage);
 
     vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
 
+    // si aucun vecteur (debut de partie)
     if (!vecteur) {
         Sleep(120);
         loopGame();
     }
+
+    // chrono en fonction de la musique
     long long chrono = gameStruct.chansonEnCours->getChrono();
 
+    // Affichage de toute les notes à l'ecran
     for (auto& note : *vecteur) {
         if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.durree >= chrono) {
 
@@ -168,10 +169,20 @@ void Gameplay::loopGame() {
 
     CouleurBouton btn = choixBouton();
 
+    // Logique du joystick, si on appuis dessus et qu on a une note appuyer proche dans le temps on fait 3 points supplementaire
+    if (btn == JOYSTICK) {
+        for (auto& note : *vecteur) {
+            // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
+            if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) {
+                gameStruct.score+=3;
+            }
+        }
+    }
     // Appuyé sur une touche
-    if (btn != UNKNOWN){
+    if (btn != UNKNOWN && btn != JOYSTICK && btn != QUITTER){
         bool aTouche = false;
         for (auto& note : *vecteur) {
+            // Si une touche est appuye et que le temps est proche d une note mettre note appuye
             if (note.couleur == btn &&
                 std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
                 note.action = APPUYE;
@@ -180,27 +191,28 @@ void Gameplay::loopGame() {
                 break;
             }
         }
+        // Si une touche est appuye mais aucune note presente
         if (!aTouche) {
-            // Faire quelque chose !
             gameStruct.score--;
         }
     }
 
+
+    // Si une note n'a pas ete appuye, la mettre morte
     for (auto& note : *vecteur) {
         if (chrono > note.tempsDepart + note.durree + 400 && 
             note.action == INITIALE) {
             note.action = MORTE;
-            // Desendre le score a un max
             gameStruct.score--;
         }
     }
-
+       
+    // valeurs de fps en ms
     Sleep(120);
     if (btn != QUITTER) {
         loopGame();
     }
     else {
-        gameStruct.score ++ ;
         finPartie();
     }
 }
@@ -537,6 +549,9 @@ CouleurBouton Gameplay::choixBouton(){
         }
         else if (it.key() == BTN_QUITTER && it.value() == BTN_RELACHE) {
             return CouleurBouton::QUITTER;
+        }
+        else if (it.key() == BTN_JOYSTICK && it.value() == BTN_RELACHE) {
+            return CouleurBouton::JOYSTICK;
         }
 
         else {

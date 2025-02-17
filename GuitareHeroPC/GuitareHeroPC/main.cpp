@@ -2,7 +2,7 @@
 #include "Gameplay.h"
 
 int main() {
-    const ComMode MODE = BLUETOOTH;
+    const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM3";
 
     Gameplay gameplay(NOM_PORT, MODE);

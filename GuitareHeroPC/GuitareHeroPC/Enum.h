@@ -12,6 +12,7 @@ enum CouleurBouton {
 	JAUNE,
 	MAUVE,
 	QUITTER,
+	JOYSTICK,
 	UNKNOWN
 };
 
