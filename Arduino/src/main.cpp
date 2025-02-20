@@ -5,6 +5,7 @@
 #include "ComFilaire.h"
 #include "ComBluetooth.h"
 #include "State.h"
+#include "Output.h"
 #include "ErrorLog.h"
 #include "Global.h"
 
@@ -14,24 +15,33 @@
   ComFilaire comFilaire(9600);
   ComBluetooth comBluetooth(9600);
   Error errorLogger;
+  Output output;
+
+  enum com {
+    FILAIRE,
+    BLUETOOTH
+  };
 
 /*---------------------------- Fonctions principales ------------------------*/
 void setup()
 {
-  //Serial.begin(115200); ###fait direcement dans le constructeur
-  //delay(2000);
+    Serial.begin(9600);
+    delay(2000);
 }
 void loop() 
 {
-  bool bluetooth=false;
-  if (bluetooth)
+  bool com=FILAIRE;
+
+  if (com==BLUETOOTH)
   {
-    //state.GetChange(&comBluetooth);
     state.GetChange(&comBluetooth);
   }
-  else
+  else if (com==FILAIRE)
   {
     state.GetChange(&comFilaire);
   }
-  //delay(500);
+  else
+  {
+    errorLogger.AddError("Erreur Selection com",1);
+  }
 }
