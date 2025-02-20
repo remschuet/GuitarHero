@@ -16,20 +16,20 @@ void State::GetState(Com* comDevice)
     //Boutons
     for (i=0;i<bt;i++)
     {
-        //comDevice->envoyerMessageString(diName[i],String(stateTempDI[i]));
+        comDevice->envoyerMessageString(MyJson(diName[i],String(stateTempDI[i])));
         diState[i]=stateTempDI[i];
     }
     //Joystick
     for (i=0;i<2;i++)
     {
-        //comDevice->envoyerMessageString(aiName[1],axe[1-i]+String(stateTempAI[i]));
+        comDevice->envoyerMessageString(MyJson(aiName[1],axe[1-i]+String(stateTempAI[i])));
         aiState[i]=stateTempAI[i];
     }
     //Accelerometre
     for (i=2;i<5;i++)
     {
         comDevice->envoyerMessageString(MyJson(aiName[0],axe[4-i]+String(stateTempAI[i])));
-        //aiState[i]=stateTempAI[i];
+        aiState[i]=stateTempAI[i];
     }
     delete[] stateTempDI;
     delete[] stateTempAI;

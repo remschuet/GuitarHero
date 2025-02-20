@@ -3,7 +3,7 @@
 /*---------------------------- Classe ComFilaire ----------------------------*/
 ComFilaire::ComFilaire(long baudRate)//9600 le baudRate par défaut a voir si on garde ca
 {
-    Serial.begin(baudRate);
+    Serial.begin(9600);
 }
 
 ComFilaire::~ComFilaire()
@@ -17,7 +17,7 @@ bool ComFilaire::envoyerMessageString(const MyJson &json)
     doc[json.key] = json.message;
     serializeJson(doc, Serial);
     Serial.println();
-    delay(100); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
+    delay(10);
     return true;
 }
 
@@ -31,7 +31,7 @@ bool ComFilaire::envoyerMessage(int potValue)
     return true;
 }
 
-MyJson ComFilaire::lireMessage() 
+MyJson ComFilaire::lireMessage()
 {
     MyJson json;
     if (Serial.available())
