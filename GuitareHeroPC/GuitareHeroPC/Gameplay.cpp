@@ -194,7 +194,7 @@ void Gameplay::loopGame() {
     if (btn == JOYSTICK) {
         for (auto& note : *vecteur) {
             // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
-            if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) {
+            if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
                 gameStruct.score+=3;
             }
         }
