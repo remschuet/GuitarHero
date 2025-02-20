@@ -95,12 +95,14 @@
     <QtRcc Include="QtWidgetsApplication1.qrc" />
     <QtUic Include="QtWidgetsApplication1.ui" />
     <QtMoc Include="QtWidgetsApplication1.h" />
+    <ClCompile Include="myQtManager.cpp" />
     <ClCompile Include="QtHelper.h" />
     <ClCompile Include="QtWidgetsApplication1.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CONST_QT.h" />
+    <ClInclude Include="myQtManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

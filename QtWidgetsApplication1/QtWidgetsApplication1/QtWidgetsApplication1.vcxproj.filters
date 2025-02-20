@@ -43,9 +43,15 @@
     <ClCompile Include="QtHelper.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="myQtManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CONST_QT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="myQtManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
