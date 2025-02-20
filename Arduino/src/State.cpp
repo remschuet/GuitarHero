@@ -28,7 +28,7 @@ void State::GetState(Com* comDevice)
     //Accelerometre
     for (i=2;i<5;i++)
     {
-        comDevice->envoyerMessageString(aiName[0],axe[4-i]+String(stateTempAI[i]));
+        comDevice->envoyerMessageString(MyJson(aiName[0],axe[4-i]+String(stateTempAI[i])));
         //aiState[i]=stateTempAI[i];
     }
     delete[] stateTempDI;
@@ -52,15 +52,15 @@ void State::GetChange(Com* comDevice)
             {
                 if (diState[i]==0)
                 {
-                    comDevice->envoyerMessageString(diName[i],change[0]);
+                    comDevice->envoyerMessageString(MyJson(diName[i],change[0]));
                 }
                 else if(diState[i]==1)
                 {
-                    comDevice->envoyerMessageString(diName[i],change[1]);
+                    comDevice->envoyerMessageString(MyJson(diName[i],change[1]));
                 }
                 else
                 {
-                    comDevice->envoyerMessageString(diName[i],change[3]);
+                    comDevice->envoyerMessageString(MyJson(diName[i],change[3]));
                     errorLogger.AddError("Erreur Etat Boutons invalide",2);
                 }
                 diState[i]=stateTempDI[i];
@@ -86,7 +86,7 @@ void State::GetChange(Com* comDevice)
                 && (i<2)
                 && (timerJoy+timerFilterJoy<=millis()))
             {
-                    comDevice->envoyerMessageString(aiName[1],change[2]);
+                    comDevice->envoyerMessageString(MyJson(aiName[1],change[2]));
                     movedJoy=1;
                     returned[0]=0;
                     returned[1]=0;
@@ -100,7 +100,7 @@ void State::GetChange(Com* comDevice)
             && (i>=2)
             && (timerAcc+timerFilterAcc<=millis()))
             {
-                comDevice->envoyerMessageString(aiName[0],change[2]);
+                comDevice->envoyerMessageString(MyJson(aiName[0],change[2]));
                 movedAcc=1;
                 timerAcc=millis();
             }

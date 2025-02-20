@@ -9,12 +9,11 @@
 static constexpr int bt = 8;
 static constexpr int ai = 5;
 static constexpr int diPins[bt] = {22, 24, 23, 9, 8, 7, 6, 5};
-static constexpr const char* diName[] = {"Bouton1", "Bouton2", "Bouton3", "Bouton4","Bouton5", "Bouton6", "Bouton7", "Bouton8"};
+static constexpr const char* diName[] = {"BtRouge", "BtBleu", "BtVert", "BtJaune","BMauve", "Bouton6", "Bouton7", "Bouton8"};
 static int constexpr aiPins[5]= {0, 1, 3, 4, 5};
 static constexpr const char* aiName[] = {"Accelerometre", "Joystick"};
 static constexpr const char* change[] = {"Appuye", "Relache","Bouge","Erreur"};
 static constexpr const char* axe[] = {"X:", "Y:","Z:"};
-//static constexpr short defaultValueAcc[3] = {340,335,412};
 static constexpr short defaultValueAI[5] = {500,500,340,335,412};
 static constexpr short timerFilterGen=100;//temps de filtre pour ne pas faire de fausse detection
 static constexpr short timerFilterJoy=500;

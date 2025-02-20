@@ -4,29 +4,31 @@
 Output::Output(){}
 Output::~Output(){}
 
-void Output::Set(const String &key, const String &message)
+void Output::Set(Com* comDevice)
 {
-    if (key=="LCD")
+    MyJson json=comDevice->lireMessage();
+
+    if (json.key=="LCD")
     {
-        SetLCD(message);
+        SetLCD(json.message);
     }
-    else if (key=="BarreGraph")
+    else if (json.key=="BarreGraph")
     {
         int i=0;
         bool led[bg];
         for(i=0;i<bg;i++)
         {
-            if (message[i]=='1')
+            if (json.message[i]=='1')
             {
                 led[i]=1;
             }
-            else if (message[i]=='0')
+            else if (json.message[i]=='0')
             {
                 led[i]=0;
             }
             else
             {
-                errorLogger.AddError("Message invalide"+message+"BG index "+String(i),3);
+                errorLogger.AddError("Message invalide"+json.message+"BG index "+String(i),3);
                 led[i]=0;
             }
         }
@@ -34,7 +36,7 @@ void Output::Set(const String &key, const String &message)
     }
     else
     {
-        errorLogger.AddError("Cle invalide"+message,3);
+        errorLogger.AddError("Cle invalide"+json.message,3);
     }
     
 }

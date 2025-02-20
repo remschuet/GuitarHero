@@ -10,11 +10,11 @@ ComFilaire::~ComFilaire()
 {
 }
 
-bool ComFilaire::envoyerMessageString(const String &key, const String &message) 
+bool ComFilaire::envoyerMessageString(const MyJson &json) 
 {
     StaticJsonDocument<500> doc;
     doc["time"] = millis();
-    doc[key] = message;
+    doc[json.key] = json.message;
     serializeJson(doc, Serial);
     Serial.println();
     delay(100); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
@@ -31,23 +31,31 @@ bool ComFilaire::envoyerMessage(int potValue)
     return true;
 }
 
-bool ComFilaire::lireMessage(int &ledState) 
+MyJson ComFilaire::lireMessage() 
 {
-    if (Serial.available()) {
+    MyJson json;
+    if (Serial.available())
+    {
         StaticJsonDocument<500> doc;
         DeserializationError error = deserializeJson(doc, Serial);
         
-        if (error) {
-            Serial.print("Erreur JSON: ");
-            Serial.println(error.c_str());
-            return false;
+        if (error)
+        {
+            errorLogger.AddError("Erreur Filaire msg ERROR",1);
         }
-        
-        if (doc.containsKey("led")) {
-            ledState = doc["led"].as<bool>();
-            return true;
+        else
+        {
+            for (JsonPair kv : doc.as<JsonObject>())
+            {
+                json.key = kv.key().c_str(); // Stocker la clé
+                json.message = kv.value().as<String>(); // Stocker la valeur comme String
+                break; // Supposer que nous voulons seulement la première paire clé-valeur
+            }
         }
     }
-    errorLogger.AddError("Erreur Lire Message Filaire",1);
-    return false;
+    else
+    {
+        errorLogger.AddError("Erreur Filaire non-dispo",1);
+    }
+    return json;
 }

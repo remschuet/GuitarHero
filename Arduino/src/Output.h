@@ -1,6 +1,8 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
+
 #include <Arduino.h>
+#include "Com.h"
 #include "Global.h"
 
 static constexpr int bg=10;
@@ -11,7 +13,7 @@ class Output {
     public:
         Output();
         ~Output();
-        void Set(const String &key, const String &message);
+        void Set(Com* comDevice);
     private:
         void SetBarreGraph(bool led[bg]);
         void SetLCD( String message);
