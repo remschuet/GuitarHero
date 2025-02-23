@@ -6,13 +6,17 @@
 #include "QtHelper.h"
 #include "myQtManager.h"
 
-
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    QWidget window;
-    myQtManager::qtPageInformations(&window); // Appel de la fonction
-    window.show(); // Afficher la fenêtre
+    QStackedWidget stack;
+
+    // Ajouter les fenêtres
+    myQtManager::qtPageMenu(nullptr, &stack);
+    myQtManager::qtPageInformations(nullptr, &stack);
+
+    stack.setCurrentIndex(0); // Afficher la première page (Menu)
+    stack.show();
 
     return app.exec();
 }
