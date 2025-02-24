@@ -25,6 +25,7 @@ private:
 	vector<Note> vecteurEnCours;
 	void departMusique();
 	const char* chanson1Nom = "psycho.mp3";
+	const char* chanson2Nom = "notes.chart";
 
 public:
 	string getNomChanson();

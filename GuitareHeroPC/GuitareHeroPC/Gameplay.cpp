@@ -333,9 +333,9 @@ void Gameplay::loopMenu() {
     gotoxy(15, 12);
     std::cout << "Rouge - Beatles";
     gotoxy(15, 13);
-    std::cout << "Vert - Integration";
+    std::cout << "Bleu - Integration";
     gotoxy(15, 14);
-    std::cout << "Bleu - Pink floyd";
+    std::cout << "Vert - Pink floyd";
     gotoxy(12, 16);
 
     std::cout << "Votre choix: ";
@@ -347,7 +347,7 @@ void Gameplay::loopMenu() {
     }
 
     if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson(CHANSON_1_MP3);
-    else if (choix == VERT) gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
+    else if (choix == BLEU) gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
     else                    gameStruct.chansonEnCours = new Chanson(CHANSON_3_MP3);
 
     choix = UNKNOWN;
