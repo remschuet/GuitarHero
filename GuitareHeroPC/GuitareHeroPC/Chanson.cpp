@@ -60,7 +60,16 @@ string Chanson::getNomChanson()
 long long Chanson::getDureeChanson() {
     char buffer[128];
     mciSendStringA("status myMP3 length", buffer, sizeof(buffer), NULL);
-    return atoll(buffer); // Convertit la durée en millisecondes
+
+    // Vérifier que la chaîne n'est pas vide ou corrompue
+    if (strlen(buffer) > 0 && isdigit(buffer[0])) {
+        durreeBackup = atoll(buffer);
+        return durreeBackup; // Convertir et renvoyer la durée en millisecondes
+    }
+    else {
+        std::cerr << "Erreur lors de la récupération de la durée de la chanson." << std::endl;
+        return durreeBackup; // Retourner 0 en cas d'erreur
+    }
 }
 
 
