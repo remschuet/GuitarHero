@@ -14,8 +14,8 @@ class ComBluetooth:public Com{
         MyJson lireMessage() override;
 
     private:
-        const int bluetoothTx = 11;  // TX HC-05 -> RX Arduino ##pin arduino à redéfinir
-        const int bluetoothRx = 10;  // RX HC-05 -> TX Arduino ##pin arduino à redéfinir
+        const int bluetoothTx = 26;  // TX HC-05 -> RX Arduino ##pin arduino à redéfinir
+        const int bluetoothRx = 24;  // RX HC-05 -> TX Arduino ##pin arduino à redéfinir
         SoftwareSerial bluetooth;
 
 };

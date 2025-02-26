@@ -16,6 +16,7 @@
   ComBluetooth comBluetooth(9600);
   Error errorLogger;
   Output output;
+  static Com* comType[] = {&comFilaire, &comBluetooth};
 
   enum com {
     FILAIRE,
@@ -27,21 +28,24 @@ void setup()
 {
     Serial.begin(9600);
     delay(2000);
+    state.SetDefault();
 }
 void loop() 
 {
-  bool com=FILAIRE;
+  com selectedCom=BLUETOOTH;
+  Com* comDevice;
 
-  if (com==BLUETOOTH)
+  if (selectedCom==FILAIRE)
   {
-    state.GetChange(&comBluetooth);
+    comDevice=comType[0];
   }
-  else if (com==FILAIRE)
+  else if (selectedCom==BLUETOOTH)
   {
-    state.GetChange(&comFilaire);
+    comDevice=comType[1];
   }
   else
   {
     errorLogger.AddError("Erreur Selection com",1);
   }
+  state.GetChange(comDevice);
 }

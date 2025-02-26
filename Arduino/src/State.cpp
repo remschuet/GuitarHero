@@ -5,7 +5,26 @@ State::State():timer(millis())
 {
     UpdateStateDI();
     UpdateStateAI();
+    /*int* stateTempAI=GetStateAI();
+    defaultValueAI[0]=stateTempAI[0];
+    defaultValueAI[1]=stateTempAI[1];
+    defaultValueAI[2]=stateTempAI[2];
+    defaultValueAI[3]=stateTempAI[3];
+    defaultValueAI[4]=stateTempAI[4];
+    Serial.println(aiState[0]);
+    Serial.println(defaultValueAI[1]);
+    Serial.println(defaultValueAI[2]);
+    Serial.println(defaultValueAI[3]);
+    Serial.println(defaultValueAI[4]);
+    Serial.println(aiState[0]);
+    Serial.println(aiState[1]);
+    Serial.println(aiState[2]);
+    Serial.println(aiState[3]);
+    Serial.println(aiState[4]);
+    delete[] stateTempAI;*/
+    SetDefault();
 }
+
 State::~State(){}
 
 void State::GetState(Com* comDevice)
@@ -71,10 +90,10 @@ void State::GetChange(Com* comDevice)
         movedAcc=false;
         for (i=0;i<5;i++)
         {
-            if ((stateTempAI[i]< defaultValueAI[i]+50 || stateTempAI[i] > defaultValueAI[i]-50)
-                && (i<2))
+            if ((stateTempAI[0]< defaultValueAI[0]+50 && stateTempAI[0] > defaultValueAI[0]-50)
+                &&(stateTempAI[1]< defaultValueAI[1]+50 && stateTempAI[1] > defaultValueAI[1]-50))
             {
-                returned[i]=1;
+                returned=true;
             }
 
             //Joystick
@@ -82,14 +101,13 @@ void State::GetChange(Com* comDevice)
             if ((aiState[i]>stateTempAI[i]+150 || aiState[i]<stateTempAI[i]-150)
                 && (stateTempAI[i] > defaultValueAI[i]+150 || stateTempAI[i] < defaultValueAI[i]-150)
                 && (movedJoy==0)
-                && (returned[0]==1 && returned[1]==1)
+                && (returned==true)
                 && (i<2)
                 && (timerJoy+timerFilterJoy<=millis()))
             {
                     comDevice->envoyerMessageString(MyJson(aiName[1],change[2]));
                     movedJoy=1;
-                    returned[0]=0;
-                    returned[1]=0;
+                    returned=false;
                     timerJoy=millis();
             }
 
@@ -152,4 +170,14 @@ void State:: UpdateStateAI()
     {
         diState[i]=analogRead(aiPins[i]);
     }
+}
+
+void State:: SetDefault()
+{
+    //delay(2);//Laisse le temps pour get les bonnes données
+    for (int i = 0; i < 5; i++)
+    {
+        defaultValueAI[i]=analogRead(aiPins[i]);
+    }
+    
 }
