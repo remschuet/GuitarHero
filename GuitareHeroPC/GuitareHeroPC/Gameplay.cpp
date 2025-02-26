@@ -109,7 +109,7 @@ void Gameplay::affichageProgression() {
 }
 
 void Gameplay::loopGame() {
-    int delaiAffichage = 10000;
+    int delaiAffichage = 5000; //aléatoire? à changer? 10000 de base    si on diminue, le problème des x qui affiche en haut disparait
     affichageTitre();
     affichageProgression();
     tick++;
@@ -154,8 +154,8 @@ void Gameplay::loopGame() {
                 case MAUVE: posX = 34; break;
             }
 
-            int hauteurNote = note.durree / 250;
-            int positionY = 25 - ((note.tempsDepart - chrono) / 250);
+            int hauteurNote = note.durree / 250;    //à changer
+            int positionY = 25 - ((note.tempsDepart - chrono) / 250);      //à changer?
 
             for (int y = 0; y < hauteurNote; y++) {
                 if (positionY - y <= 25) { // Empêcher d'afficher hors écran

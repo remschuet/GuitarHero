@@ -39,29 +39,32 @@ std::vector<Note>* ComFichierTexte::setListeNotes(std::string nomFichier, std::v
 	int couleurTemp, débutTemp, duréeTemp;
 	while (!feof(fichierEntree))
 	{
+		//jaune-mauve jaune-mauve rouge jaune-mauve vert vert-mauve bleu
+		//3-4 3-4 0 3-4 2 2-4 1
 
+		// 112 vert OK, 146 bleu OK, 0 jaune OK, 0 mauve OK ~110 rouge OK le vecteur à tout bien formater!
 		fscanf_s(fichierEntree, "%i %i %i", &couleurTemp, &débutTemp, &duréeTemp);
-		if (couleurTemp == 1)
+		if (couleurTemp == 0)
 		{
 			vrouge.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::ROUGE));
 		}
-		else if (couleurTemp == 2)
-		{
-			vjaune.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::JAUNE));
-		}
-		else if (couleurTemp == 3)
+		else if (couleurTemp == 1)
 		{
 			vbleu.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::BLEU));
 		}
-		else if (couleurTemp == 4)
+		else if (couleurTemp == 2)
+		{
+			vvert.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::VERT));
+		}
+		else if (couleurTemp == 3)
+		{
+			vjaune.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::JAUNE));
+		}
+		else if (couleurTemp == 4)	//open strum (no button pressed, but joystick)
 		{
 			vmauve.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::MAUVE));
 		}
-		else if (couleurTemp == 5)	//open strum (no button pressed, but joystick)
-		{
-			vmauve.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::MAUVE));
-		}
-		else if (couleurTemp == 0)
+		else if (couleurTemp == 5)
 		{
 			//vvert.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::VERT));
 		}
