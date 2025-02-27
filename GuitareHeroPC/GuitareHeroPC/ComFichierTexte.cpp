@@ -40,27 +40,36 @@ std::vector<Note>* ComFichierTexte::setListeNotes(std::string nomFichier, std::v
 	while (!feof(fichierEntree))
 	{
 
-			fscanf_s(fichierEntree, "%i %i %i", &couleurTemp, &débutTemp, &duréeTemp);
-			if (couleurTemp == 1)
-			{
-				vrouge.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::ROUGE));
-			}
-			else if (couleurTemp == 2)
-			{
-				vvert.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::VERT));
-			}
-			else if (couleurTemp == 3)
-			{
-				vjaune.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::JAUNE));
-			}
-			else if (couleurTemp == 4)
-			{
-				vbleu.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::BLEU));
-			}
-			else if (couleurTemp == 5)
-			{
-				vmauve.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::MAUVE));
-			}
+		fscanf_s(fichierEntree, "%i %i %i", &couleurTemp, &débutTemp, &duréeTemp);
+		if (couleurTemp == 0)
+		{
+			vrouge.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::ROUGE));
+		}
+		else if (couleurTemp == 1)
+		{
+			vbleu.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::BLEU));
+		}
+		else if (couleurTemp == 2)
+		{
+			vvert.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::VERT));
+		}
+		else if (couleurTemp == 3)
+		{
+			vjaune.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::JAUNE));
+		}
+		else if (couleurTemp == 4)    //open strum (no button pressed, but joystick)
+		{
+			vmauve.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::MAUVE));
+		}
+		else if (couleurTemp == 5)
+		{
+			//vvert.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::VERT));
+		}
+		else if (couleurTemp == 6)    //forced strum (joystick even if the note is a hammer-on/pull-off)
+		{
+			//vmauve.push_back(Note(0, débutTemp, duréeTemp, CouleurBouton::MAUVE));
+		}
+
 	}
 
 	fclose(fichierEntree);

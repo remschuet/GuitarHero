@@ -50,6 +50,7 @@ void Gameplay::afficherImage() {
     //}
     cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre
     cv::destroyWindow("Image");
+    Sleep(200);
 }
 
 void Gameplay::PrendreImage() {
@@ -130,111 +131,112 @@ void Gameplay::affichageProgression() {
 }
 
 void Gameplay::loopGame() {
-    int delaiAffichage = 10000;
-    affichageTitre();
-    affichageProgression();
-    tick++;
+    while (true) {
+        long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+        long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
-    //Barre d'infos du joueur
-    gotoxy(40, 3);
-    cout << "SCORE: " << gameStruct.score;
-    gotoxy(40, 2);
-    cout << "MAX_SCORE: " << gameStruct.joueur->getMeilleurScore();
-    gotoxy(40, 1);
-    cout << "PLAYER: " << gameStruct.joueur->getNomJoueur();
-    // Barre en bas
-    gotoxy(4, 25);
-    std::cout << "------------------------------------";
-    gotoxy(6, 26);
-    std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
+        affichageTitre();
+        affichageProgression();
+        tick++;
 
-    // mettre à jours les vecteurs
-    gameStruct.chansonEnCours->tick(delaiAffichage);
+        //Barre d'infos du joueur
+        gotoxy(40, 3);
+        cout << "SCORE: " << gameStruct.score;
+        gotoxy(40, 2);
+        cout << "MAX_SCORE: " << gameStruct.joueur->getMeilleurScore();
+        gotoxy(40, 1);
+        cout << "PLAYER: " << gameStruct.joueur->getNomJoueur();
+        // Barre en bas
+        gotoxy(4, 25);
+        std::cout << "------------------------------------";
+        gotoxy(6, 26);
+        std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
 
-    vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
+        // mettre à jours les vecteurs
+        gameStruct.chansonEnCours->tick(delaiAffichage);
 
-    // si aucun vecteur (debut de partie)
-    if (!vecteur) {
-        Sleep(120);
-        loopGame();
-    }
+        vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
 
-    // chrono en fonction de la musique
-    long long chrono = gameStruct.chansonEnCours->getChrono();
+        // si aucun vecteur (debut de partie)
+        if (!vecteur) {
+            Sleep(120);
+            loopGame();
+        }
 
-    // Affichage de toute les notes à l'ecran
-    for (auto& note : *vecteur) {
-        if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.durree >= chrono) {
+        // chrono en fonction de la musique
+        long long chrono = gameStruct.chansonEnCours->getChrono();
 
-            int posX = 0;
+        // Affichage de toute les notes à l'ecran
+        for (auto& note : *vecteur) {
+            if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.duree >= chrono) {
 
-            switch (note.couleur) {
+                int posX = 0;
+
+                switch (note.couleur) {
                 case ROUGE: posX = 8; break;
                 case BLEU: posX = 15; break;
                 case VERT: posX = 21; break;
                 case JAUNE: posX = 27; break;
                 case MAUVE: posX = 34; break;
-            }
+                }
 
-            int hauteurNote = note.durree / 250;
-            int positionY = 25 - ((note.tempsDepart - chrono) / 250);
+                int hauteurNote = note.duree / 250;
+                int positionY = 25 - ((note.tempsDepart - chrono) / 250);
 
-            for (int y = 0; y < hauteurNote; y++) {
-                if (positionY - y <= 25) { // Empêcher d'afficher hors écran
-                    gotoxy(posX, positionY - y);
-                    std::cout << "X";
+                for (int y = 0; y < hauteurNote; y++) {
+                    if (positionY - y <= 25) { // Empêcher d'afficher hors écran
+                        gotoxy(posX, positionY - y);
+                        std::cout << "X";
+                    }
                 }
             }
         }
-    }
 
-    CouleurBouton btn = choixBouton();
+        CouleurBouton btn = choixBouton();
 
-    // Logique du joystick, si on appuis dessus et qu on a une note appuyer proche dans le temps on fait 3 points supplementaire
-    if (btn == JOYSTICK) {
-        for (auto& note : *vecteur) {
-            // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
-            if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
-                gameStruct.score+=3;
+        // Logique du joystick, si on appuis dessus et qu on a une note appuyer proche dans le temps on fait 3 points supplementaire
+        if (btn == JOYSTICK) {
+            for (auto& note : *vecteur) {
+                // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
+                if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
+                    gameStruct.score += 3;
+                }
             }
         }
-    }
-    // Appuyé sur une touche
-    if (btn != UNKNOWN && btn != JOYSTICK && btn != QUITTER){
-        bool aTouche = false;
-        for (auto& note : *vecteur) {
-            // Si une touche est appuye et que le temps est proche d une note mettre note appuye
-            if (note.couleur == btn &&
-                std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
-                note.action = APPUYE;
-                aTouche = true;
-                gameStruct.score++;
-                break;
+        // Appuyé sur une touche
+        if (btn != UNKNOWN && btn != JOYSTICK && btn != QUITTER) {
+            bool aTouche = false;
+            for (auto& note : *vecteur) {
+                // Si une touche est appuye et que le temps est proche d une note mettre note appuye
+                if (note.couleur == btn &&
+                    std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
+                    note.action = APPUYE;
+                    aTouche = true;
+                    gameStruct.score++;
+                    break;
+                }
+            }
+            // Si une touche est appuye mais aucune note presente
+            if (!aTouche) {
+                gameStruct.score--;
             }
         }
-        // Si une touche est appuye mais aucune note presente
-        if (!aTouche) {
-            gameStruct.score--;
-        }
-    }
 
 
-    // Si une note n'a pas ete appuye, la mettre morte
-    for (auto& note : *vecteur) {
-        if (chrono > note.tempsDepart + note.durree + 400 && 
-            note.action == INITIALE) {
-            note.action = MORTE;
-            gameStruct.score--;
+        // Si une note n'a pas ete appuye, la mettre morte
+        for (auto& note : *vecteur) {
+            if (chrono > note.tempsDepart + note.duree + 400 &&
+                note.action == INITIALE) {
+                note.action = MORTE;
+                gameStruct.score--;
+            }
         }
-    }
-       
-    // valeurs de fps en ms
-    Sleep(120);
-    if (btn != QUITTER) {
-        loopGame();
-    }
-    else {
-        finPartie();
+
+        // valeurs de fps en ms
+        Sleep(120);
+        if (btn == QUITTER || tempsEcoule > dureeTotale) {
+            finPartie();
+        }
     }
 }
 
@@ -369,9 +371,9 @@ void Gameplay::loopMenu() {
     gotoxy(15, 12);
     std::cout << "Rouge - Beatles";
     gotoxy(15, 13);
-    std::cout << "Vert - Integration";
-    gotoxy(15, 14);
     std::cout << "Bleu - Pink floyd";
+    gotoxy(15, 14);
+    std::cout << "Vert - Integration";
     gotoxy(12, 16);
 
     std::cout << "Votre choix: ";
@@ -383,7 +385,7 @@ void Gameplay::loopMenu() {
     }
 
     if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson(CHANSON_1_MP3);
-    else if (choix == VERT) gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
+    else if (choix == BLEU) gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
     else                    gameStruct.chansonEnCours = new Chanson(CHANSON_3_MP3);
 
     choix = UNKNOWN;
