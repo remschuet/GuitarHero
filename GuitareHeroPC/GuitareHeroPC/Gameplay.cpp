@@ -234,7 +234,7 @@ void Gameplay::loopGame() {
 
         // valeurs de fps en ms
         Sleep(120);
-        if (btn == QUITTER || tempsEcoule > dureeTotale) {
+        if (btn == QUITTER || tempsEcoule >= dureeTotale) {
             finPartie();
         }
     }
