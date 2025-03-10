@@ -16,6 +16,7 @@ int main(int argc, char* argv[]) {
     myQtManager::qtPageInformations(nullptr, &stack);
 
     stack.setCurrentIndex(0); // Afficher la première page (Menu)
+    stack.resize(1500, 700);
     stack.show();
 
     return app.exec();
@@ -23,7 +24,7 @@ int main(int argc, char* argv[]) {
 #include "ComBluetooth.h"
 #include "Gameplay.h"
 
-/*int main(int argc, char* argv[]) {
+/*int main(int argc, char* argv[]) {    //main projet 1
 
     const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM3";
