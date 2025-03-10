@@ -36,7 +36,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>Qt</QtInstall>
+    <QtInstall>6.7.3_msvc2022_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -92,6 +92,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Chanson.cpp" />
+    <ClCompile Include="ComArduino.cpp" />
+    <ClCompile Include="ComBluetooth.cpp" />
+    <ClCompile Include="ComClavier.cpp" />
+    <ClCompile Include="ComFichierTexte.cpp" />
+    <ClCompile Include="ComFilaire.cpp" />
+    <ClCompile Include="DAOSqlite.cpp" />
+    <ClCompile Include="Gameplay.cpp" />
+    <ClCompile Include="Joueur.cpp" />
+    <ClCompile Include="Note.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
+    <ClCompile Include="tests.cpp" />
     <QtRcc Include="QtWidgetsApplication1.qrc" />
     <QtUic Include="QtWidgetsApplication1.ui" />
     <QtMoc Include="QtWidgetsApplication1.h" />
@@ -101,8 +113,25 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Chanson.h" />
+    <ClInclude Include="ComArduino.h" />
+    <ClInclude Include="ComBluetooth.h" />
+    <ClInclude Include="ComClavier.h" />
+    <ClInclude Include="ComFichierTexte.h" />
+    <ClInclude Include="ComFilaire.h" />
+    <ClInclude Include="CONST.h" />
     <ClInclude Include="CONST_QT.h" />
+    <ClInclude Include="DAOSqlite.h" />
+    <ClInclude Include="Enum.h" />
+    <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="GameStruct.h" />
+    <ClInclude Include="Joueur.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="myQtManager.h" />
+    <ClInclude Include="Note.h" />
+    <ClInclude Include="SerialPort.h" />
+    <ClInclude Include="sqlite3.h" />
+    <ClInclude Include="tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
