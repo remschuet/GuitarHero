@@ -5,6 +5,10 @@
 #include "CONST_QT.h"
 #include "QtHelper.h"
 #include "myQtManager.h"
+#include "ComBluetooth.h"
+#include "Gameplay.h"
+#include <QThread>
+#include <QDebug>
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
@@ -19,10 +23,28 @@ int main(int argc, char* argv[]) {
     stack.resize(1500, 700);
     stack.show();
 
+    const ComMode MODE = CLAVIER;
+    const std::string NOM_PORT = "COM3";
+    
+    int entier = 0;
+
+    while (true) {
+        // Exécuter la logique de votre jeu ici
+        entier++;
+        qDebug() << "Entier actuel: " << entier;
+
+        // Traiter les événements Qt pour permettre les rafraîchissements
+        QApplication::processEvents();
+
+        // Pour éviter une boucle infinie sans délai
+        QThread::msleep(10);
+    }
+
+    // Gameplay gameplay(NOM_PORT, MODE);
+    // gameplay.SelectionJoueur();
+
     return app.exec();
 }
-#include "ComBluetooth.h"
-#include "Gameplay.h"
 
 /*int main(int argc, char* argv[]) {    //main projet 1
 
