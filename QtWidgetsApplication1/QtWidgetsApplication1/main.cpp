@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     const std::string NOM_PORT = "COM3";
 
     QStackedWidget stack;
-    Gameplay gameplay(NOM_PORT, MODE);
+    Gameplay* gameplay = new Gameplay(NOM_PORT, MODE);
 
     // Ajouter les fenêtres
     myQtManager::qtPageMenu(nullptr, &stack);
