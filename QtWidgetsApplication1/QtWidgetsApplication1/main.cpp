@@ -13,19 +13,20 @@
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
+    const ComMode MODE = CLAVIER;
+    const std::string NOM_PORT = "COM3";
+
     QStackedWidget stack;
+    Gameplay gameplay(NOM_PORT, MODE);
 
     // Ajouter les fenêtres
     myQtManager::qtPageMenu(nullptr, &stack);
     myQtManager::qtPageInformations(nullptr, &stack);
 
-    stack.setCurrentIndex(0); // Afficher la première page (Menu)
+    stack.setCurrentIndex(0);
     stack.resize(1920, 1080);
     stack.show();
 
-    const ComMode MODE = CLAVIER;
-    const std::string NOM_PORT = "COM3";
-    
     int entier = 0;
     qDebug() << "debug entier actuel: " << entier;
 
@@ -41,9 +42,6 @@ int main(int argc, char* argv[]) {
         // Pour éviter une boucle infinie sans délai
         QThread::msleep(10);
     }
-
-    // Gameplay gameplay(NOM_PORT, MODE);
-    // gameplay.SelectionJoueur();
 
     return app.exec();
 }
