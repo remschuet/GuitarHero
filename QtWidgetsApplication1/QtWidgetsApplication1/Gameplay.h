@@ -7,7 +7,11 @@
 #include <vector>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 #include <iostream>
+
+#include <windows.h>
+#pragma comment(lib, "User32.lib")
 
 class Gameplay
 {
