@@ -3,6 +3,10 @@
 #include <string>
 #include <iostream>
 
+extern "C" {
+#include "sqlite3.h"
+}
+
 DAOSqlite* DAOSqlite::instance = nullptr;  // Initialisation du pointeur d'instance
 const char* DAOSqlite::nomFichier = "database.db";  // Initialisation de la variable statique
 
