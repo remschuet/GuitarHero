@@ -20,18 +20,20 @@ int main(int argc, char* argv[]) {
     myQtManager::qtPageInformations(nullptr, &stack);
 
     stack.setCurrentIndex(0); // Afficher la première page (Menu)
-    stack.resize(1500, 700);
+    stack.resize(1920, 1080);
     stack.show();
 
     const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM3";
     
     int entier = 0;
+    qDebug() << "debug entier actuel: " << entier;
 
-    while (true) {
+    while (entier < 10) {
         // Exécuter la logique de votre jeu ici
         entier++;
-        qDebug() << "Entier actuel: " << entier;
+        qDebug() << "debug entier actuel: " << entier;
+        cout << "cout entier actuel: " << entier;
 
         // Traiter les événements Qt pour permettre les rafraîchissements
         QApplication::processEvents();
