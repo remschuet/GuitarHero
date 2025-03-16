@@ -53,8 +53,20 @@ void Gameplay::afficherImage() {
     //    btn = choixBouton();
     //    Sleep(50);
     //}
-    cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre
-    cv::destroyWindow("Image");
+    CouleurBouton btn = UNKNOWN;
+    while (btn == UNKNOWN) {
+        btn = choixBouton();  // Vérifier le bouton
+
+        if (btn != UNKNOWN) {
+            cv::destroyWindow("Image");  // Fermer la fenêtre OpenCV
+            break;  // Sortir de la boucle
+        }
+
+        cv::imshow("Image", image);  // Mettre à jour l'affichage
+        cv::waitKey(1);
+    }
+    //cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre        //doit être changé pour fillaire (pas waitkey)
+    //cv::destroyWindow("Image");
     Sleep(200);
 }
 
