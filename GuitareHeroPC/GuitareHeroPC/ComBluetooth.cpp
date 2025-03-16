@@ -66,9 +66,6 @@ bool ComBluetooth::envoyerMessage(const json& j_msg) {
 }
 
 bool ComBluetooth::recevoirMessage(std::string& msg) {
-    if (++petiteValeur % 5 == 0) {
-        return false;
-    }
     if (hSerial == INVALID_HANDLE_VALUE) {
         std::cerr << "Le port n'est pas ouvert." << std::endl;
         return false;
