@@ -70,17 +70,38 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack) {
     stack->addWidget(window);
 }
 
-void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack) {
+void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* gameplay) {
     QWidget* window = new QWidget();
     window->setWindowTitle("Menu");
 
-    QPushButton* infoButton = new QPushButton("Voir Informations", window);
-    infoButton->move(50, 50);
+    //paramteres du joueur
+    QPushButton* infoButton = new QPushButton("Parametres du joueur", window);
+    infoButton->move(500, 300);
+    
+
+    //Titre du jeu
+    QLabel* nomJeu = new QLabel("Guitar Hero UDS", window);
+    myQt_setFont(nomJeu, QT_TITLE);
+    nomJeu->setStyleSheet("color: " + COULEUR_TITRE + ";");  // Vert très foncé
+    nomJeu->move(430, 30);
+
+    //meilleur score
+    QLabel* meilleurScore = new QLabel("Meilleur score: 1000", window);
+    myQt_setFont(meilleurScore, QT_SUBTITLE);
+    meilleurScore->setStyleSheet("color: " + COULEUR_TITRE + ";");  // Vert très foncé
+    meilleurScore->move(430, 200);
+    
+    //image du joueur
+    QLabel* imageLabel = new QLabel(window);
+    QPixmap image("C:/Users/Jovan/Desktop/Git/GuitarHero/GuitareHeroPC/GuitareHeroPC/avatar.jpeg"); // Remplacer par le chemin de ton image
+    imageLabel->setPixmap(image.scaled(100, 100, Qt::KeepAspectRatio));
+    imageLabel->setStyleSheet("border: 2px solid " + COULEUR_IMAGE_BORDURE + ";");  // Bordure verte
+    imageLabel->move(1000, 200);
 
     // Changer de page au clic
     QObject::connect(infoButton, &QPushButton::clicked, [stack]() {
         stack->setCurrentIndex(1); // Aller à la page d'informations
-        });
+        });    
 
     stack->addWidget(window);
 }
