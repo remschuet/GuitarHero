@@ -20,12 +20,12 @@ int main(int argc, char* argv[]) {
     Gameplay* gameplay = new Gameplay(NOM_PORT, MODE);
 
     // Ajouter les fenêtres
-    myQtManager::qtPageMenu(nullptr, &stack);
+    myQtManager::qtPageMenu(nullptr, &stack, gameplay);
     myQtManager::qtPageInformations(nullptr, &stack);
     myQtManager::qtPageAccueil(nullptr, &stack);
 
     stack.setCurrentIndex(0);
-    stack.resize(1920, 1080);
+    stack.resize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     stack.show();
 
     int entier = 0;
