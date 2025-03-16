@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
 
     const ComMode MODE = FILAIRE;
-    const std::string NOM_PORT = "COM3";
+    const std::string NOM_PORT = "COM4";
 
     Gameplay gameplay(NOM_PORT, MODE);
     gameplay.SelectionJoueur();
