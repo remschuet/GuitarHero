@@ -451,6 +451,16 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
     //cin >> bob;*/
 }
 
+void Gameplay::envoyerMsg(const std::string& key, const std::string& value)
+{
+    // Créer un objet JSON avec la clé et la valeur
+    json j_msg;
+    j_msg[key] = value;
+
+    // Appeler la fonction envoyerMessage avec l'objet JSON
+    comArduino->envoyerMessage(j_msg);
+}
+
 void Gameplay::modifierLeProfile() {
     Sleep(1000);
     afficherImage();

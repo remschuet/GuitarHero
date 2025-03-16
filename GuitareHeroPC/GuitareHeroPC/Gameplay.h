@@ -26,6 +26,8 @@ public:
 
 	void voirMeilleurScore();
 
+	void envoyerMsg(const std::string& key, const std::string& value);
+
 	bool configBluetooth(std::string nomPort);
 	bool configFilaire(std::string nomPort);
 	void interpreterMsg(std::string);

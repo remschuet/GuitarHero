@@ -3,9 +3,13 @@
 
 int main(int argc, char* argv[]) {
 
-    const ComMode MODE = CLAVIER;
-    const std::string NOM_PORT = "COM3";
+    const ComMode MODE = FILAIRE;
+    const std::string NOM_PORT = "COM5";
 
     Gameplay gameplay(NOM_PORT, MODE);
-    gameplay.SelectionJoueur();
+    for (int i = 0; i < 30; i++) {
+        gameplay.envoyerMsg("hello", "world");
+        Sleep(500);
+    }
+//     gameplay.SelectionJoueur();
 }
