@@ -317,6 +317,8 @@ void Gameplay::SelectionJoueur()
     DAOSqlite* dao = DAOSqlite::getInstance();
     gameStruct.joueur = dao->getJoueur(nomJoueur);
 
+    // Envoit de message BarreGraph
+    envoyerMsg("hello", "world");
     loopMenu();
 }
 
