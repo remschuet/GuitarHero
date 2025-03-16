@@ -317,6 +317,8 @@ void Gameplay::SelectionJoueur()
     DAOSqlite* dao = DAOSqlite::getInstance();
     gameStruct.joueur = dao->getJoueur(nomJoueur);
 
+    // Envoit de message BarreGraph
+    envoyerMsg(BAR_GRAPH, "0101010101");
     loopMenu();
 }
 
@@ -449,6 +451,16 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
     std::cout << "10e : " << scores[9].first << " - " << scores[9].second;
     //std::string bob;
     //cin >> bob;*/
+}
+
+void Gameplay::envoyerMsg(const std::string& key, const std::string& value)
+{
+    // Créer un objet JSON avec la clé et la valeur
+    json j_msg;
+    j_msg[key] = value;
+
+    // Appeler la fonction envoyerMessage avec l'objet JSON
+    comArduino->envoyerMessage(j_msg);
 }
 
 void Gameplay::modifierLeProfile() {
