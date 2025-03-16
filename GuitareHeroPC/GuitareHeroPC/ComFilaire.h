@@ -16,7 +16,7 @@ private:
     const int msgMaxSize = 1024;
 
 public:
-    ComFilaire(const std::string& port, int baud = 115200, int msgSize = 1024)
+    ComFilaire(const std::string& port, int baud = 9600, int msgSize = 1024)
         : baudRate(baud), msgMaxSize(msgSize) {
         arduino = new SerialPort(port.c_str(), baudRate);
         if (!arduino->isConnected()) {

@@ -24,6 +24,11 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     else {
         comArduino = new ComClavier();
     }
+    string msg = "";
+    for (int i = 0; i < 20; i++) {
+        comArduino->recevoirMessage(msg);
+          Sleep(250);
+    }
 }
 
 void Gameplay::afficherImage() {
@@ -289,7 +294,7 @@ void Gameplay::finPartie() {
     CouleurBouton btn = UNKNOWN;
     while(btn == UNKNOWN) {
         btn = choixBouton();
-        Sleep(50);
+        Sleep(delaiFillaire);
     }
     loopMenu();
 
@@ -344,7 +349,7 @@ void Gameplay::loopMenu() {
     choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(20);
+        Sleep(delaiFillaire);
     }
     if (choix == ROUGE){
         voirMeilleurScore();
@@ -383,7 +388,7 @@ void Gameplay::loopMenu() {
 
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(20);
+        Sleep(delaiFillaire);
     }
 
     if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson(CHANSON_1_MP3);
@@ -432,7 +437,7 @@ void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obten
     CouleurBouton choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(20);
+        Sleep(delaiFillaire);
     }
 
     /*gotoxy(10, 15);
@@ -507,7 +512,7 @@ void Gameplay::modifierLeProfile() {
     CouleurBouton choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(20);
+        Sleep(delaiFillaire);
     }
 
     switch (choix) {
@@ -588,7 +593,16 @@ CouleurBouton Gameplay::choixBouton(){
         return CouleurBouton::UNKNOWN;
     }
 
-    json j = json::parse(msg);
+    json j = json::object();
+    //json j = json::parse(msg);
+    try {
+        j = json::parse(msg);
+    }
+    catch (const json::parse_error&) {
+        //std::cout << "json erreur : " << msg << std::endl;
+        // Ignorer l'erreur
+    }
+
     if (verbose) {
         std::cout << j;
     }
