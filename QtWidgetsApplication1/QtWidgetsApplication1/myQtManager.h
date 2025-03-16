@@ -20,5 +20,6 @@ public:
 
     static void qtPageMeilleurScore(QWidget* window);
 
+    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack);
 };
 

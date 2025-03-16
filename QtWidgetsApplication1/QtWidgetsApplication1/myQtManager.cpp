@@ -84,6 +84,19 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack) {
 
     stack->addWidget(window);
 }
+void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack)
+{
+    QWidget* window = new QWidget();
+
+    //image en background
+    QLabel* imageLabel = new QLabel(window);
+    QPixmap image("Path.png");
+    imageLabel->setPixmap(image.scaled(1920, 1080, Qt::KeepAspectRatio));
+    //pas de bordure (tous l'écran) et ne bouge pas par rapport à l'écran
+
+    //login box
+
+}
 
 void myQtManager::qtPageFinPartie(QWidget* window)
 {

@@ -536,8 +536,36 @@ void Gameplay::interpreterMsg(string msg) {
         if (it.key() == "message") {
             std::cout << it.value() << std::endl;
         }
-        if (it.key() == "btnBleu" && it.value() == "released") {
+        if (it.key() == "btnBleu" && it.value() == "released") {        //bouton bleu, mais note rouge???
             std::cout << "note rouge appuyé" << std::endl;
+        }
+        else if (it.key() == "btnRouge" && it.value() == "released") {       //bouton rouge note rouge
+            // return CouleurBouton::BLEU;
+            cout << "note/btn rouge appuyé" << endl;                    //lorsqu'on utilise namespace std, plus besoin d'écrire std::
+        }
+        else if (it.key() == "btnVert" && it.value() == "released") {
+            //return CouleurBouton::VERT;
+            cout << "note/btn vert appuyé" << endl;
+        }
+        else if (it.key() == "btnJaune" && it.value() == "released") {
+            //return CouleurBouton::JAUNE;
+            cout << "note/btn jaune appuyé" << endl;
+        }
+        else if (it.key() == "btnMauve" && it.value() == "released") {
+            //return CouleurBouton::MAUVE;
+            cout << "note/btn mauve appuyé" << endl;
+        }
+        //else if (it.key() == BTN_QUITTER && it.value() == "released") {
+            //return CouleurBouton::QUITTER;
+        //}
+        else if (it.key() == "btnJoystick" && it.value() == "released") {
+            //return CouleurBouton::JOYSTICK;
+            cout << "joystick utilisé" << endl;
+        }
+
+        else {
+            //return CouleurBouton::UNKNOWN;
+            cout << "bouton inconnu" << endl;
         }
     }
 }
