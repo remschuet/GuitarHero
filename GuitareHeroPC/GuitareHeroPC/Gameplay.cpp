@@ -318,7 +318,7 @@ void Gameplay::SelectionJoueur()
     gameStruct.joueur = dao->getJoueur(nomJoueur);
 
     // Envoit de message BarreGraph
-    envoyerMsg("hello", "world");
+    envoyerMsg(BAR_GRAPH, "0101010101");
     loopMenu();
 }
 
