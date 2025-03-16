@@ -29,6 +29,8 @@ const std::string BTN_MAUVE = "BtMauve";
 const std::string BTN_QUITTER = "btnQuitter";
 const std::string BTN_JOYSTICK = "btJoystick";
 
+const std::string BAR_GRAPH = "barGraph";	//message : 10 caracteres de 0 et 1 1010101010 -> 1 sur deux barres d'allumer
+
 /*****************/
 /*     AUTRES    */
 /************** **/

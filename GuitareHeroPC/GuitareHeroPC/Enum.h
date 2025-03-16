@@ -13,7 +13,10 @@ enum CouleurBouton {
 	MAUVE,
 	QUITTER,
 	JOYSTICK,
-	UNKNOWN
+	UNKNOWN,
+	ok,
+	flecheDroite,
+	flecheGauche
 };
 
 enum NotesAction {
