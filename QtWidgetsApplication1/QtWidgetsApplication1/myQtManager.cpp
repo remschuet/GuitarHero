@@ -86,7 +86,9 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* g
     nomJeu->move(430, 30);
 
     //meilleur score
-    QLabel* meilleurScore = new QLabel("Meilleur score: 1000", window);
+    int meilleurScoreJoueur = gameplay->gameStruct.joueur->ScoreMax;
+
+    QLabel* meilleurScore = new QLabel("Meilleur score:"+ meilleurScoreJoueur, window);
     myQt_setFont(meilleurScore, QT_SUBTITLE);
     meilleurScore->setStyleSheet("color: " + COULEUR_TITRE + ";");  // Vert très foncé
     meilleurScore->move(430, 200);
@@ -100,23 +102,10 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* g
 
     // Changer de page au clic
     QObject::connect(infoButton, &QPushButton::clicked, [stack]() {
-        stack->setCurrentIndex(1); // Aller à la page d'informations
+        stack->setCurrentIndex(0); // Aller à la page d'informations
         });    
 
     stack->addWidget(window);
-}
-void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack)
-{
-    QWidget* window = new QWidget();
-
-    //image en background
-    QLabel* imageLabel = new QLabel(window);
-    QPixmap image("Path.png");
-    imageLabel->setPixmap(image.scaled(1920, 1080, Qt::KeepAspectRatio));
-    //pas de bordure (tous l'écran) et ne bouge pas par rapport à l'écran
-
-    //login box
-
 }
 
 void myQtManager::qtPageFinPartie(QWidget* window)
@@ -130,4 +119,10 @@ void myQtManager::qtPageParametres(QWidget* window)
 void myQtManager::qtPageMeilleurScore(QWidget* window)
 {
 }
+
+void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack)
+{
+}
+
+
 

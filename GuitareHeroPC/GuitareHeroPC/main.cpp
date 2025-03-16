@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
 
-    const ComMode MODE = FILAIRE;
+    const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM3";
 
     Gameplay gameplay(NOM_PORT, MODE);

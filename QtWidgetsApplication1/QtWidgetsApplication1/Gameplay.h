@@ -34,13 +34,14 @@ public:
 	bool configFilaire(std::string nomPort);
 	void interpreterMsg(std::string);
 	CouleurBouton choixBouton();
+	GameStruct gameStruct;
+
 
 private:
 	ComArduino* comArduino;
 	ComMode modeCommunication;
 	bool verbose;
 	bool admin;
-	GameStruct gameStruct;
 	int tick = 0;
 	void modifierLeProfile();
 };
