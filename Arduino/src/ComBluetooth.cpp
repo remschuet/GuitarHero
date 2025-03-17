@@ -1,63 +1,61 @@
 #include "ComBluetooth.h"
 
 /*---------------------------- Classe ComBluetooth ----------------------------*/
-    ComBluetooth::ComBluetooth(long baudRate)//9600 le baudRate par défaut a voir si on garde ca
-        : bluetooth(bluetoothRx, bluetoothTx)
-    {
-        bluetooth.begin(baudRate);
+ComBluetooth::ComBluetooth(long baudRate)//9600 le baudRate par défaut a voir si on garde ca
+{
+    Serial1.begin(baudRate);
+}
+
+ComBluetooth::~ComBluetooth()
+{
+    Serial1.end();
+}
+
+bool ComBluetooth::envoyerMessage(const MyJson &json)
+{
+    StaticJsonDocument<500> doc;
+    //doc["time"] = millis();
+    doc[json.key] = json.message;
+    serializeJson(doc, Serial1);
+    Serial1.println();
+    delay(10); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
+    return true;
+}
+
+MyJson ComBluetooth::lireMessage()
+{
+    MyJson json;
+    StaticJsonDocument<500> doc;
+    String jsonMessage = "";
+    // Lire les données du port Bluetooth
+    if (Serial1.available()) {
+        jsonMessage = Serial1.readString();  // Lire le message Bluetooth
+    } else {
+        return json;  // Si aucune donnée reçue, on retourne un objet vide
     }
 
-    ComBluetooth::~ComBluetooth()
+    // Désérialisation du JSON
+    DeserializationError error = deserializeJson(doc, jsonMessage);
+    if (error)
     {
-    }
-
-    bool ComBluetooth::envoyerMessageString(const MyJson &json)
-    {
-        StaticJsonDocument<500> doc;
-        doc["time"] = millis();
-        doc[json.key] = json.message;
-        serializeJson(doc, bluetooth);
-        bluetooth.println();
-        delay(10); // TODO : ATTENTION MAIS NE PAS DESCENDRE EN DESSOUS DE 50 mili
-        return true;
-    }
-
-    bool ComBluetooth::envoyerMessage(int potValue) 
-    {
-        StaticJsonDocument<500> doc;
-        doc["time"] = millis();
-        doc["analog"] = potValue;
-        serializeJson(doc, Serial);
-        bluetooth.println();
-        return true;
-    }
-
-    MyJson ComBluetooth::lireMessage()
-    {
-        MyJson json;
-        if (bluetooth.available())
-        {
-            StaticJsonDocument<500> doc;
-            DeserializationError error = deserializeJson(doc, bluetooth);
-            
-            if (error)
-            {
-                //bluetooth.println(error.c_str());
-                errorLogger.AddError("Erreur Btooth msg ERROR",1);
-            }
-            else
-            {
-                for (JsonPair kv : doc.as<JsonObject>())
-                {
-                    json.key = kv.key().c_str(); // Stocker la clé
-                    json.message = kv.value().as<String>(); // Stocker la valeur comme String
-                    break; // Supposer que nous voulons seulement la première paire clé-valeur
-                }
-            }
-        }
-        else
-        {
-            errorLogger.AddError("Erreur Btooth non-dispo",1);
-        }
+        Serial1.print("❌ Erreur de parsing JSON : ");
+        Serial1.println(error.c_str());
         return json;
     }
+
+    // Récupérer la première clé et sa valeur
+    for (JsonPair keyValue : doc.as<JsonObject>())
+    {
+        json.key = keyValue.key().c_str();  // Stocker la clé
+        json.message = keyValue.value().as<String>(); // Stocker la valeur sous forme de String
+        break; // Prend seulement la première clé trouvée
+    }
+
+/*    // ✅ Afficher la clé et la valeur
+    bluetooth.print("📥 Clé reçue : ");
+    bluetooth.println(json.key);
+    bluetooth.print("📥 Valeur reçue : ");
+    bluetooth.println(json.message);
+*/
+    return json;
+}

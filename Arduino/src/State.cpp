@@ -5,23 +5,6 @@ State::State():timer(millis())
 {
     UpdateStateDI();
     UpdateStateAI();
-    /*int* stateTempAI=GetStateAI();
-    defaultValueAI[0]=stateTempAI[0];
-    defaultValueAI[1]=stateTempAI[1];
-    defaultValueAI[2]=stateTempAI[2];
-    defaultValueAI[3]=stateTempAI[3];
-    defaultValueAI[4]=stateTempAI[4];
-    Serial.println(aiState[0]);
-    Serial.println(defaultValueAI[1]);
-    Serial.println(defaultValueAI[2]);
-    Serial.println(defaultValueAI[3]);
-    Serial.println(defaultValueAI[4]);
-    Serial.println(aiState[0]);
-    Serial.println(aiState[1]);
-    Serial.println(aiState[2]);
-    Serial.println(aiState[3]);
-    Serial.println(aiState[4]);
-    delete[] stateTempAI;*/
     SetDefault();
 }
 
@@ -35,19 +18,19 @@ void State::GetState(Com* comDevice)
     //Boutons
     for (i=0;i<bt;i++)
     {
-        comDevice->envoyerMessageString(MyJson(diName[i],String(stateTempDI[i])));
+        comDevice->envoyerMessage(MyJson(diName[i],String(stateTempDI[i])));
         diState[i]=stateTempDI[i];
     }
     //Joystick
     for (i=0;i<2;i++)
     {
-        comDevice->envoyerMessageString(MyJson(aiName[1],axe[1-i]+String(stateTempAI[i])));
+        comDevice->envoyerMessage(MyJson(aiName[1],axe[1-i]+String(stateTempAI[i])));
         aiState[i]=stateTempAI[i];
     }
     //Accelerometre
     for (i=2;i<5;i++)
     {
-        comDevice->envoyerMessageString(MyJson(aiName[0],axe[4-i]+String(stateTempAI[i])));
+        comDevice->envoyerMessage(MyJson(aiName[0],axe[4-i]+String(stateTempAI[i])));
         aiState[i]=stateTempAI[i];
     }
     delete[] stateTempDI;
@@ -71,15 +54,15 @@ void State::GetChange(Com* comDevice)
             {
                 if (diState[i]==0)
                 {
-                    comDevice->envoyerMessageString(MyJson(diName[i],change[0]));
+                    comDevice->envoyerMessage(MyJson(diName[i],change[0]));
                 }
                 else if(diState[i]==1)
                 {
-                    comDevice->envoyerMessageString(MyJson(diName[i],change[1]));
+                    comDevice->envoyerMessage(MyJson(diName[i],change[1]));
                 }
                 else
                 {
-                    comDevice->envoyerMessageString(MyJson(diName[i],change[3]));
+                    comDevice->envoyerMessage(MyJson(diName[i],change[3]));
                     errorLogger.AddError("Erreur Etat Boutons invalide",2);
                 }
                 diState[i]=stateTempDI[i];
@@ -105,7 +88,7 @@ void State::GetChange(Com* comDevice)
                 && (i<2)
                 && (timerJoy+timerFilterJoy<=millis()))
             {
-                    comDevice->envoyerMessageString(MyJson(aiName[1],change[2]));
+                    comDevice->envoyerMessage(MyJson(aiName[1],change[2]));
                     movedJoy=1;
                     returned=false;
                     timerJoy=millis();
@@ -118,7 +101,7 @@ void State::GetChange(Com* comDevice)
             && (i>=2)
             && (timerAcc+timerFilterAcc<=millis()))
             {
-                comDevice->envoyerMessageString(MyJson(aiName[0],change[2]));
+                comDevice->envoyerMessage(MyJson(aiName[0],change[2]));
                 movedAcc=1;
                 timerAcc=millis();
             }

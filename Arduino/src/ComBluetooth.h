@@ -2,21 +2,18 @@
 #define COM_BLUETOOTH_H
 
 #include <Com.h>
-#include "Global.h"
 
 /*---------------------------- Classe ComBluetooth ----------------------------*/
 class ComBluetooth:public Com{
     public:
-        ComBluetooth(long baudRate=9600);//9600 le baudRate par défaut a voir si on garde ca
+        ComBluetooth(long baudRate=115200);//115200 le baudRate par défaut a voir si on garde ca
         ~ComBluetooth();//9600 le baudRate par défaut a voir si on garde ca
-        bool envoyerMessageString(const MyJson &json) override;
-        bool envoyerMessage(int potValue) override;
+        bool envoyerMessage(const MyJson &json) override;
         MyJson lireMessage() override;
 
     private:
-        const int bluetoothTx = 26;  // TX HC-05 -> RX Arduino ##pin arduino à redéfinir
-        const int bluetoothRx = 24;  // RX HC-05 -> TX Arduino ##pin arduino à redéfinir
-        SoftwareSerial bluetooth;
+        const int bluetoothTx = 18;  // TX Arduino -> RX HC-05
+        const int bluetoothRx = 19;  // RX Arduino -> TX HC-05
 
 };
 

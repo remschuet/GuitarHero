@@ -3,17 +3,17 @@
 /*---------------------------- Classe ComFilaire ----------------------------*/
 ComFilaire::ComFilaire(long baudRate)//9600 le baudRate par défaut a voir si on garde ca
 {
-    Serial.begin(9600);
+    Serial.begin(baudRate);
 }
 
 ComFilaire::~ComFilaire()
 {
 }
 
-bool ComFilaire::envoyerMessageString(const MyJson &json) 
+bool ComFilaire::envoyerMessage(const MyJson &json) 
 {
     StaticJsonDocument<500> doc;
-    doc["time"] = millis();
+    //doc["time"] = millis();
     doc[json.key] = json.message;
     serializeJson(doc, Serial);
     Serial.println();
@@ -21,41 +21,41 @@ bool ComFilaire::envoyerMessageString(const MyJson &json)
     return true;
 }
 
-bool ComFilaire::envoyerMessage(int potValue) 
-{
-    StaticJsonDocument<500> doc;
-    doc["time"] = millis();
-    doc["analog"] = potValue;
-    serializeJson(doc, Serial);
-    Serial.println();
-    return true;
-}
-
 MyJson ComFilaire::lireMessage()
 {
     MyJson json;
-    if (Serial.available())
-    {
-        StaticJsonDocument<500> doc;
-        DeserializationError error = deserializeJson(doc, Serial);
-        
-        if (error)
-        {
-            errorLogger.AddError("Erreur Filaire msg ERROR",1);
-        }
-        else
-        {
-            for (JsonPair kv : doc.as<JsonObject>())
-            {
-                json.key = kv.key().c_str(); // Stocker la clé
-                json.message = kv.value().as<String>(); // Stocker la valeur comme String
-                break; // Supposer que nous voulons seulement la première paire clé-valeur
-            }
-        }
+    StaticJsonDocument<500> doc;
+    String jsonMessage = "";
+    // Lire les données du port Bluetooth
+    if (Serial.available()) {
+        jsonMessage = Serial.readString();  // Lire le message Bluetooth
+    } else {
+        //Serial.print("YOP");
+        return json;  // Si aucune donnée reçue, on retourne un objet vide
     }
-    else
+
+    // Désérialisation du JSON
+    DeserializationError error = deserializeJson(doc, jsonMessage);
+    if (error)
     {
-        errorLogger.AddError("Erreur Filaire non-dispo",1);
+        Serial.print("❌ Erreur de parsing JSON : ");
+        Serial.println(error.c_str());
+        return json;
     }
+
+    // Récupérer la première clé et sa valeur
+    for (JsonPair keyValue : doc.as<JsonObject>())
+    {
+        json.key = keyValue.key().c_str();  // Stocker la clé
+        json.message = keyValue.value().as<String>(); // Stocker la valeur sous forme de String
+        break; // Prend seulement la première clé trouvée
+    }
+
+/*    // ✅ Afficher la clé et la valeur
+    Serial.print("📥 Clé reçue : ");
+    Serial.println(json.key);
+    Serial.print("📥 Valeur reçue : ");
+    Serial.println(json.message);
+*/
     return json;
 }
