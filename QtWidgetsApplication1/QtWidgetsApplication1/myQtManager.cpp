@@ -127,7 +127,6 @@ void myQtManager::qtPageAccueil(QWidget * parent, QStackedWidget * stack) {
     page->setStyleSheet("background-color: " + COULEUR_FOND + ";");
 
     // Image de fond
-    // Set up a QLabel for the background image
     QLabel* backgroundLabel = new QLabel(page);
     backgroundLabel->setPixmap(QPixmap("./background_login.jpeg")); // Replace with your image path
     backgroundLabel->setScaledContents(true);

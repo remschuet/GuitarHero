@@ -67,35 +67,35 @@ bool ComBluetooth::envoyerMessage(const json& j_msg) {
 
 bool ComBluetooth::recevoirMessage(std::string& msg) {
     if (hSerial == INVALID_HANDLE_VALUE) {
-        DWORD dwError = GetLastError();
-        std::cerr << "Erreur lors de l'ouverture du port " << portName << ". Code d'erreur : " << dwError << std::endl;
-    }
-
-    char charBuffer[1024];
-    DWORD bytesRead;
-
-    // Configuration des timeouts
-    COMMTIMEOUTS timeouts = { 0 };
-    timeouts.ReadIntervalTimeout = 50;
-    timeouts.ReadTotalTimeoutConstant = 50;
-    timeouts.ReadTotalTimeoutMultiplier = 10;
-    SetCommTimeouts(hSerial, &timeouts);
-
-    if (!ReadFile(hSerial, charBuffer, sizeof(charBuffer) - 1, &bytesRead, NULL)) {
-        std::cerr << "Erreur lors de la lecture du port série." << std::endl;
+        std::cerr << "Le port n'est pas ouvert." << std::endl;
         return false;
     }
 
-    if (bytesRead > 0) {
-        msg.assign(charBuffer, bytesRead);
-        size_t pos = msg.find('\n');
-        if (pos != std::string::npos) {
-            msg = msg.substr(0, pos);
-            return true;
+    DWORD errors;
+    COMSTAT status;
+    ClearCommError(hSerial, &errors, &status);
+
+    if (status.cbInQue > 0) {
+        char charBuffer[1024];
+        DWORD bytesRead;
+        if (ReadFile(hSerial, charBuffer, sizeof(charBuffer) - 1, &bytesRead, NULL)) {
+            if (bytesRead > 0) {
+                msg.assign(charBuffer, bytesRead);
+                size_t pos = msg.find('\n');
+                if (pos != std::string::npos) {
+                    msg = msg.substr(0, pos);
+                    return true;
+                }
+            }
+        }
+        else {
+            std::cerr << "Erreur lors de la lecture du port série." << std::endl;
         }
     }
     return false;
 }
+
+
 
 
 //#include "ComBluetooth.h"

@@ -3,8 +3,8 @@
 
 int main(int argc, char* argv[]) {
 
-    const ComMode MODE = FILAIRE;
-    const std::string NOM_PORT = "COM2";
+    const ComMode MODE = BLUETOOTH;
+    const std::string NOM_PORT = "COM7";
 
     Gameplay gameplay(NOM_PORT, MODE);
     gameplay.SelectionJoueur();
