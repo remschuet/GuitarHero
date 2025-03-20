@@ -1,5 +1,4 @@
 #include "myQtManager.h"
-#include "CONST_QT.h"
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     // Créer un objet QFont et définir la taille de la police
@@ -98,7 +97,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* g
     
     //image du joueur
     QLabel* imageLabel = new QLabel(window);
-    QPixmap image("../GuitarHero/GuitareHeroPC/GuitareHeroPC/avatar.jpeg"); // Remplacer par le chemin de ton image
+    QPixmap image("./avatar.jpeg"); // Remplacer par le chemin de ton image
     imageLabel->setPixmap(image.scaled(100, 100, Qt::KeepAspectRatio));
     imageLabel->setStyleSheet("border: 2px solid " + COULEUR_IMAGE_BORDURE + ";");  // Bordure verte
     imageLabel->move(1000, 200);
@@ -123,9 +122,61 @@ void myQtManager::qtPageMeilleurScore(QWidget* window)
 {
 }
 
-void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack)
-{
+void myQtManager::qtPageAccueil(QWidget * parent, QStackedWidget * stack) {
+    QWidget* page = new QWidget(parent);
+    page->setStyleSheet("background-color: " + COULEUR_FOND + ";");
+
+    // Image de fond
+    // Set up a QLabel for the background image
+    QLabel* backgroundLabel = new QLabel(page);
+    backgroundLabel->setPixmap(QPixmap("./background_login.jpeg")); // Replace with your image path
+    backgroundLabel->setScaledContents(true);
+    backgroundLabel->setGeometry(page->rect()); // Match the size of the page
+    backgroundLabel->lower(); // Ensure it's at the back
+    
+    // Layout principal
+    QVBoxLayout* layout = new QVBoxLayout(page);
+
+    // Titre
+    QLabel* labelTitre = new QLabel("Welcome to Sherby Guitar !");
+    labelTitre->setAlignment(Qt::AlignCenter);
+    labelTitre->setStyleSheet("font-size: " + QString::number(QT_TITLE) + "px; color: " + COULEUR_TITRE + "; font-weight: bold;");
+
+    // Sous-layout pour l'entrée du pseudo et mot de passe
+    QVBoxLayout* formLayout = new QVBoxLayout();
+
+    QLineEdit* inputNom = new QLineEdit();
+    inputNom->setPlaceholderText("USERNAME");
+    inputNom->setStyleSheet("background-color: white; color: black; border-radius: 5px; padding: 5px; font-size: 16px;");
+
+
+    formLayout->addWidget(inputNom);
+
+    // Bouton Login
+    QPushButton* btnLogin = new QPushButton("LOGIN");
+    btnLogin->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
+
+    // Ajouter les éléments au layout
+    layout->addStretch();
+    layout->addWidget(labelTitre);
+    layout->addLayout(formLayout);
+    layout->addWidget(btnLogin);
+    layout->addStretch();
+
+    // Définir une taille plus adaptée et centrer
+    int largeur = TAILLE_ECRAN_X * 0.6;
+    int hauteur = TAILLE_ECRAN_Y * 0.5;
+    page->setFixedSize(largeur, hauteur);
+
+    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+    int posX = (screenGeometry.width() - largeur) / 2;
+    int posY = (screenGeometry.height() - hauteur) / 2;
+    page->move(posX, posY);
+
+    page->setLayout(layout);
+    stack->addWidget(page);
 }
+
 
 
 

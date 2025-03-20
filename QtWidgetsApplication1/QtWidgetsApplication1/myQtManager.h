@@ -4,6 +4,11 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QPushButton>
+#include <QGuiApplication>
+#include <QVBoxLayout>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <qscreen.h>
 #include "Gameplay.h"
 #include "GameStruct.h"
 #include "CONST_QT.h"

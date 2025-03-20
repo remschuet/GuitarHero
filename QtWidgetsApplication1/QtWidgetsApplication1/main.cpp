@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     myQtManager::qtPageInformations(nullptr, &stack);
     myQtManager::qtPageAccueil(nullptr, &stack);
 
-    stack.setCurrentIndex(0);
+    stack.setCurrentIndex(2);
     stack.resize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     stack.show();
 
