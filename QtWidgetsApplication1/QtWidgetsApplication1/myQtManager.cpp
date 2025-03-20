@@ -86,7 +86,10 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* g
     nomJeu->move(430, 30);
 
     //meilleur score
-    int meilleurScoreJoueur = gameplay->gameStruct.joueur->ScoreMax;
+    int meilleurScoreJoueur = 1000;
+    if (gameplay->gameStruct.joueur != nullptr) {
+        meilleurScoreJoueur = gameplay->gameStruct.joueur->ScoreMax;
+    }
 
     QLabel* meilleurScore = new QLabel("Meilleur score:"+ meilleurScoreJoueur, window);
     myQt_setFont(meilleurScore, QT_SUBTITLE);
@@ -95,7 +98,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* g
     
     //image du joueur
     QLabel* imageLabel = new QLabel(window);
-    QPixmap image("C:/Users/Jovan/Desktop/Git/GuitarHero/GuitareHeroPC/GuitareHeroPC/avatar.jpeg"); // Remplacer par le chemin de ton image
+    QPixmap image("../GuitarHero/GuitareHeroPC/GuitareHeroPC/avatar.jpeg"); // Remplacer par le chemin de ton image
     imageLabel->setPixmap(image.scaled(100, 100, Qt::KeepAspectRatio));
     imageLabel->setStyleSheet("border: 2px solid " + COULEUR_IMAGE_BORDURE + ";");  // Bordure verte
     imageLabel->move(1000, 200);
