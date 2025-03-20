@@ -42,7 +42,7 @@ void setup()
   delay(2000);
 
   state.SetDefault();
-  selectedCom=FILAIRE;
+  selectedCom=BLUETOOTH;
 
   lcd.init();           // S'assurer que l'initialisation n'est pas redondante si déjà faite dans Global.cpp
   lcd.backlight();

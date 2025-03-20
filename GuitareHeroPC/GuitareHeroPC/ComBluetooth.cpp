@@ -37,7 +37,7 @@ bool ComBluetooth::configurerPort() {
         return false;
     }
 
-    dcbSerialParams.BaudRate = CBR_9600;
+    dcbSerialParams.BaudRate = CBR_115200;
     dcbSerialParams.ByteSize = 8;
     dcbSerialParams.StopBits = ONESTOPBIT;
     dcbSerialParams.Parity = NOPARITY;
@@ -52,7 +52,7 @@ bool ComBluetooth::configurerPort() {
 
 bool ComBluetooth::envoyerMessage(const json& j_msg) {
     if (hSerial == INVALID_HANDLE_VALUE) {
-        std::cerr << "Le port n'est pas ouvert." << std::endl;
+        std::cerr << "Le port n'est pas ouvert envoyer." << std::endl;
         return false;
     }
 
@@ -67,8 +67,8 @@ bool ComBluetooth::envoyerMessage(const json& j_msg) {
 
 bool ComBluetooth::recevoirMessage(std::string& msg) {
     if (hSerial == INVALID_HANDLE_VALUE) {
-        std::cerr << "Le port n'est pas ouvert." << std::endl;
-        return false;
+        DWORD dwError = GetLastError();
+        std::cerr << "Erreur lors de l'ouverture du port " << portName << ". Code d'erreur : " << dwError << std::endl;
     }
 
     char charBuffer[1024];

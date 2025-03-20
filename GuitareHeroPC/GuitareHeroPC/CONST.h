@@ -7,11 +7,11 @@
 
 const std::string CHANSON_1_MP3 = "psycho.mp3";
 const std::string CHANSON_2_MP3 = "Coldplay_Hymn.mp3";
-const std::string CHANSON_3_MP3 = "autre.mp3";
+const std::string CHANSON_3_MP3 = "Blitzkrieg2022.mp3";
 
 const std::string CHANSON_1_TXT = "psycho.txt";
 const std::string CHANSON_2_TXT = "Coldplay_Hymn[MediumSingle].txt";
-const std::string CHANSON_3_TXT = "autre.txt";
+const std::string CHANSON_3_TXT = "Blitzkrieg2022.txt";
 
 /***************************/
 /*  MESSAGE ENTRE ARDUINO  */
@@ -35,4 +35,4 @@ const std::string BAR_GRAPH = "bG2";	//message : 10 caracteres de 0 et 1 1010101
 /*     AUTRES    */
 /************** **/
 const int delaiAffichage = 5500; //10000 à la base
-const int delaiFillaire = 100; //delai avant choix bouton.		 si plus petit que 100 -> bug
+const int delaiFillaire = 10; //delai avant choix bouton.		 si plus petit que 100 -> bug

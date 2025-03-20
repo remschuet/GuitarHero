@@ -73,7 +73,7 @@ void Output::Set(Com* comDevice,com *selectedCom)
 void Output::SetLCD(String message)
 {
     lcd.clear();
-    lcd.setCursor(0, 1);
+    lcd.setCursor(0, 0);
     lcd.print(message);
     analogWrite(48,150);
 }

@@ -12,7 +12,7 @@
 class Gameplay
 {
 public:
-	Gameplay(std::string comPort = "COM5", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
+	Gameplay(std::string comPort = "COM2", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
 	void afficherImage();
 	void PrendreImage();
 	void gotoxy(int x, int y);
