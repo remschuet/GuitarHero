@@ -585,6 +585,17 @@ CouleurBouton Gameplay::choixBouton(){
     return CouleurBouton::UNKNOWN;
 }
 
+void Gameplay::setJoueur(Joueur* nouveauJoueur) {
+    if (joueurActuel != nullptr) {
+        delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
+    }
+    joueurActuel = nouveauJoueur;
+}
+
+Joueur* Gameplay::getJoueur() {
+    return joueurActuel;
+}
+
 bool Gameplay::configBluetooth(std::string nomPort) {
     comArduino = new ComBluetooth(nomPort);
     return true;

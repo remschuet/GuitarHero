@@ -22,9 +22,9 @@ int main(int argc, char* argv[]) {
     // Ajouter les fenêtres
     myQtManager::qtPageMenu(nullptr, &stack, gameplay);
     myQtManager::qtPageInformations(nullptr, &stack);
-    myQtManager::qtPageAccueil(nullptr, &stack);
+    myQtManager::qtPageAccueil(nullptr, &stack, gameplay);
 
-    stack.setCurrentIndex(2);
+    stack.setCurrentIndex(1);
     stack.resize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     stack.show();
 

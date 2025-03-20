@@ -35,9 +35,12 @@ public:
 	void interpreterMsg(std::string);
 	CouleurBouton choixBouton();
 	GameStruct gameStruct;
+	Joueur* getJoueur(); 
+	void setJoueur(Joueur* nouveauJoueur);
 
 
 private:
+	Joueur* joueurActuel = nullptr;
 	ComArduino* comArduino;
 	ComMode modeCommunication;
 	bool verbose;

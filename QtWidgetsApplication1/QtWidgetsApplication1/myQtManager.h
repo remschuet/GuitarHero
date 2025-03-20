@@ -4,11 +4,9 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QPushButton>
-#include <QGuiApplication>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QMessageBox>
-#include <qscreen.h>
 #include "Gameplay.h"
 #include "GameStruct.h"
 #include "CONST_QT.h"
@@ -27,6 +25,5 @@ public:
 
     static void qtPageMeilleurScore(QWidget* window);
 
-    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack);
+    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G);
 };
-
