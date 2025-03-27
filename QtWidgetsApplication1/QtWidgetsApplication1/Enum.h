@@ -1,5 +1,15 @@
 #pragma once
 
+enum fenetres { 
+	Menu,
+	Accueil,
+	MeilleursScores,
+	Informations,
+	FinPartie,
+	Parametre
+};
+
+
 enum NotesEtats {
 	AFFICHER,
 	EN_ATTENTE,

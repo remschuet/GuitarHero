@@ -10,9 +10,8 @@
 #include "Gameplay.h"
 #include "GameStruct.h"
 #include "CONST_QT.h"
+#include "Enum.h"
 
-
-enum fenetres { Menu, Accueil, MeilleursScores, Informations, FinPartie, Parametre};
 
 class myQtManager {
 public:

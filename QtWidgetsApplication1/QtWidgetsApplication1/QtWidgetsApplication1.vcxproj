@@ -141,9 +141,13 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="myQtManager.h" />
     <ClInclude Include="Note.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SerialPort.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="tests.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="QtWidgetsApplication1.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

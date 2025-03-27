@@ -13,7 +13,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     // Image de fond
     QLabel* backgroundLabel = new QLabel(page);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    QPixmap resizedPixmap("placeholder background login.jpeg");
+    QPixmap resizedPixmap("placeholder_background_login.png");
    // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(false);
