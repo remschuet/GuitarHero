@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
 
-    const ComMode MODE = BLUETOOTH;
+    const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM7";
 
     Gameplay gameplay(NOM_PORT, MODE);

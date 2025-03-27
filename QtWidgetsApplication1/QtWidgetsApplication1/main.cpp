@@ -20,15 +20,23 @@ int main(int argc, char* argv[]) {
     Gameplay* gameplay = new Gameplay(NOM_PORT, MODE);
 
     // Ajouter les fenêtres
-    myQtManager::qtPageMenu(nullptr, &stack, gameplay);
-    myQtManager::qtPageInformations(nullptr, &stack);
-    myQtManager::qtPageAccueil(nullptr, &stack, gameplay);
+    //enum fenetres {qtPageMenu, qtPageAccueil};
+    fenetres QtFenetre = Accueil;
+   // QtFenetre[qtPageAccueil];
+        myQtManager::qtPageMenu(nullptr, &stack, gameplay); // tout sauf 1
+        //myQtManager::qtPageInformations(nullptr, &stack);
+        myQtManager::qtPageAccueil(nullptr, &stack, gameplay);  // 1]
+        myQtManager::qtPageMeilleurScore(nullptr, &stack, gameplay);
+        myQtManager::qtPageInformations(nullptr, &stack, gameplay);
+        myQtManager::qtPageFinPartie(nullptr, &stack, gameplay);
+        myQtManager::qtPageParametres(nullptr, &stack, gameplay);
+    
 
-    stack.setCurrentIndex(1);
+    stack.setCurrentIndex(QtFenetre);
     stack.resize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     stack.show();
 
-    int entier = 0;
+    /*int entier = 0;
     qDebug() << "debug entier actuel: " << entier;
 
     while (entier < 10) {
@@ -42,7 +50,7 @@ int main(int argc, char* argv[]) {
 
         // Pour éviter une boucle infinie sans délai
         QThread::msleep(10);
-    }
+    }*/
 
     return app.exec();
 }
