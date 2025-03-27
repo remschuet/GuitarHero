@@ -141,7 +141,6 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="myQtManager.h" />
     <ClInclude Include="Note.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="SerialPort.h" />
     <ClInclude Include="sqlite3.h" />
     <ClInclude Include="tests.h" />

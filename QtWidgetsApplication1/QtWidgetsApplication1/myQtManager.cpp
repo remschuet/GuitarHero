@@ -164,6 +164,63 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G)
 {
     QWidget* pageMeilleursScores = new QWidget();
+    QVBoxLayout* mainLayout = new QVBoxLayout(pageMeilleursScores);
+
+    // Titre "Meilleur Score"
+    QLabel* titre = new QLabel("Meilleur Score");
+    titre->setAlignment(Qt::AlignCenter);
+    QFont fontTitre("Arial", 16, QFont::Bold);
+    titre->setFont(fontTitre);
+    mainLayout->addWidget(titre);
+
+    // Récupération des meilleurs scores depuis Gameplay
+    std::vector<Joueur*> meilleursJoueurs = {/* Ajouter la fonction qui récupère les 10 meilleurs joueurs */ };
+
+    // Affichage des scores
+    for (size_t i = 0; i < meilleursJoueurs.size() && i < 10; ++i) {
+        QHBoxLayout* rowLayout = new QHBoxLayout();
+
+        // Position
+        QLabel* position = new QLabel(QString::number(i + 1) + ".");
+        position->setFixedWidth(30);
+        rowLayout->addWidget(position);
+
+        // Nom du joueur
+        QLabel* nomJoueur = new QLabel(QString::fromStdString(meilleursJoueurs[i]->getNomJoueur()));
+        nomJoueur->setFixedWidth(100);
+        rowLayout->addWidget(nomJoueur);
+
+        // Score
+        QLabel* score = new QLabel(QString::number(meilleursJoueurs[i]->getMeilleurScore()));
+        score->setFixedWidth(50);
+        rowLayout->addWidget(score);
+
+        // Icône du joueur (remplace l'ancien label par une image)
+        QLabel* icone = new QLabel();
+        QPixmap pixmap(QString::fromStdString(meilleursJoueurs[i]->getImage())); // Récupère le chemin de l'image
+        pixmap = pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation); // Redimensionne l'image
+        icone->setPixmap(pixmap);
+        rowLayout->addWidget(icone);
+
+        mainLayout->addLayout(rowLayout);
+    }
+
+    // Bouton retour aligné à droite
+    QPushButton* btnRetour = new QPushButton("Retour");
+    btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
+    btnRetour->setFixedSize(80, 30);
+
+    QHBoxLayout* btnLayout = new QHBoxLayout();
+    btnLayout->addStretch();
+    btnLayout->addWidget(btnRetour);
+    mainLayout->addLayout(btnLayout);
+
+    // Action du bouton retour
+    QObject::connect(btnRetour, &QPushButton::clicked, [stack]() {
+        stack->setCurrentIndex(0); // Retour au menu principal
+        });
+
+    pageMeilleursScores->setLayout(mainLayout);
     stack->addWidget(pageMeilleursScores);
 }
 
