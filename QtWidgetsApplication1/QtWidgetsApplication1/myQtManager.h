@@ -1,12 +1,15 @@
 #pragma once
 #include <QApplication>
 #include <QWidget>
+#include <QStackedLayout>
 #include <QLabel>
+#include <qdebug.h>
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QMessageBox>
+#include "DAOSqlite.h"
 #include "Gameplay.h"
 #include "GameStruct.h"
 #include "CONST_QT.h"

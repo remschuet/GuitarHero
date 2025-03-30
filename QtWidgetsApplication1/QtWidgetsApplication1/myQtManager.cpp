@@ -14,11 +14,11 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     QLabel* backgroundLabel = new QLabel(page);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("placeholder_background_login.png");
-   // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(false);
     backgroundLabel->lower();
-   
+
 
     // Titre
     QLabel* labelTitre = new QLabel(page);
@@ -38,8 +38,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
 
     // formLayout->addWidget(inputNom);
-
-     // Bouton Login
+// Bouton Login
     QPushButton* btnLogin = new QPushButton("LOGIN", page);
     btnLogin->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
     btnLogin->setGeometry((TAILLE_ECRAN_X - 900) / 2, 620, 200, 50);;
@@ -67,79 +66,62 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     stack->addWidget(page);
 }
 
+
+
 void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
     // Créer un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout(pageMenu);
+    layout->setAlignment(Qt::AlignCenter);
 
+    // Titre du menu
     QLabel* titre = new QLabel("Menu Principal");
     myQt_setFont(titre, 20);
-    layout->addWidget(titre);
-    layout->setAlignment(titre, Qt::AlignHCenter | Qt::AlignTop);
+    layout->addWidget(titre, 0, Qt::AlignHCenter);
 
-    //QPushButton* btnStart = new QPushButton("Démarrer");
-    //layout->addWidget(btnStart);
+    // Espacement entre le titre et les boutons
+    layout->addSpacing(30);
 
-    // Bouton Meilleurs Scores
-    QPushButton* btnMeilleursScores = new QPushButton("Voir meilleurs scores", pageMenu);
-    btnMeilleursScores->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
-    layout->addWidget(btnMeilleursScores);
-    layout->setAlignment(btnMeilleursScores, Qt::AlignHCenter | Qt::AlignTop);
-    layout->setSpacing(20);
-    //btnMeilleursScores->setGeometry((TAILLE_ECRAN_X - 900) / 2, 620, 200, 50);;
-    QObject::connect(btnMeilleursScores, &QPushButton::clicked, [=]() {
+    // Liste des boutons
+    QStringList buttonNames = { "Demarrer", "Voir meilleurs scores", "Informations joueur", "Deconnexion" };
+    QVector<QPushButton*> buttons;
+
+    // Création des boutons avec un style uniforme
+    for (const QString& name : buttonNames) {
+        QPushButton* button = new QPushButton(name);
+        button->setStyleSheet("background-color: " + COULEUR_BOUTON +
+            "; color: " + COULEUR_TEXTE_BOUTON +
+            "; font-size: 18px; border-radius: 5px; padding: 10px;");
+        button->setFixedSize(250, 50);
+        buttons.append(button);
+        layout->addWidget(button, 0, Qt::AlignHCenter);
+    }
+
+    // Gestion des connexions des boutons
+    QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
+        fenetres QtFenetre = Parametre; // Page à changer
+        stack->setCurrentIndex(QtFenetre);
+        });
+
+    QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = MeilleursScores;
-        // Configurer la page du menu et rediriger
-        qtPageMenu(parent, stack, G);
-        qDebug() << "index actuel : " << QtFenetre;
-        stack->setCurrentIndex(QtFenetre); 
+        stack->setCurrentIndex(QtFenetre);
         });
 
-    //Bouton Informations joueur
-    QPushButton* btnInfosJoueur = new QPushButton("Informations joueur", pageMenu);
-    btnInfosJoueur->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
-    btnInfosJoueur->setGeometry((TAILLE_ECRAN_X - 900) / 2, 520, 200, 50);;
-    QObject::connect(btnInfosJoueur, &QPushButton::clicked, [=]() {
+    QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Informations;
-        // Configurer la page du menu et rediriger
-        qtPageMenu(parent, stack, G);
-        qDebug() << "index actuel : " << QtFenetre;
-        stack->setCurrentIndex(QtFenetre); 
-        });
-
-
-    //bouton Commencer Partie
-    QPushButton* btnCommencerPartie = new QPushButton("Demarrer ", pageMenu);
-    btnCommencerPartie->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
-    btnCommencerPartie->setGeometry((TAILLE_ECRAN_X - 900) / 2, 320, 200, 50);;
-    QObject::connect(btnCommencerPartie, &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = Parametre; //La page partie n'existe pas encore                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                                                                           // À changer!!!
-        // Configurer la page du menu et rediriger
-        qtPageMenu(parent, stack, G);
-        qDebug() << "index actuel : " << QtFenetre;
         stack->setCurrentIndex(QtFenetre);
         });
 
-    //bouton Déconnexion (changement de joueur)
-    QPushButton* btnDeconnexion = new QPushButton("Deconnexion", pageMenu);
-    btnDeconnexion->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
-    btnDeconnexion->setGeometry((TAILLE_ECRAN_X ) / 2, 620, 200, 50);;
-    QObject::connect(btnDeconnexion, &QPushButton::clicked, [=]() {
+    QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
-        // Configurer la page du menu et rediriger
-        qtPageMenu(parent, stack, G);
-        qDebug() << "index actuel : " << QtFenetre;
         stack->setCurrentIndex(QtFenetre);
         });
-
-
-   
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
-
 }
+
 
 
 // Autres fonctions (à implémenter )
@@ -168,41 +150,50 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
 
     // Titre "Meilleur Score"
     QLabel* titre = new QLabel("Meilleur Score");
-    titre->setAlignment(Qt::AlignCenter);
+    titre->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     QFont fontTitre("Arial", 16, QFont::Bold);
     titre->setFont(fontTitre);
     mainLayout->addWidget(titre);
 
+    //debug
+    qDebug() << "qtPageMeilleurScore appelée\n";
+
     // Récupération des meilleurs scores depuis Gameplay
-    std::vector<Joueur*> meilleursJoueurs = {/* Ajouter la fonction qui récupère les 10 meilleurs joueurs */ };
+    std::pair < std::string, int> scores[10];
+    DAOSqlite* sqlite = DAOSqlite::getInstance();
+    sqlite->getMeilleurScore(scores);
 
     // Affichage des scores
-    for (size_t i = 0; i < meilleursJoueurs.size() && i < 10; ++i) {
-        QHBoxLayout* rowLayout = new QHBoxLayout();
+    for (size_t i = 0; i < 10 && i < 10; ++i) {
+        if (scores[i].first != "")
+        {
+            QHBoxLayout* rowLayout = new QHBoxLayout();
 
-        // Position
-        QLabel* position = new QLabel(QString::number(i + 1) + ".");
-        position->setFixedWidth(30);
-        rowLayout->addWidget(position);
+            // Position
+            QLabel* position = new QLabel(QString::number(i + 1) + ".");
+            position->setFixedWidth(30);
+            rowLayout->addWidget(position);
 
-        // Nom du joueur
-        QLabel* nomJoueur = new QLabel(QString::fromStdString(meilleursJoueurs[i]->getNomJoueur()));
-        nomJoueur->setFixedWidth(100);
-        rowLayout->addWidget(nomJoueur);
+            // Nom du joueur
+            QLabel* nomJoueur = new QLabel(QString::fromStdString(scores[i].first));
+            nomJoueur->setFixedWidth(100);
+            rowLayout->addWidget(nomJoueur);
 
-        // Score
-        QLabel* score = new QLabel(QString::number(meilleursJoueurs[i]->getMeilleurScore()));
-        score->setFixedWidth(50);
-        rowLayout->addWidget(score);
+            // Score
+            QLabel* score = new QLabel(QString::number(scores[i].second));
+            score->setFixedWidth(50);
+            rowLayout->addWidget(score);
 
-        // Icône du joueur (remplace l'ancien label par une image)
-        QLabel* icone = new QLabel();
-        QPixmap pixmap(QString::fromStdString(meilleursJoueurs[i]->getImage())); // Récupère le chemin de l'image
-        pixmap = pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation); // Redimensionne l'image
-        icone->setPixmap(pixmap);
-        rowLayout->addWidget(icone);
+            /*// Icône du joueur (remplace l'ancien label par une image)
+            QLabel* icone = new QLabel();
+            QPixmap pixmap(QString::fromStdString(scores[i].first)); // Récupère le chemin de l'image
+            pixmap = pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation); // Redimensionne l'image
+            icone->setPixmap(pixmap);
+            rowLayout->addWidget(icone);
 
-        mainLayout->addLayout(rowLayout);
+            mainLayout->addLayout(rowLayout);
+            */
+        }
     }
 
     // Bouton retour aligné à droite
