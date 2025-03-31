@@ -332,6 +332,17 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         layout->addWidget(button, 0, Qt::AlignHCenter);
     }
 
+
+
+    //QPushButton* btnRetour = new QPushButton("Retour");
+    //btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
+    //btnRetour->setFixedSize(80, 30);
+
+    //QHBoxLayout* btnLayout = new QHBoxLayout();
+    //btnLayout->addStretch();
+    //btnLayout->addWidget(btnRetour);
+    //mainLayout->addLayout(btnLayout);
+
     // Gestion des connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = MeilleursScores; // Page à changer
@@ -353,6 +364,15 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         changerDePage(stack, QtFenetre, G);
         stack->setCurrentIndex(QtFenetre);
         });
+
+    /*QObject::connect(btnRetour, &QPushButton::clicked, [stack]() {
+        fenetres QtFenetre = Menu;
+        changerDePage(stack, QtFenetre, G);
+        stack->setCurrentIndex(QtFenetre)
+        });
+
+    // Action du bouton retour*/
+ 
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageParametre);
