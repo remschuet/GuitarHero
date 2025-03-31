@@ -6,7 +6,8 @@ enum fenetres {
 	MeilleursScores,
 	Informations,
 	FinPartie,
-	Parametre
+	Parametre,
+	Game
 };
 
 
