@@ -1,4 +1,5 @@
 ﻿#include "myQtManager.h"
+#include <QGraphicsOpacityEffect>
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
@@ -124,6 +125,19 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     myQt_setFont(titre, 20);
     layout->addWidget(titre, 0, Qt::AlignHCenter);
 
+    // Image de fond
+    QLabel* backgroundLabel = new QLabel(pageMenu);
+    backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    QPixmap resizedPixmap("placeholder_background_menu.png");
+    // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    backgroundLabel->setPixmap(resizedPixmap);
+    backgroundLabel->setPixmap(resizedPixmap);
+    backgroundLabel->setScaledContents(false);
+    backgroundLabel->lower();
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+    opacityEffect->setOpacity(0.5);
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+
     // Espacement entre le titre et les boutons
     layout->addSpacing(30);
 
@@ -150,7 +164,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = MeilleursScores;
-        stack->setCurrentIndex(QtFenetre);
+        changerDePage(stack, QtFenetre, G);
         });
 
     QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
@@ -278,7 +292,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     // Récupération des meilleurs scores depuis Gameplay
     std::pair < std::string, int> scores[10];
     DAOSqlite* sqlite = DAOSqlite::getInstance();
-    sqlite->getMeilleurScore(scores);
+    Joueur* allJoueur = sqlite->getMeilleurScore(scores);
 
     // Affichage des scores
     for (size_t i = 0; i < 10 && i < 10; ++i) {
@@ -331,5 +345,4 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     pageMeilleursScores->setLayout(mainLayout);
     stack->addWidget(pageMeilleursScores);
 }
-
 
