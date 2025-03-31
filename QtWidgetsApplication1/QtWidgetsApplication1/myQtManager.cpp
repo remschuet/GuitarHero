@@ -307,19 +307,35 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 {
     // Créer un widget pour la page du menu
     QWidget* pageParametre = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout(pageParametre);
-    layout->setAlignment(Qt::AlignCenter);
+    QGridLayout* layout = new QGridLayout(pageParametre);
 
-    // Titre du menu
+    // Créer le bouton "Retour"
+    QPushButton* btnRetour = new QPushButton("Retour");
+    btnRetour->setStyleSheet(
+        "background-color: red; "
+        "color: white; "
+        "font-size: 25px; "
+        "padding: 5px 10px; "
+        "border-radius: 5px; "
+        "QPushButton:hover {"
+        "background-color: green; "
+        "color: yellow; "
+        "}"
+    );
+    btnRetour->setFixedSize(300, 75);
+
+    // Ajouter le bouton "Retour" en haut à gauche (cellule (0, 0))
+    layout->addWidget(btnRetour, 0, 0, Qt::AlignLeft|Qt::AlignTop);
+
+    // Titre du menu (centré dans la grille)
     QLabel* titre = new QLabel("Paramètre");
-    myQt_setFont(titre, 20);
-    layout->addWidget(titre, 0, Qt::AlignHCenter);
+    myQt_setFont(titre, 50);
+    layout->addWidget(titre, 0, 0, 0, 0, Qt::AlignHCenter|Qt::AlignTop); // Cellule (0, 1) à (0, 2)
 
-    // Image de fond
+    // Image de fond (à l'arrière-plan)
     QLabel* backgroundLabel = new QLabel(pageParametre);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("./images/Setting.png");
-    // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(false);
     backgroundLabel->lower();
@@ -327,54 +343,44 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     opacityEffect->setOpacity(0.5);
     backgroundLabel->setGraphicsEffect(opacityEffect);
 
-    // Espacement entre le titre et les boutons
-    layout->addSpacing(30);
+    // Ajouter un espacement entre le titre et les boutons
+    // 
+    QWidget* spacer = new QWidget();
+    spacer->setFixedHeight(20);  // Espacement vertical
+    layout->addWidget(spacer, 1, 0, 1, 3);  // Ajouter un widget vide comme espacement
 
     // Liste des boutons
-    QStringList buttonNames = { "Demarrer", "Voir meilleurs scores", "Informations joueur", "Deconnexion" };
+    QStringList buttonNames = { "Difficulté", "Paramètre de la manette", "Informations joueur", "Mode Admin" };
     QVector<QPushButton*> buttons;
 
     // Création des boutons avec un style uniforme
-    for (const QString& name : buttonNames) {
-        QPushButton* button = new QPushButton(name);
+    for (int i = 0; i < buttonNames.size(); ++i) {
+        QPushButton* button = new QPushButton(buttonNames[i]);
         button->setStyleSheet(
-            "background-color: " + COULEUR_BOUTON +";"
-            "color: " + COULEUR_TEXTE_BOUTON +";"
-            "font - size: 18px;"
+            "background-color: " + COULEUR_BOUTON + ";"
+            "color: " + COULEUR_TEXTE_BOUTON + ";"
+            "font-size: 25px;"
             "border-radius: 5px; padding: 10px;"
             "QPushButton:hover {"
-            "background-color: green; "  // Change la couleur de fond au survol
-            "color: yellow; "  // Change la couleur du texte au survol
-            "}");
-        button->setFixedSize(250, 50);
+            "background-color: green; "
+            "color: yellow; "
+            "}"
+        );
+        button->setFixedSize(300, 75);
         buttons.append(button);
-        layout->addWidget(button, 0, Qt::AlignHCenter);
+        layout->addWidget(button, 1, 1, 1, 1, Qt::AlignHCenter|Qt::AlignVCenter);// Centrer les boutons
     }
 
+    //btnLayout->addStretch();            // Ajoute un espace flexible avant le bouton
+    //btnLayout->addWidget(btnRetour);    // Ajoute le bouton à la fin (à droite)
+    //btnLayout->addWidget(btnRetour, 0, Qt::AlignLeft | Qt::AlignTop);
 
+    // Ajouter ce layout à votre layout principal (QVBoxLayout)
+    //layout->addLayout(btnLayout);
 
-    QPushButton* btnRetour = new QPushButton("Retour");
-    btnRetour->setStyleSheet(
-        "background-color: red; "
-        "color: white; "
-        "padding: 5px 10px; "
-        "border-radius: 5px; "
-        "QPushButton:hover {"
-        "background-color: green; "  // Change la couleur de fond au survol
-        "color: yellow; "  // Change la couleur du texte au survol
-        "}"
-    );
-    btnRetour->setFixedSize(80, 30);
-
-    QHBoxLayout* btnLayout = new QHBoxLayout();
-    btnLayout->addStretch();
-    btnLayout->addWidget(btnRetour);
-    layout->addLayout(btnLayout);
-
-    // Gestion des connexions des boutons
+    // Connexion des boutons aux actions
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = MeilleursScores; // Page à changer
-        changerDePage(stack, QtFenetre, G);
+        fenetres QtFenetre = MeilleursScores;
         });
 
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
@@ -390,19 +396,16 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
         changerDePage(stack, QtFenetre, G);
-        stack->setCurrentIndex(QtFenetre);
         });
 
     QObject::connect(btnRetour, &QPushButton::clicked, [=]() {
         stack->setCurrentIndex(0); // Retour au menu principal
         });
 
-    // Action du bouton retour 
-
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageParametre);
-
 }
+
 
 void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G)
 {
