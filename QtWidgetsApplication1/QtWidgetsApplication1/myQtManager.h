@@ -20,6 +20,8 @@ class myQtManager {
 public:
     static void myQt_setFont(QLabel* q, int tailleFont);
 
+    static void changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G);
+
     static void qtPageInformations(QWidget* window, QStackedWidget* stack, Gameplay* G);
 
     static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G);

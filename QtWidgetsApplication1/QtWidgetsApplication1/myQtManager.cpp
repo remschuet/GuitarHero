@@ -1,10 +1,56 @@
-#include "myQtManager.h"
+ï»¿#include "myQtManager.h"
+#include <QGraphicsOpacityEffect>
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
     font.setPointSize(tailleFont);
     q->setFont(font);
 }
+
+void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G)
+{
+    // Supprimer l'ancienne page si elle existe
+    QWidget* anciennePage = stack->widget(page);
+    if (anciennePage != nullptr) {
+        stack->removeWidget(anciennePage); // On le retire du stack
+        delete anciennePage;               // On le supprime seulement aprÃ¨s l'avoir retirÃ©
+    }
+
+    QWidget* nouvellePage = nullptr;
+
+    // RecrÃ©er la page demandÃ©e sans crÃ©er un QWidget vide !
+    switch (page) {
+    case Accueil:
+        qtPageAccueil(nullptr, stack, G);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gÃ¨re Ã§a.
+        nouvellePage = stack->widget(stack->count() - 1);  // RÃ©cupÃ¨re la derniÃ¨re page ajoutÃ©e
+        break;
+    case Menu:
+        qtPageMenu(nullptr, stack, G);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
+    case MeilleursScores:
+        qtPageMeilleurScore(nullptr, stack, G);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
+    case Informations:
+        qtPageInformations(nullptr, stack, G);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
+    case FinPartie:
+        qtPageFinPartie(nullptr, stack, G);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
+    case Parametre:
+        qtPageParametres(nullptr, stack, G);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
+    }
+
+    if (nouvellePage != nullptr) {
+        stack->setCurrentIndex(stack->indexOf(nouvellePage));  // âœ… Afficher la nouvelle page
+    }
+}
+
 
 void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
 
@@ -27,7 +73,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     labelTitre->setStyleSheet("font-size: " + QString::number(QT_TITLE) + "px; color: " + COULEUR_TITRE + "; font-weight: bold;");
     labelTitre->setGeometry((TAILLE_ECRAN_X - 1750) / 2, 200, 1100, 100);
 
-    // Sous-layout pour l'entrée du pseudo et mot de passe
+    // Sous-layout pour l'entrÃ©e du pseudo et mot de passe
     //QVBoxLayout* formLayout = new QVBoxLayout();
 
     //nom du joueur
@@ -43,7 +89,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     btnLogin->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
     btnLogin->setGeometry((TAILLE_ECRAN_X - 900) / 2, 620, 200, 50);;
 
-    // Associer le bouton login à la création du joueur
+    // Associer le bouton login Ã  la crÃ©ation du joueur
     QObject::connect(btnLogin, &QPushButton::clicked, [=]() {
         QString nomJoueur = inputNom->text().trimmed();
         if (nomJoueur.isEmpty()) {
@@ -59,17 +105,17 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
         // Configurer la page du menu et rediriger
         qtPageMenu(parent, stack, G);
-        stack->setCurrentIndex(QtFenetre); // Aller à la dernière page ajoutée (menu)
+        stack->setCurrentIndex(QtFenetre); // Aller Ã  la derniÃ¨re page ajoutÃ©e (menu)
         });
 
-    // Définir la mise en page
+    // DÃ©finir la mise en page
     stack->addWidget(page);
 }
 
 
 
 void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
-    // Créer un widget pour la page du menu
+    // CrÃ©er un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout(pageMenu);
     layout->setAlignment(Qt::AlignCenter);
@@ -79,6 +125,19 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     myQt_setFont(titre, 20);
     layout->addWidget(titre, 0, Qt::AlignHCenter);
 
+    // Image de fond
+    QLabel* backgroundLabel = new QLabel(pageMenu);
+    backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    QPixmap resizedPixmap("placeholder_background_menu.png");
+    // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+    backgroundLabel->setPixmap(resizedPixmap);
+    backgroundLabel->setPixmap(resizedPixmap);
+    backgroundLabel->setScaledContents(false);
+    backgroundLabel->lower();
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+    opacityEffect->setOpacity(0.5);
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+
     // Espacement entre le titre et les boutons
     layout->addSpacing(30);
 
@@ -86,7 +145,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     QStringList buttonNames = { "Demarrer", "Voir meilleurs scores", "Informations joueur", "Deconnexion" };
     QVector<QPushButton*> buttons;
 
-    // Création des boutons avec un style uniforme
+    // CrÃ©ation des boutons avec un style uniforme
     for (const QString& name : buttonNames) {
         QPushButton* button = new QPushButton(name);
         button->setStyleSheet("background-color: " + COULEUR_BOUTON +
@@ -99,22 +158,23 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Gestion des connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = Parametre; // Page à changer
+        fenetres QtFenetre = Parametre; // Page Ã  changer
         stack->setCurrentIndex(QtFenetre);
         });
 
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = MeilleursScores;
-        stack->setCurrentIndex(QtFenetre);
+        changerDePage(stack, QtFenetre, G);
         });
 
     QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Informations;
-        stack->setCurrentIndex(QtFenetre);
+        changerDePage(stack, QtFenetre, G);
         });
 
     QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
+        changerDePage(stack, QtFenetre, G);
         stack->setCurrentIndex(QtFenetre);
         });
 
@@ -124,11 +184,82 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
 
 
-// Autres fonctions (à implémenter )
+// Autres fonctions (Ã  implÃ©menter )
 void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G)
 {
-    QWidget* pageInformations = new QWidget();
-    stack->addWidget(pageInformations);
+    QWidget* window = new QWidget(parent);
+    window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
+
+    std::string nom = "Inconnu";
+    int score = 0;
+    
+
+    if (G->getJoueur() != nullptr) {
+        Joueur* joueurlog = G->getJoueur();
+        nom = joueurlog->getNomJoueur();
+    }
+
+    // Layout principal
+    QVBoxLayout* mainLayout = new QVBoxLayout(window);
+    mainLayout->setAlignment(Qt::AlignTop);
+
+    QLabel* title = new QLabel("INFORMATIONS", window);
+    myQt_setFont(title, QT_TITLE);
+    title->setStyleSheet(QString("color: %1; border: 3px solid %1; padding: 10px;").arg(COULEUR_TITRE));
+    title->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(title);
+
+    // Cadre infos
+    QFrame* infoFrame = new QFrame(window);
+    infoFrame->setStyleSheet(QString("border: 3px solid %1; background-color: %2; padding: 15px; border-radius: 15px;")
+        .arg(COULEUR_TITRE));
+    QVBoxLayout* infoLayout = new QVBoxLayout(infoFrame);
+
+    // Infos texte
+    QHBoxLayout* pseudoLayout = new QHBoxLayout();
+    QLabel* pseudoLabel = new QLabel("Pseudo :", window);
+    myQt_setFont(pseudoLabel, QT_SUBTITLE);
+    pseudoLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
+    QLabel* pseudoValue = new QLabel(QString::fromStdString(nom), window);
+    myQt_setFont(pseudoValue, QT_SUBTITLE);
+    pseudoValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    pseudoLayout->addWidget(pseudoLabel);
+    pseudoLayout->addWidget(pseudoValue);
+
+    QHBoxLayout* scoreLayout = new QHBoxLayout();
+    QLabel* scoreLabel = new QLabel("Score :", window);
+    myQt_setFont(scoreLabel, QT_SUBTITLE);
+    scoreLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
+    QLabel* scoreValue = new QLabel(QString::number(score), window);
+    myQt_setFont(scoreValue, QT_SUBTITLE);
+    scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    scoreLayout->addWidget(scoreLabel);
+    scoreLayout->addWidget(scoreValue);
+
+    QVBoxLayout* detailsLayout = new QVBoxLayout();
+    detailsLayout->addLayout(pseudoLayout);
+    detailsLayout->addLayout(scoreLayout);
+    infoLayout->addLayout(detailsLayout);
+    infoFrame->setLayout(infoLayout);
+    mainLayout->addWidget(infoFrame);
+
+    // Image
+    QLabel* imageLabel = new QLabel(window);
+
+
+    // Retour
+    QPushButton* backButton = new QPushButton("? Retour", window);
+    backButton->setStyleSheet(QString(
+        "background-color: %1; color: %2; border: 2px solid %3; padding: 10px; border-radius: 10px; font-size: 18px; font-weight: bold;"
+    ).arg(COULEUR_BOUTON)
+        .arg(COULEUR_TEXTE_BOUTON)
+        .arg(COULEUR_BOUTON));
+    QObject::connect(backButton, &QPushButton::clicked, [stack]() {
+        stack->setCurrentIndex(Menu); // ou l'index du menu
+        });
+    mainLayout->addWidget(backButton, 0, Qt::AlignLeft);
+
+    stack->addWidget(window);
 }
 
 void myQtManager::qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G)
@@ -165,12 +296,12 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     mainLayout->addWidget(titre);
 
     //debug
-    qDebug() << "qtPageMeilleurScore appelée\n";
+    qDebug() << "qtPageMeilleurScore appelÃ©e\n";
 
-    // Récupération des meilleurs scores depuis Gameplay
+    // RÃ©cupÃ©ration des meilleurs scores depuis Gameplay
     std::pair < std::string, int> scores[10];
     DAOSqlite* sqlite = DAOSqlite::getInstance();
-    sqlite->getMeilleurScore(scores);
+    Joueur* allJoueur = sqlite->getMeilleurScore(scores);
 
     // Affichage des scores
     for (size_t i = 0; i < 10 && i < 10; ++i) {
@@ -193,9 +324,9 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
             score->setFixedWidth(50);
             rowLayout->addWidget(score);
 
-            /*// Icône du joueur (remplace l'ancien label par une image)
+            /*// IcÃ´ne du joueur (remplace l'ancien label par une image)
             QLabel* icone = new QLabel();
-            QPixmap pixmap(QString::fromStdString(scores[i].first)); // Récupère le chemin de l'image
+            QPixmap pixmap(QString::fromStdString(scores[i].first)); // RÃ©cupÃ¨re le chemin de l'image
             pixmap = pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation); // Redimensionne l'image
             icone->setPixmap(pixmap);
             rowLayout->addWidget(icone);
@@ -205,7 +336,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
         }
     }
 
-    // Bouton retour aligné à droite
+    // Bouton retour alignÃ© Ã  droite
     QPushButton* btnRetour = new QPushButton("Retour");
     btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
     btnRetour->setFixedSize(80, 30);
@@ -223,5 +354,4 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     pageMeilleursScores->setLayout(mainLayout);
     stack->addWidget(pageMeilleursScores);
 }
-
 
