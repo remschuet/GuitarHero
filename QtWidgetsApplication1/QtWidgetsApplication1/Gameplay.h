@@ -28,8 +28,6 @@ public:
 	void SelectionJoueur();
 	void loopMenu();
 
-	void voirMeilleurScore();
-
 	bool configBluetooth(std::string nomPort);
 	bool configFilaire(std::string nomPort);
 	void interpreterMsg(std::string);
@@ -37,7 +35,6 @@ public:
 	GameStruct gameStruct;
 	Joueur* getJoueur(); 
 	void setJoueur(Joueur* nouveauJoueur);
-
 
 private:
 	Joueur* joueurActuel = nullptr;
