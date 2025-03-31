@@ -145,8 +145,79 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 // Autres fonctions (à implémenter )
 void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G)
 {
-    QWidget* pageInformations = new QWidget();
-    stack->addWidget(pageInformations);
+    QWidget* window = new QWidget(parent);
+    window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
+
+    std::string nom = "Inconnu";
+    int score = 0;
+    
+
+    if (G->getJoueur() != nullptr) {
+        Joueur* joueur = G->getJoueur();
+        nom = joueur->getNomJoueur();
+    }
+
+    // Layout principal
+    QVBoxLayout* mainLayout = new QVBoxLayout(window);
+    mainLayout->setAlignment(Qt::AlignTop);
+
+    QLabel* title = new QLabel("INFORMATIONS", window);
+    myQt_setFont(title, QT_TITLE);
+    title->setStyleSheet(QString("color: %1; border: 3px solid %1; padding: 10px;").arg(COULEUR_TITRE));
+    title->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(title);
+
+    // Cadre infos
+    QFrame* infoFrame = new QFrame(window);
+    infoFrame->setStyleSheet(QString("border: 3px solid %1; background-color: %2; padding: 15px; border-radius: 15px;")
+        .arg(COULEUR_TITRE));
+    QVBoxLayout* infoLayout = new QVBoxLayout(infoFrame);
+
+    // Infos texte
+    QHBoxLayout* pseudoLayout = new QHBoxLayout();
+    QLabel* pseudoLabel = new QLabel("Pseudo :", window);
+    myQt_setFont(pseudoLabel, QT_SUBTITLE);
+    pseudoLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
+    QLabel* pseudoValue = new QLabel(QString::fromStdString(nom), window);
+    myQt_setFont(pseudoValue, QT_SUBTITLE);
+    pseudoValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    pseudoLayout->addWidget(pseudoLabel);
+    pseudoLayout->addWidget(pseudoValue);
+
+    QHBoxLayout* scoreLayout = new QHBoxLayout();
+    QLabel* scoreLabel = new QLabel("Score :", window);
+    myQt_setFont(scoreLabel, QT_SUBTITLE);
+    scoreLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
+    QLabel* scoreValue = new QLabel(QString::number(score), window);
+    myQt_setFont(scoreValue, QT_SUBTITLE);
+    scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    scoreLayout->addWidget(scoreLabel);
+    scoreLayout->addWidget(scoreValue);
+
+    QVBoxLayout* detailsLayout = new QVBoxLayout();
+    detailsLayout->addLayout(pseudoLayout);
+    detailsLayout->addLayout(scoreLayout);
+    infoLayout->addLayout(detailsLayout);
+    infoFrame->setLayout(infoLayout);
+    mainLayout->addWidget(infoFrame);
+
+    // Image
+    QLabel* imageLabel = new QLabel(window);
+
+
+    // Retour
+    QPushButton* backButton = new QPushButton("? Retour", window);
+    backButton->setStyleSheet(QString(
+        "background-color: %1; color: %2; border: 2px solid %3; padding: 10px; border-radius: 10px; font-size: 18px; font-weight: bold;"
+    ).arg(COULEUR_BOUTON)
+        .arg(COULEUR_TEXTE_BOUTON)
+        .arg(COULEUR_BOUTON));
+    QObject::connect(backButton, &QPushButton::clicked, [stack]() {
+        stack->setCurrentIndex(Menu); // ou l'index du menu
+        });
+    mainLayout->addWidget(backButton, 0, Qt::AlignLeft);
+
+    stack->addWidget(window);
 }
 
 void myQtManager::qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G)
