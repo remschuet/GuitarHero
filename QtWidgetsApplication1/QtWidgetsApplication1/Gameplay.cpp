@@ -534,7 +534,6 @@ void Gameplay::setJoueur(Joueur* nouveauJoueur) {
         delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
     }
     joueurActuel = nouveauJoueur;
-    gameStruct.joueur = nouveauJoueur;
 }
 
 Joueur* Gameplay::getJoueur() {
