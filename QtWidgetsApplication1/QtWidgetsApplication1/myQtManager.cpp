@@ -304,7 +304,7 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     // Image de fond
     QLabel* backgroundLabel = new QLabel(pageParametre);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    QPixmap resizedPixmap("placeholder_background_menu.png");
+    QPixmap resizedPixmap("./images/Setting.png");
     // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setPixmap(resizedPixmap);
