@@ -106,8 +106,8 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
         QMessageBox::information(parent, "Bienvenue", "Joueur " + nomJoueur);
 
         // 🔴 Enregistrement du joueur dans la base de données
-       // DAOSqlite* sqlite = DAOSqlite::getInstance();
-       // sqlite->ajouterJoueur(G->getJoueur());  
+        DAOSqlite* sqlite = DAOSqlite::getInstance();
+        sqlite->ajouterJoueur(nomJoueur.toStdString(),0,"");
         // Fonction à implémenter dans DAOSqlite
         fenetres QtFenetre = Menu;
 
