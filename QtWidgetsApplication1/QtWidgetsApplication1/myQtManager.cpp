@@ -322,7 +322,6 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     QPixmap resizedPixmap("./images/Setting.png");
     // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     backgroundLabel->setPixmap(resizedPixmap);
-    backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(false);
     backgroundLabel->lower();
     QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
@@ -339,9 +338,15 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     // Création des boutons avec un style uniforme
     for (const QString& name : buttonNames) {
         QPushButton* button = new QPushButton(name);
-        button->setStyleSheet("background-color: " + COULEUR_BOUTON +
-            "; color: " + COULEUR_TEXTE_BOUTON +
-            "; font-size: 18px; border-radius: 5px; padding: 10px;");
+        button->setStyleSheet(
+            "background-color: " + COULEUR_BOUTON +";"
+            "color: " + COULEUR_TEXTE_BOUTON +";"
+            "font - size: 18px;"
+            "border-radius: 5px; padding: 10px;"
+            "QPushButton:hover {"
+            "background-color: green; "  // Change la couleur de fond au survol
+            "color: yellow; "  // Change la couleur du texte au survol
+            "}");
         button->setFixedSize(250, 50);
         buttons.append(button);
         layout->addWidget(button, 0, Qt::AlignHCenter);
@@ -349,14 +354,23 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 
 
 
-    //QPushButton* btnRetour = new QPushButton("Retour");
-    //btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
-    //btnRetour->setFixedSize(80, 30);
+    QPushButton* btnRetour = new QPushButton("Retour");
+    btnRetour->setStyleSheet(
+        "background-color: red; "
+        "color: white; "
+        "padding: 5px 10px; "
+        "border-radius: 5px; "
+        "QPushButton:hover {"
+        "background-color: green; "  // Change la couleur de fond au survol
+        "color: yellow; "  // Change la couleur du texte au survol
+        "}"
+    );
+    btnRetour->setFixedSize(80, 30);
 
-    //QHBoxLayout* btnLayout = new QHBoxLayout();
-    //btnLayout->addStretch();
-    //btnLayout->addWidget(btnRetour);
-    //mainLayout->addLayout(btnLayout);
+    QHBoxLayout* btnLayout = new QHBoxLayout();
+    btnLayout->addStretch();
+    btnLayout->addWidget(btnRetour);
+    layout->addLayout(btnLayout);
 
     // Gestion des connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
@@ -380,14 +394,11 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         stack->setCurrentIndex(QtFenetre);
         });
 
-    /*QObject::connect(btnRetour, &QPushButton::clicked, [stack]() {
-        fenetres QtFenetre = Menu;
-        changerDePage(stack, QtFenetre, G);
-        stack->setCurrentIndex(QtFenetre)
+    QObject::connect(btnRetour, &QPushButton::clicked, [=]() {
+        stack->setCurrentIndex(0); // Retour au menu principal
         });
 
-    // Action du bouton retour*/
- 
+    // Action du bouton retour 
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageParametre);
