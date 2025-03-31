@@ -417,6 +417,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     titre->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     QFont fontTitre("Arial", 16, QFont::Bold);
     titre->setFont(fontTitre);
+    titre->setStyleSheet(COULEUR_FOND);
     mainLayout->addWidget(titre);
 
     //debug
@@ -428,38 +429,85 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     sqlite->getMeilleurScore(scores);
     // Affichage des scores
     for (size_t i = 0; i < 10; ++i) {
-        if (scores[i].first != "")
-        {
-            QHBoxLayout* rowLayout = new QHBoxLayout();
+        if (scores[i].first != "") {
+            // Définition des couleurs et des médailles
+            QString bgColor = "rgba(128, 128, 128, 0.5)"; // Fond général vert pour toutes les cartes
+            QString textColor = COULEUR_TEXTE_BOUTON; // Blanc pour contraste
+            QString medal;
+            QString borderColor = COULEUR_IMAGE_BORDURE; // Bordure verte par défaut
+            QString nameBgColor; // Couleur de fond pour le nom du joueur
+            QString positionTextColor; // Couleur pour le texte de la position
 
-            // Position
-            QLabel* position = new QLabel(QString::number(i + 1) + ".");
-            position->setFixedWidth(30);
+            // Couleurs spécifiques pour les noms et positions du top 3, gris transparent pour les autres
+            if (i == 0) {
+                medal = "🥇";
+                borderColor = "#FFD700"; // Or pour la bordure
+                nameBgColor = "#FFD700"; // Fond or pour le nom
+                positionTextColor = "#FFD700"; // Or pour la position
+                textColor = "#FFD700";
+            }
+            else if (i == 1) {
+                medal = "🥈";
+                borderColor = "#C0C0C0"; // Argent pour la bordure
+                nameBgColor = "#C0C0C0"; // Fond argent pour le nom
+                positionTextColor = "#C0C0C0"; // Argent pour la position
+                textColor = "#C0C0C0";
+            }
+            else if (i == 2) {
+                medal = "🥉";
+                borderColor = "#CD7F32"; // Bronze pour la bordure
+                nameBgColor = "#CD7F32"; // Fond bronze pour le nom
+                positionTextColor = "#CD7F32"; // Bronze pour la position
+                textColor = "#CD7F32";
+
+
+            }
+            else {
+                nameBgColor = COULEUR_TEXTE_BOUTON; // Gris semi-transparent pour les autres
+                positionTextColor = "#0000"; // Vert clair pour les positions hors top 3
+            }
+
+            // Conteneur principal du score (Style carte)
+            QFrame* scoreCard = new QFrame();
+            scoreCard->setStyleSheet("background-color: " + bgColor + "; "
+                "border: 2px solid " + borderColor + "; "
+                "border-radius: 10px; "
+                "padding: 10px;");
+
+            QHBoxLayout* rowLayout = new QHBoxLayout(scoreCard);
+
+            // Position + Médaille
+            QLabel* position = new QLabel(QString::number(i + 1) + ". " + medal);
+            position->setFixedWidth(60);
+            position->setFixedHeight(40);
+            position->setStyleSheet("font-weight: bold; color: " + positionTextColor + ";"); // Couleur ajustée pour la position
             rowLayout->addWidget(position);
 
-            // Nom du joueur
+            // Nom du joueur avec fond spécifique
             QLabel* nomJoueur = new QLabel(QString::fromStdString(scores[i].first));
-            nomJoueur->setFixedWidth(100);
+            nomJoueur->setFixedWidth(120);
+            nomJoueur->setStyleSheet("font-weight: bold; color: #000000;" // Noir sur or/argent/bronze, vert foncé sur gris
+                "background-color: " + nameBgColor + "; "
+                "border-radius: 5px; "
+                "padding: 2px;");
+            nomJoueur->setFixedHeight(35);
+
             rowLayout->addWidget(nomJoueur);
 
             // Score
             QLabel* score = new QLabel(QString::number(scores[i].second));
-            score->setFixedWidth(50);
+            score->setFixedWidth(60);
+            score->setStyleSheet("font-weight: bold; color: " + textColor + ";"); // Blanc
+            score->setFixedHeight(35);
             rowLayout->addWidget(score);
 
-            /*// Icône du joueur (remplace l'ancien label par une image)
-            QLabel* icone = new QLabel();
-            QPixmap pixmap(QString::fromStdString(scores[i].first)); // Récupère le chemin de l'image
-            pixmap = pixmap.scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation); // Redimensionne l'image
-            icone->setPixmap(pixmap);
-            rowLayout->addWidget(icone);
+            // Ajouter le cadre au layout principal
+            mainLayout->addWidget(scoreCard);
 
-            mainLayout->addLayout(rowLayout);
-            */
+            // Debug
+            qDebug() << "Score[" << i << "] : " << QString::fromStdString(scores[i].first) << " - " << scores[i].second;
         }
-    }
-
-    // Bouton retour aligné à droite
+    }    // Bouton retour aligné à droite
     QPushButton* btnRetour = new QPushButton("Retour");
     btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
     btnRetour->setFixedSize(80, 30);

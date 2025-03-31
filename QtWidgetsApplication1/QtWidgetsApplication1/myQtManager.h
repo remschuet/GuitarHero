@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QComboBox>
 #include "DAOSqlite.h"
 #include "Gameplay.h"
 #include "GameStruct.h"
