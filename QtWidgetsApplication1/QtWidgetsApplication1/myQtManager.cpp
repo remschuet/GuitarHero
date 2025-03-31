@@ -91,6 +91,8 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     // formLayout->addWidget(inputNom);
 // Bouton Login
     QPushButton* btnLogin = new QPushButton("LOGIN", page);
+    btnLogin->setDefault(true);
+    QObject::connect(inputNom, &QLineEdit::returnPressed, btnLogin, &QPushButton::click);
     btnLogin->setStyleSheet("background-color: " + COULEUR_BOUTON + "; color: " + COULEUR_TEXTE_BOUTON + "; font-size: 18px; border-radius: 5px; padding: 10px;");
     btnLogin->setGeometry((TAILLE_ECRAN_X - 900) / 2, 620, 200, 50);;
 
@@ -103,7 +105,6 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
         }
 
         G->setJoueur(new Joueur(nomJoueur.toStdString()));
-        QMessageBox::information(parent, "Bienvenue", "Joueur " + nomJoueur);
 
         // 🔴 Enregistrement du joueur dans la base de données
         DAOSqlite* sqlite = DAOSqlite::getInstance();
