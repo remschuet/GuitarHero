@@ -141,6 +141,15 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 {
     QWidget* pageParametres = new QWidget();
     stack->addWidget(pageParametres);
+
+    QPushButton* btnRetour = new QPushButton("Retour");
+    btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
+    btnRetour->setFixedSize(80, 30);
+
+    QHBoxLayout* btnLayout = new QHBoxLayout();
+    btnLayout->addStretch();
+    btnLayout->addWidget(btnRetour);
+
 }
 
 void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G)
