@@ -105,7 +105,6 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
         }
 
         G->setJoueur(new Joueur(nomJoueur.toStdString()));
-        QMessageBox::information(parent, "Bienvenue", "Joueur " + nomJoueur);
 
         // 🔴 Enregistrement du joueur dans la base de données
        // DAOSqlite* sqlite = DAOSqlite::getInstance();
