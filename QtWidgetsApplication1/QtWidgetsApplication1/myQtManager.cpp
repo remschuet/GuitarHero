@@ -150,11 +150,11 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     // Conteneur blanc pour le menu (titre + boutons)
     QFrame* menuContainer = new QFrame();
     menuContainer->setStyleSheet("background-color: white; border-radius: 15px; padding: 15px;");
-    menuContainer->setFixedSize(300, 350); // Ajuste la hauteur pour inclure le titre
+    menuContainer->setFixedSize(450, 500); // Ajuste la hauteur pour inclure le titre
 
     QVBoxLayout* menuLayout = new QVBoxLayout(menuContainer);
     menuLayout->setAlignment(Qt::AlignCenter);
-    menuLayout->setSpacing(15); // Espacement entre les éléments
+    menuLayout->setSpacing(25); // Espacement entre les éléments
 
     // Titre du menu
     QLabel* titre = new QLabel("Menu Principal");
@@ -164,10 +164,11 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     menuLayout->addWidget(titre);
 
     // Liste des boutons
-    QStringList buttonNames = { "Demarrer", "Voir meilleurs scores", "Informations joueur", "Deconnexion" };
+    QStringList buttonNames = { "Demarrer", "Voir meilleurs scores", "Informations joueur","Paramètres" ,"Deconnexion" };
     QVector<QPushButton*> buttons;
 
     // Création des boutons avec un style uniforme
+    // Création des boutons avec un style uniforme et ajout d'espacement
     for (const QString& name : buttonNames) {
         QPushButton* button = new QPushButton(name);
         button->setStyleSheet("background-color: " + COULEUR_BOUTON +
@@ -175,8 +176,10 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
             "; font-size: 18px; border-radius: 5px; padding: 10px;");
         button->setFixedSize(250, 50);
         buttons.append(button);
+
         menuLayout->addWidget(button, 0, Qt::AlignHCenter);
     }
+
 
     // Ajouter le conteneur du menu au layout principal
     layout->addWidget(menuContainer, 0, Qt::AlignHCenter);
@@ -198,9 +201,15 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
         });
 
     QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
+        fenetres QtFenetre = Parametre;
+        changerDePage(stack, QtFenetre, G);
+        });
+
+    QObject::connect(buttons[4], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
         changerDePage(stack, QtFenetre, G);
         });
+    
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
@@ -381,10 +390,9 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     // Récupération des meilleurs scores depuis Gameplay
     std::pair < std::string, int> scores[10];
     DAOSqlite* sqlite = DAOSqlite::getInstance();
-    Joueur* allJoueur = sqlite->getMeilleurScore(scores);
-
+    sqlite->getMeilleurScore(scores);
     // Affichage des scores
-    for (size_t i = 0; i < 10 && i < 10; ++i) {
+    for (size_t i = 0; i < 10; ++i) {
         if (scores[i].first != "")
         {
             QHBoxLayout* rowLayout = new QHBoxLayout();
