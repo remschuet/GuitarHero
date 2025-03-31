@@ -44,7 +44,12 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         qtPageParametres(nullptr, stack, G);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
+    case Game:
+        qtPageGameplay(nullptr, stack, G);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
     }
+
 
     if (nouvellePage != nullptr) {
         stack->setCurrentIndex(stack->indexOf(nouvellePage));  // ✅ Afficher la nouvelle page
@@ -59,7 +64,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     // Image de fond
     QLabel* backgroundLabel = new QLabel(page);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    QPixmap resizedPixmap("placeholder_background_login.png");
+    QPixmap resizedPixmap("./images/placeholder_background_login.png");
     // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(false);
@@ -112,6 +117,12 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     stack->addWidget(page);
 }
 
+void myQtManager::qtPageGameplay(QWidget* parent, QStackedWidget* stack, Gameplay* G)
+{
+    QWidget* pageGameplay = new QWidget();
+    stack->addWidget(pageGameplay);
+}
+
 
 
 void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
@@ -120,26 +131,33 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     QVBoxLayout* layout = new QVBoxLayout(pageMenu);
     layout->setAlignment(Qt::AlignCenter);
 
-    // Titre du menu
-    QLabel* titre = new QLabel("Menu Principal");
-    myQt_setFont(titre, 20);
-    layout->addWidget(titre, 0, Qt::AlignHCenter);
-
     // Image de fond
     QLabel* backgroundLabel = new QLabel(pageMenu);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    QPixmap resizedPixmap("placeholder_background_menu.png");
-    // QPixmap resizedPixmap = originalPixmap.scaled(TAILLE_ECRAN_X, TAILLE_ECRAN_Y, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-    backgroundLabel->setPixmap(resizedPixmap);
+    QPixmap resizedPixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(false);
     backgroundLabel->lower();
+
     QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
     opacityEffect->setOpacity(0.5);
     backgroundLabel->setGraphicsEffect(opacityEffect);
 
-    // Espacement entre le titre et les boutons
-    layout->addSpacing(30);
+    // Conteneur blanc pour le menu (titre + boutons)
+    QFrame* menuContainer = new QFrame();
+    menuContainer->setStyleSheet("background-color: white; border-radius: 15px; padding: 15px;");
+    menuContainer->setFixedSize(300, 350); // Ajuste la hauteur pour inclure le titre
+
+    QVBoxLayout* menuLayout = new QVBoxLayout(menuContainer);
+    menuLayout->setAlignment(Qt::AlignCenter);
+    menuLayout->setSpacing(15); // Espacement entre les éléments
+
+    // Titre du menu
+    QLabel* titre = new QLabel("Menu Principal");
+    myQt_setFont(titre, 20);
+    titre->setAlignment(Qt::AlignCenter);
+    titre->setStyleSheet("color: green; border-radius: 5px; padding: 5px; font-size: 20px;");
+    menuLayout->addWidget(titre);
 
     // Liste des boutons
     QStringList buttonNames = { "Demarrer", "Voir meilleurs scores", "Informations joueur", "Deconnexion" };
@@ -153,8 +171,11 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
             "; font-size: 18px; border-radius: 5px; padding: 10px;");
         button->setFixedSize(250, 50);
         buttons.append(button);
-        layout->addWidget(button, 0, Qt::AlignHCenter);
+        menuLayout->addWidget(button, 0, Qt::AlignHCenter);
     }
+
+    // Ajouter le conteneur du menu au layout principal
+    layout->addWidget(menuContainer, 0, Qt::AlignHCenter);
 
     // Gestion des connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
@@ -175,12 +196,12 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
         changerDePage(stack, QtFenetre, G);
-        stack->setCurrentIndex(QtFenetre);
         });
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
 }
+
 
 
 
@@ -248,7 +269,7 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
 
 
     // Retour
-    QPushButton* backButton = new QPushButton("? Retour", window);
+    QPushButton* backButton = new QPushButton("Retour", window);
     backButton->setStyleSheet(QString(
         "background-color: %1; color: %2; border: 2px solid %3; padding: 10px; border-radius: 10px; font-size: 18px; font-weight: bold;"
     ).arg(COULEUR_BOUTON)
