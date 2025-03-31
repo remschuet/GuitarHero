@@ -529,10 +529,12 @@ CouleurBouton Gameplay::choixBouton(){
 }
 
 void Gameplay::setJoueur(Joueur* nouveauJoueur) {
+    
     if (joueurActuel != nullptr) {
         delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
     }
     joueurActuel = nouveauJoueur;
+    gameStruct.joueur = nouveauJoueur;
 }
 
 Joueur* Gameplay::getJoueur() {
