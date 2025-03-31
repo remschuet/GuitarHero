@@ -61,7 +61,7 @@ void DAOSqlite::reinitialiser() {
     creationTableJoueur();
 }
 
-void DAOSqlite::ajouterJoueur(std::string nom, int score, std::string photoChemin) {
+void DAOSqlite::ajouterJoueur(std::string nom, int score = 0, std::string photoChemin = "") {
     std::string query = "INSERT INTO JOUEUR(nom, score, photo) VALUES('" + nom + "', " + std::to_string(score) + ", '" + photoChemin + "');";
     sqlite3_exec(db, query.c_str(), nullptr, nullptr, nullptr);
 }
