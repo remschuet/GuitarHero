@@ -24,7 +24,7 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     if (modeCommunication == BLUETOOTH) {
         configBluetooth(nomPort);
     }
-    else if (modeCommunication == FILAIRE){
+    else if (modeCommunication == FILAIRE) {
         configFilaire(nomPort);
     }
     else {
@@ -104,17 +104,22 @@ void Gameplay::gotoxy(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
 
-void Gameplay::affichageTitre() {
-    system("cls");
+void Gameplay::affichageTitre(QLabel* label) {
+    label->clear();
+
+	label->setText("GUITAR HERO");
+    label->setFont(QFont("Arial", 24, QFont::Bold));
+    label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    /*system("cls");
     gotoxy(10, 2);
     std::cout << "===========================";
     gotoxy(15, 3);
     std::cout << "!! GUITAR HERO !!";
     gotoxy(10, 4);
-    std::cout << "===========================";
+    std::cout << "===========================";*/
 }
 
-void Gameplay::affichageProgression() {
+void Gameplay::affichageProgression(QLabel* label) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
@@ -132,17 +137,17 @@ void Gameplay::affichageProgression() {
         else
             std::cout << "-";  // Bloc vide
     }
-    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s    " << pourcentage << "%"<<endl;
+    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s    " << pourcentage << "%" << endl;
 
 }
 
-void Gameplay::loopGame() {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
         long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
-        affichageTitre();
-        affichageProgression();
+        affichageTitre(titleLabel);
+        affichageProgression(ProgressionLabel);
         tick++;
 
         //Barre d'infos du joueur
@@ -166,7 +171,7 @@ void Gameplay::loopGame() {
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
             Sleep(120);
-            loopGame();
+            //loopGame();
         }
 
         // chrono en fonction de la musique
@@ -272,12 +277,12 @@ void Gameplay::demarrerPartie(QLabel* label) {
     //loopGame();
 }
 
-void Gameplay::updateGame() {
+void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
-    affichageTitre();
-    affichageProgression();
+    affichageTitre(titleLabel);
+    affichageProgression(ProgressionLabel);
     tick++;
 
     if (tempsEcoule >= dureeTotale) {
@@ -327,12 +332,12 @@ void Gameplay::finPartie() {
 
 }
 
-void Gameplay::SelectionJoueur()
+void Gameplay::SelectionJoueur(QLabel* label)                    //cout à enlever
 {
     string nomJoueur = "";
 
-    system("cls"); // Efface l'écran avant d'afficher le menu
-
+   //system("cls"); // Efface l'écran avant d'afficher le menu
+    label->clear();
     // Affichage du cadre
     gotoxy(10, 2);
     std::cout << "**************************************";
@@ -376,7 +381,7 @@ void Gameplay::loopMenu() {
         choix = choixBouton();
         Sleep(20);
     }
-    if (choix == ROUGE){
+    if (choix == ROUGE) {
         //myQtmanager->getMeilleursScores(); À revoir
         loopMenu();
         return;
@@ -517,7 +522,7 @@ void Gameplay::interpreterMsg(string msg) {
     }
 }
 
-CouleurBouton Gameplay::choixBouton(){
+CouleurBouton Gameplay::choixBouton() {
     std::string msg;
     if (!comArduino->recevoirMessage(msg)) {
         return CouleurBouton::UNKNOWN;
@@ -561,15 +566,15 @@ CouleurBouton Gameplay::choixBouton(){
 }
 
 void Gameplay::setJoueur(Joueur* nouveauJoueur) {
-    
-    if (joueurActuel != nullptr) {
+
+    if (gameStruct.joueur != nullptr) {
         delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
     }
-    joueurActuel = nouveauJoueur;
+    gameStruct.joueur = nouveauJoueur;
 }
 
 Joueur* Gameplay::getJoueur() {
-    return joueurActuel;
+    return gameStruct.joueur;
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {
