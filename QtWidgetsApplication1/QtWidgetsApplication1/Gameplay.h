@@ -5,44 +5,61 @@
 #include "Joueur.h"
 #include "GameStruct.h"
 #include <vector>
+#include <QLabel>
+#include <QTimer>
+#include "ComFichierTexte.h"
+#include "ComClavier.h"
+#include "DAOSqlite.h"
+#include <CONST.h>
+#include <conio.h> // Pour _getch()
+#include "CONST_QT.h"
+#include <QThread>
+#include <qcoreapplication.h>
+#include <qstackedwidget>
+#include <QVBoxLayout>
+#include <QObject>
 
 #include <opencv2/opencv.hpp>
-#include <iostream>
+#include <opencv2/core.hpp>
 
-class Gameplay
+#include <windows.h>
+#pragma comment(lib, "User32.lib")
+
+class Gameplay : public QObject        //QT
 {
+    Q_OBJECT;        //QT
+
 public:
-	Gameplay(std::string comPort = "COM2", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
-	void afficherImage();
-	void PrendreImage();
-	void gotoxy(int x, int y);
-	void affichageTitre();
-	void affichageProgression();
-	void loopGame();
-	void demarrerPartie();
-	void finPartie();
-	void SelectionJoueur();
-	void loopMenu();
+    Gameplay(std::string comPort = "COM5", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
+    explicit Gameplay(QObject* parent = nullptr);    //QT
+    void afficherImage();
+    void PrendreImage();
+    void gotoxy(int x, int y);
+    void affichageTitre(QLabel* Label);
+    void affichageProgression(QLabel* Label);
+    void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel);
+    void demarrerPartie(QLabel* Label);
+    void finPartie();
+    void SelectionJoueur(QLabel* Label);
+    void loopMenu();
 
-	void voirMeilleurScore();
-
-	void setJoueur(Joueur* nouveauJoueur);
-
-	Joueur* getJoueur();
-
-	void envoyerMsg(const std::string& key, const std::string& value);
-
-	bool configBluetooth(std::string nomPort);
-	bool configFilaire(std::string nomPort);
-	void interpreterMsg(std::string);
-	CouleurBouton choixBouton();
+    bool configBluetooth(std::string nomPort);
+    bool configFilaire(std::string nomPort);
+    void interpreterMsg(std::string);
+    CouleurBouton choixBouton();
+    GameStruct gameStruct;
+    Joueur* getJoueur();
+    void setJoueur(Joueur* nouveauJoueur);
 
 private:
-	ComArduino* comArduino;
-	ComMode modeCommunication;
-	bool verbose;
-	bool admin;
-	GameStruct gameStruct;
-	int tick = 0;
-	void modifierLeProfile();
+    Joueur* joueurActuel = nullptr;
+    ComArduino* comArduino;
+    ComMode modeCommunication;
+    bool verbose;
+    bool admin;
+    int tick = 0;
+    void modifierLeProfile();
+    QTimer* gameTimer;
+private slots:
+    void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel);
 };

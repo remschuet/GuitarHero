@@ -7,8 +7,12 @@
 #include <vector>
 #include <CONST.h>
 #include <conio.h> // Pour _getch()
-
-#pragma comment(lib, "User32.lib")
+#include "CONST_QT.h"
+#include <QThread>
+#include <qcoreapplication.h>
+#include <qstackedwidget>
+#include <QVBoxLayout>
+#include <QLabel>
 
 using namespace std;
 
@@ -25,11 +29,6 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     }
     else {
         comArduino = new ComClavier();
-    }
-    string msg = "";
-    for (int i = 0; i < 20; i++) {
-        comArduino->recevoirMessage(msg);
-        Sleep(250);
     }
 }
 
@@ -55,20 +54,8 @@ void Gameplay::afficherImage() {
     //    btn = choixBouton();
     //    Sleep(50);
     //}
-    CouleurBouton btn = UNKNOWN;
-    while (btn == UNKNOWN) {
-        btn = choixBouton();  // Vérifier le bouton
-
-        if (btn != UNKNOWN) {
-            cv::destroyWindow("Image");  // Fermer la fenêtre OpenCV
-            break;  // Sortir de la boucle
-        }
-
-        cv::imshow("Image", image);  // Mettre à jour l'affichage
-        cv::waitKey(1);
-    }
-    //cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre        //doit être changé pour fillaire (pas waitkey)
-    //cv::destroyWindow("Image");
+    cv::waitKey(0);	//Attend qu'un touche soit pressé pour fermer la fenêtre
+    cv::destroyWindow("Image");
     Sleep(200);
 }
 
@@ -117,17 +104,21 @@ void Gameplay::gotoxy(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
 
-void Gameplay::affichageTitre() {
-    system("cls");
+void Gameplay::affichageTitre(QLabel* label) {
+    label->clear();
+    label->setText("GUITAR HERO");
+    label->setFont(QFont("Arial", 24, QFont::Bold));
+    label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    /*system("cls");
     gotoxy(10, 2);
     std::cout << "===========================";
     gotoxy(15, 3);
     std::cout << "!! GUITAR HERO !!";
     gotoxy(10, 4);
-    std::cout << "===========================";
+    std::cout << "===========================";*/
 }
 
-void Gameplay::affichageProgression() {
+void Gameplay::affichageProgression(QLabel* label) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
@@ -149,13 +140,13 @@ void Gameplay::affichageProgression() {
 
 }
 
-void Gameplay::loopGame() {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
         long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
-        affichageTitre();
-        affichageProgression();
+        affichageTitre(titleLabel);
+        affichageProgression(ProgressionLabel);
         tick++;
 
         //Barre d'infos du joueur
@@ -179,7 +170,7 @@ void Gameplay::loopGame() {
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
             Sleep(120);
-            loopGame();
+            //loopGame();
         }
 
         // chrono en fonction de la musique
@@ -259,31 +250,57 @@ void Gameplay::loopGame() {
     }
 }
 
-void Gameplay::demarrerPartie() {
+void Gameplay::demarrerPartie(QLabel* label) {
+    qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
+    label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
+    label->setText("Depart du jeu dans 3 secondes...");
+    QCoreApplication::processEvents();
+    Sleep(1000);                                            //Si ça ne marche pas, essayer QThread::sleep(1); ou QThread::sleep(1000);
+    //QThread::sleep(1);
+    label->setText("Depart du jeu dans 2 secondes...");
+    QCoreApplication::processEvents();
+    //QThread::sleep(1);
+    Sleep(1000);
+    label->setText("Depart du jeu dans 1 secondes...");
+    QCoreApplication::processEvents();
+    //QThread::sleep(1);
+    Sleep(1000);
 
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 3 secondes...";
-    Sleep(1000);
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 2 secondes...";
-    Sleep(1000);
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 1 secondes...";
-    Sleep(1000);
-
-    system("cls");
+    ////system("cls");
+    label->clear();
     tick = 0;
     gameStruct.chansonEnCours->startChrono();
-    loopGame();
+    gameTimer->start(120);
+    qDebug() << "Partie demarree";
+    //loopGame();
+}
+
+void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
+    long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+    long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+
+    affichageTitre(titleLabel);
+    affichageProgression(ProgressionLabel);
+    tick++;
+
+    if (tempsEcoule >= dureeTotale) {
+        finPartie();
+    }
 }
 
 void Gameplay::finPartie() {
+    gameTimer->stop();
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
-    system("cls");
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //la fonction pour afficher la page de fin de partie doit être dans myQtManager pour que la fct soit accepté...
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+   /* system("cls");
     std::cout << "\n=====================================\n";
     std::cout << "            FIN DE PARTIE            \n";
     std::cout << "=====================================\n\n";
@@ -295,31 +312,31 @@ void Gameplay::finPartie() {
 
     std::cout << "Vous avez completer :  " << pourcentage << "% de la chanson";
 
-    gameStruct.chansonEnCours->arretMusique();
+     gameStruct.chansonEnCours->arretMusique();
 
 
-    if (gameStruct.joueur->ScoreMax < gameStruct.score) {
-        // sauvegarder le score
-        DAOSqlite* sqlite = DAOSqlite::getInstance();
-        sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
-        gameStruct.joueur->ScoreMax = gameStruct.score;
-    }
+     if (gameStruct.joueur->ScoreMax < gameStruct.score) {
+         // sauvegarder le score
+         DAOSqlite* sqlite = DAOSqlite::getInstance();
+         sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
+         gameStruct.joueur->ScoreMax = gameStruct.score;
+     }
 
-    CouleurBouton btn = UNKNOWN;
-    while (btn == UNKNOWN) {
-        btn = choixBouton();
-        Sleep(delaiFillaire);
-    }
-    loopMenu();
+     CouleurBouton btn = UNKNOWN;
+     while(btn == UNKNOWN) {
+         btn = choixBouton();
+         Sleep(50);
+     }
+     loopMenu();*/
 
 }
 
-void Gameplay::SelectionJoueur()
+void Gameplay::SelectionJoueur(QLabel* label)                    //cout à enlever
 {
     string nomJoueur = "";
 
-    system("cls"); // Efface l'écran avant d'afficher le menu
-
+    //system("cls"); // Efface l'écran avant d'afficher le menu
+    label->clear();
     // Affichage du cadre
     gotoxy(10, 2);
     std::cout << "**************************************";
@@ -336,8 +353,6 @@ void Gameplay::SelectionJoueur()
     DAOSqlite* dao = DAOSqlite::getInstance();
     gameStruct.joueur = dao->getJoueur(nomJoueur);
 
-    // Envoit de message BarreGraph
-    envoyerMsg(BAR_GRAPH, "0101010101");
     loopMenu();
 }
 
@@ -363,10 +378,10 @@ void Gameplay::loopMenu() {
     choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(delaiFillaire);
+        Sleep(20);
     }
     if (choix == ROUGE) {
-        voirMeilleurScore();
+        //myQtmanager->getMeilleursScores(); À revoir
         loopMenu();
         return;
     }
@@ -402,7 +417,7 @@ void Gameplay::loopMenu() {
 
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(delaiFillaire);
+        Sleep(20);
     }
 
     if (choix == ROUGE)     gameStruct.chansonEnCours = new Chanson(CHANSON_1_MP3);
@@ -411,88 +426,9 @@ void Gameplay::loopMenu() {
 
     choix = UNKNOWN;
 
-    demarrerPartie();
+    //demarrerPartie();
 }
 
-void Gameplay::voirMeilleurScore() {        //Reste à tester après avoir obtenu des scores
-
-    //int scores[10] = { 0 };
-    std::pair < std::string, int> scores[10];
-    DAOSqlite* sqlite = DAOSqlite::getInstance();
-    sqlite->getMeilleurScore(scores);
-    system("cls");
-    gotoxy(10, 2);
-    std::cout << "**************************************";
-    gotoxy(10, 3);
-    std::cout << "*        GUITAR HERO MENU           *";
-    gotoxy(10, 4);
-    std::cout << "**************************************";
-    gotoxy(10, 7);
-    std::cout << "             HIGH SCORE              ";
-    gotoxy(10, 9);
-    std::cout << "1er : " << scores[0].first << " - " << scores[0].second;      //afficher en très très gros et jaune/or?
-    gotoxy(10, 11);
-    std::cout << "2e  : " << scores[1].first << " - " << scores[1].second;        //afficher en très gros et argent/bleu?
-    gotoxy(10, 13);
-    std::cout << "3e  : " << scores[2].first << " - " << scores[2].second;        //afficher en gros et bronze/orange?
-
-    int y = 15;
-
-    for (int i = 3; i < 10; i++)
-    {
-        if (scores[i].first != "")
-        {
-            gotoxy(10, y);
-            std::cout << i + 1 << "e : " << scores[i].first << " - " << scores[i].second;
-            y += 2;
-        }
-    }
-
-    CouleurBouton choix = UNKNOWN;
-    while (choix == UNKNOWN) {
-        choix = choixBouton();
-        Sleep(delaiFillaire);
-    }
-
-    /*gotoxy(10, 15);
-    std::cout << "4e  : " << scores[3].first << " - " << scores[3].second;
-    gotoxy(10, 17);
-    std::cout << "5e  : " << scores[4].first << " - " << scores[4].second;
-    gotoxy(10, 19);
-    std::cout << "6e  : " << scores[5].first << " - " << scores[5].second;
-    gotoxy(10, 21);
-    std::cout << "7e  : " << scores[6].first << " - " << scores[6].second;
-    gotoxy(10, 23);
-    std::cout << "8e  : " << scores[7].first << " - " << scores[7].second;
-    gotoxy(10, 25);
-    std::cout << "9e  : " << scores[8].first << " - " << scores[8].second;
-    gotoxy(10, 27);
-    std::cout << "10e : " << scores[9].first << " - " << scores[9].second;
-    //std::string bob;
-    //cin >> bob;*/
-}
-
-void Gameplay::setJoueur(Joueur* nouveauJoueur) {
-
-    if (gameStruct.joueur != nullptr) {
-        delete gameStruct.joueur;  // Supprime l'ancien joueur pour éviter les fuites mémoire
-    }
-    gameStruct.joueur = nouveauJoueur;
-}
-
-Joueur* Gameplay::getJoueur() {
-    return gameStruct.joueur;
-}
-
-void Gameplay::envoyerMsg(const std::string& key, const std::string& value)
-{
-    // Créer un objet JSON avec la clé et la valeur
-    json j_msg;
-    j_msg[key] = value;
-
-    // Appeler la fonction envoyerMessage avec l'objet JSON
-    comArduino->envoyerMessage(j_msg);
-}
 
 void Gameplay::modifierLeProfile() {
     Sleep(1000);
@@ -538,7 +474,7 @@ void Gameplay::modifierLeProfile() {
     CouleurBouton choix = UNKNOWN;
     while (choix == UNKNOWN) {
         choix = choixBouton();
-        Sleep(delaiFillaire);
+        Sleep(20);
     }
 
     switch (choix) {
@@ -579,36 +515,8 @@ void Gameplay::interpreterMsg(string msg) {
         if (it.key() == "message") {
             std::cout << it.value() << std::endl;
         }
-        if (it.key() == "btnBleu" && it.value() == "released") {        //bouton bleu, mais note rouge???
+        if (it.key() == "btnBleu" && it.value() == "released") {
             std::cout << "note rouge appuyé" << std::endl;
-        }
-        else if (it.key() == "btnRouge" && it.value() == "released") {       //bouton rouge note rouge
-            // return CouleurBouton::BLEU;
-            cout << "note/btn rouge appuyé" << endl;                    //lorsqu'on utilise namespace std, plus besoin d'écrire std::
-        }
-        else if (it.key() == "btnVert" && it.value() == "released") {
-            //return CouleurBouton::VERT;
-            cout << "note/btn vert appuyé" << endl;
-        }
-        else if (it.key() == "btnJaune" && it.value() == "released") {
-            //return CouleurBouton::JAUNE;
-            cout << "note/btn jaune appuyé" << endl;
-        }
-        else if (it.key() == "btnMauve" && it.value() == "released") {
-            //return CouleurBouton::MAUVE;
-            cout << "note/btn mauve appuyé" << endl;
-        }
-        //else if (it.key() == BTN_QUITTER && it.value() == "released") {
-            //return CouleurBouton::QUITTER;
-        //}
-        else if (it.key() == "btnJoystick" && it.value() == "released") {
-            //return CouleurBouton::JOYSTICK;
-            cout << "joystick utilisé" << endl;
-        }
-
-        else {
-            //return CouleurBouton::UNKNOWN;
-            cout << "bouton inconnu" << endl;
         }
     }
 }
@@ -619,16 +527,7 @@ CouleurBouton Gameplay::choixBouton() {
         return CouleurBouton::UNKNOWN;
     }
 
-    json j = json::object();
-    //json j = json::parse(msg);
-    try {
-        j = json::parse(msg);
-    }
-    catch (const json::parse_error&) {
-        //std::cout << "json erreur : " << msg << std::endl;
-        // Ignorer l'erreur
-    }
-
+    json j = json::parse(msg);
     if (verbose) {
         std::cout << j;
     }
@@ -663,6 +562,18 @@ CouleurBouton Gameplay::choixBouton() {
     }
 
     return CouleurBouton::UNKNOWN;
+}
+
+void Gameplay::setJoueur(Joueur* nouveauJoueur) {
+
+    if (joueurActuel != nullptr) {
+        delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
+    }
+    joueurActuel = nouveauJoueur;
+}
+
+Joueur* Gameplay::getJoueur() {
+    return joueurActuel;
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {

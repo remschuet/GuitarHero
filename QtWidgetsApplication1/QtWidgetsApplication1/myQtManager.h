@@ -34,9 +34,9 @@ public:
 
     static void qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G);
 
-    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G);
+    static void qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G);
 
-    static void qtPageGameplay(QWidget* parent, QStackedWidget* stack, Gameplay* G);
+    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G);
 
     static void afficherImage(QWidget* parentWidget, const QString& imagePath);
 

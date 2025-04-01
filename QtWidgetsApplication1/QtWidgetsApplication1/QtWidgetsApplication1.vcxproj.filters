@@ -111,9 +111,6 @@
     <ClInclude Include="Joueur.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Gameplay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -149,5 +146,10 @@
     <ResourceCompile Include="QtWidgetsApplication1.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Gameplay.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>
