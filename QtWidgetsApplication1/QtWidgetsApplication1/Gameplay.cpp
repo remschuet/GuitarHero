@@ -104,17 +104,21 @@ void Gameplay::gotoxy(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
 
-void Gameplay::affichageTitre() {
-    system("cls");
+void Gameplay::affichageTitre(QLabel* label) {
+    label->clear();
+	label->setText("GUITAR HERO");
+    label->setFont(QFont("Arial", 24, QFont::Bold));
+    label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    /*system("cls");
     gotoxy(10, 2);
     std::cout << "===========================";
     gotoxy(15, 3);
     std::cout << "!! GUITAR HERO !!";
     gotoxy(10, 4);
-    std::cout << "===========================";
+    std::cout << "===========================";*/
 }
 
-void Gameplay::affichageProgression() {
+void Gameplay::affichageProgression(QLabel* label) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
@@ -136,13 +140,13 @@ void Gameplay::affichageProgression() {
 
 }
 
-void Gameplay::loopGame() {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
         long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
-        affichageTitre();
-        affichageProgression();
+        affichageTitre(titleLabel);
+        affichageProgression(ProgressionLabel);
         tick++;
 
         //Barre d'infos du joueur
@@ -166,7 +170,7 @@ void Gameplay::loopGame() {
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
             Sleep(120);
-            loopGame();
+            //loopGame();
         }
 
         // chrono en fonction de la musique
@@ -272,12 +276,12 @@ void Gameplay::demarrerPartie(QLabel* label) {
     //loopGame();
 }
 
-void Gameplay::updateGame() {
+void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
-    affichageTitre();
-    affichageProgression();
+    affichageTitre(titleLabel);
+    affichageProgression(ProgressionLabel);
     tick++;
 
     if (tempsEcoule >= dureeTotale) {
@@ -327,12 +331,12 @@ void Gameplay::finPartie() {
 
 }
 
-void Gameplay::SelectionJoueur()
+void Gameplay::SelectionJoueur(QLabel* label)                    //cout à enlever
 {
     string nomJoueur = "";
 
-    system("cls"); // Efface l'écran avant d'afficher le menu
-
+   //system("cls"); // Efface l'écran avant d'afficher le menu
+    label->clear();
     // Affichage du cadre
     gotoxy(10, 2);
     std::cout << "**************************************";
