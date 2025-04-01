@@ -7,16 +7,12 @@
 #include <vector>
 
 #include <opencv2/opencv.hpp>
-#include <opencv2/core.hpp>
 #include <iostream>
-
-#include <windows.h>
-#pragma comment(lib, "User32.lib")
 
 class Gameplay
 {
 public:
-	Gameplay(std::string comPort = "COM5", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
+	Gameplay(std::string comPort = "COM2", ComMode modeCommunication = FILAIRE, bool verbose = false, bool admin = false);
 	void afficherImage();
 	void PrendreImage();
 	void gotoxy(int x, int y);
@@ -28,20 +24,25 @@ public:
 	void SelectionJoueur();
 	void loopMenu();
 
+	void voirMeilleurScore();
+
+	void setJoueur(Joueur* nouveauJoueur);
+
+	Joueur* getJoueur();
+
+	void envoyerMsg(const std::string& key, const std::string& value);
+
 	bool configBluetooth(std::string nomPort);
 	bool configFilaire(std::string nomPort);
 	void interpreterMsg(std::string);
 	CouleurBouton choixBouton();
-	GameStruct gameStruct;
-	Joueur* getJoueur(); 
-	void setJoueur(Joueur* nouveauJoueur);
 
 private:
-	Joueur* joueurActuel = nullptr;
 	ComArduino* comArduino;
 	ComMode modeCommunication;
 	bool verbose;
 	bool admin;
+	GameStruct gameStruct;
 	int tick = 0;
 	void modifierLeProfile();
 };
