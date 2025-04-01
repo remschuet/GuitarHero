@@ -455,10 +455,10 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         paraManette->setScaledContents(true);  // Redimensionner l'image pour s'adapter au QLabel
 
         // Créer un bouton "Retour aux Paramètres"
-        QPushButton* btnRetourParametre = new QPushButton("Retour aux Paramètres", overlayWidget);
+        QPushButton* btnRetourParametre = new QPushButton("Retour", overlayWidget);
         btnRetourParametre->setStyleSheet(
             "QPushButton { "
-            "    background-color: red; "
+            "    background-color: green; "
             "    color: white; "
             "    font-size: 25px; "
             "    border-radius: 5px; "
@@ -470,10 +470,10 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
             "} "
         );
         btnRetourParametre->setFixedSize(500, 100);
-        btnRetourParametre->setGeometry(100, 50, 500, 100);  // Positionner le bouton
+        btnRetourParametre->setGeometry(0, 0, 500, 100);  // Positionner le bouton
 
         // Ajouter l'overlayWidget à la pageParametre, au-dessus de tous les autres éléments
-        layout->addWidget(overlayWidget, 0, 0, 1, 3);  // Assurez-vous qu'il couvre toute la page
+        layout->addWidget(overlayWidget, 0, 0, 0, 0);  // Assurez-vous qu'il couvre toute la page
 
         // Assurer que le bouton et l'image sont bien au-dessus des autres widgets
         overlayWidget->raise();  // Met l'overlayWidget (contenant l'image et le bouton) au-dessus des autres éléments
