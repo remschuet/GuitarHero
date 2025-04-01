@@ -25,9 +25,8 @@ int main(int argc, char* argv[]) {
     myQtManager::qtPageAccueil(nullptr, &stack, gameplay);
     myQtManager::qtPageMeilleurScore(nullptr, &stack, gameplay);
     myQtManager::qtPageInformations(nullptr, &stack, gameplay);
-    myQtManager::qtPageFinPartie(nullptr, &stack, gameplay);
     myQtManager::qtPageParametres(nullptr, &stack, gameplay);
-
+    myQtManager::qtPageGame(nullptr, &stack, gameplay);
 
     stack.setCurrentIndex(QtFenetre);
     stack.resize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
