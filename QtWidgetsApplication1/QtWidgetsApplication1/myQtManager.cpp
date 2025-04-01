@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <iostream>
+#include "MyQtPageAdmin.h"
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
@@ -54,7 +55,7 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Admin:
-        qtPageAdmin(nullptr, stack, G, manager);
+        stack->addWidget(new MyQtPageAdmin(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }
