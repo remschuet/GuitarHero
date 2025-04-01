@@ -45,8 +45,6 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }
-
-
     if (nouvellePage != nullptr) {
         stack->setCurrentIndex(stack->indexOf(nouvellePage));  // ✅ Afficher la nouvelle page
     }
