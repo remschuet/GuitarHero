@@ -42,7 +42,7 @@ public:
     void affichageProgression(QLabel* Label);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
-    void finPartie();
+    void finPartie(myQtManager* manager);
     void SelectionJoueur(QLabel* Label);
     void loopMenu();
 
@@ -64,5 +64,5 @@ private:
     void modifierLeProfile();
     QTimer* gameTimer;
 private slots:
-    void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel);
+    void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
 };
