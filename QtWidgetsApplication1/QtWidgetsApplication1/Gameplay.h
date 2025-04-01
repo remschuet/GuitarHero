@@ -35,12 +35,12 @@ public:
     void afficherImage();
     void PrendreImage();
     void gotoxy(int x, int y);
-    void affichageTitre();
-    void affichageProgression();
-    void loopGame();
+    void affichageTitre(QLabel* Label);
+    void affichageProgression(QLabel* Label);
+    void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel);
     void demarrerPartie(QLabel* Label);
     void finPartie();
-    void SelectionJoueur();
+    void SelectionJoueur(QLabel* Label);
     void loopMenu();
 
     bool configBluetooth(std::string nomPort);
@@ -61,5 +61,5 @@ private:
     void modifierLeProfile();
     QTimer* gameTimer;
 private slots:
-    void updateGame();
+    void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel);
 };
