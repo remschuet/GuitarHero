@@ -18,28 +18,29 @@
 #include "CONST_QT.h"
 #include "Enum.h"
 
+class Gameplay;
 
 class myQtManager {
 public:
     static void myQt_setFont(QLabel* q, int tailleFont);
 
-    static void changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G);
+    static void changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G, myQtManager* manager);
 
-    static void qtPageInformations(QWidget* window, QStackedWidget* stack, Gameplay* G);
+    static void qtPageInformations(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
-    static void qtPageAdmin(QWidget* pageAdmin, QStackedWidget* stack, Gameplay* G);
+    static void qtPageAdmin(QWidget* pageAdmin, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
-    static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G);
+    static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
     static void qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G);
 
-    static void qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G);
+    static void qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
-    static void qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G);
+    static void qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
     static void qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
-    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G);
+    static void qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
     static void afficherImage(QWidget* parentWidget, const QString& imagePath);
 

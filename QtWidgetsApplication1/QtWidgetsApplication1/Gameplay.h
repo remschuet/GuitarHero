@@ -26,6 +26,8 @@
 #include <windows.h>
 #pragma comment(lib, "User32.lib")
 
+class myQtManager;
+
 class Gameplay : public QObject        //QT
 {
     Q_OBJECT;        //QT
