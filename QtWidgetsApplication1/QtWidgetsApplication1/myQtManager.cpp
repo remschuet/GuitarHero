@@ -45,7 +45,7 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Game:
-        qtPageGameplay(nullptr, stack, G);
+        qtPageGame(nullptr, stack, G);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }
@@ -122,14 +122,6 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     stack->addWidget(page);
 }
 
-void myQtManager::qtPageGameplay(QWidget* parent, QStackedWidget* stack, Gameplay* G)
-{
-    QWidget* pageGameplay = new QWidget();
-    stack->addWidget(pageGameplay);
-}
-
-
-
 void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
     // Créer un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
@@ -187,7 +179,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Gestion des connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = Parametre; // Page à changer
+        fenetres QtFenetre = Game; // Page à changer
         changerDePage(stack, QtFenetre, G);
         });
 
@@ -523,3 +515,24 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     stack->addWidget(pageMeilleursScores);
 }
 
+void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G)
+{
+    QWidget* pageGame = new QWidget();
+    QVBoxLayout* layout = new QVBoxLayout(pageGame);
+
+    QLabel* gameLabel = new QLabel(pageGame);
+    gameLabel->setAlignment(Qt::AlignCenter);
+    layout->addWidget(gameLabel);
+
+    int pageIndex = stack->addWidget(pageGame); // Add the page and get its index
+    qDebug() << "PageGame ajouté à l'index :" << pageIndex;
+
+    QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel](int index) {
+        qDebug() << "Index actuel changé à :" << index;
+        if (stack->widget(index) == pageGame) {
+            qDebug() << "PageGame est affichée!";
+            G->demarrerPartie(gameLabel);
+        }
+        });
+    stack->addWidget(pageGame);
+}

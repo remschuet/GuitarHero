@@ -7,6 +7,13 @@
 #include <vector>
 #include <CONST.h>
 #include <conio.h> // Pour _getch()
+#include "CONST_QT.h"
+#include <QThread>
+#include <qcoreapplication.h>
+#include <qstackedwidget>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QObject>
 
 using namespace std;
 
@@ -240,58 +247,84 @@ void Gameplay::loopGame() {
     }
 }
 
-void Gameplay::demarrerPartie() {
+void Gameplay::demarrerPartie(QLabel* label) {
+    qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
+    label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
+    label->setText("Depart du jeu dans 3 secondes...");
+    QCoreApplication::processEvents();
+    Sleep(1000);                                            //Si ça ne marche pas, essayer QThread::sleep(1); ou QThread::sleep(1000);
+    //QThread::sleep(1);
+    label->setText("Depart du jeu dans 2 secondes...");
+    QCoreApplication::processEvents();
+    //QThread::sleep(1);
+    Sleep(1000);
+    label->setText("Depart du jeu dans 1 secondes...");
+    QCoreApplication::processEvents();
+    //QThread::sleep(1);
+    Sleep(1000);
 
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 3 secondes...";
-    Sleep(1000);
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 2 secondes...";
-    Sleep(1000);
-    gotoxy(12, 18);
-    std::cout << "Départ du jeu dans 1 secondes...";
-    Sleep(1000);
-
-    system("cls");
+    ////system("cls");
+    label->clear();
     tick = 0;
     gameStruct.chansonEnCours->startChrono();
-    loopGame();
+    gameTimer->start(120);
+    qDebug() << "Partie demarree";
+    //loopGame();
+}
+
+void Gameplay::updateGame() {
+    long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+    long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+
+    affichageTitre();
+    affichageProgression();
+    tick++;
+
+    if (tempsEcoule >= dureeTotale) {
+        finPartie();
+    }
 }
 
 void Gameplay::finPartie() {
-   long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
-   long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
-   long long pourcentage = (tempsEcoule*100 / dureeTotale);
+    gameTimer->stop();
+    long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+    long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+    long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
-   system("cls");
-   std::cout << "\n=====================================\n";
-   std::cout << "            FIN DE PARTIE            \n";
-   std::cout << "=====================================\n\n";
-
-   if (gameStruct.joueur->getMeilleurScore() < gameStruct.score) {
-       cout << "Felicitations vous avez battu votre meilleur score !!! \n\n";
-   }
-   std::cout << "Name:  " << gameStruct.joueur->getNomJoueur() << "           SCORE: " << gameStruct.score << "\n\n";
-
-   std::cout << "Vous avez completer :  " << pourcentage << "% de la chanson";
-
-    gameStruct.chansonEnCours->arretMusique();
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //la fonction pour afficher la page de fin de partie doit être dans myQtManager pour que la fct soit accepté...
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-    if (gameStruct.joueur->ScoreMax < gameStruct.score) {
-        // sauvegarder le score
-        DAOSqlite* sqlite = DAOSqlite::getInstance();
-        sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
-        gameStruct.joueur->ScoreMax = gameStruct.score;
+   /* system("cls");
+    std::cout << "\n=====================================\n";
+    std::cout << "            FIN DE PARTIE            \n";
+    std::cout << "=====================================\n\n";
+
+    if (gameStruct.joueur->getMeilleurScore() < gameStruct.score) {
+        cout << "Felicitations vous avez battu votre meilleur score !!! \n\n";
     }
-    
-    CouleurBouton btn = UNKNOWN;
-    while(btn == UNKNOWN) {
-        btn = choixBouton();
-        Sleep(50);
-    }
-    loopMenu();
+    std::cout << "Name:  " << gameStruct.joueur->getNomJoueur() << "           SCORE: " << gameStruct.score << "\n\n";
+
+    std::cout << "Vous avez completer :  " << pourcentage << "% de la chanson";
+
+     gameStruct.chansonEnCours->arretMusique();
+
+
+     if (gameStruct.joueur->ScoreMax < gameStruct.score) {
+         // sauvegarder le score
+         DAOSqlite* sqlite = DAOSqlite::getInstance();
+         sqlite->updateScoreJoueur(gameStruct.joueur->getNomJoueur(), gameStruct.score);
+         gameStruct.joueur->ScoreMax = gameStruct.score;
+     }
+
+     CouleurBouton btn = UNKNOWN;
+     while(btn == UNKNOWN) {
+         btn = choixBouton();
+         Sleep(50);
+     }
+     loopMenu();*/
 
 }
 
@@ -390,7 +423,7 @@ void Gameplay::loopMenu() {
 
     choix = UNKNOWN;
 
-    demarrerPartie();
+    //demarrerPartie();
 }
 
 
@@ -544,4 +577,3 @@ bool Gameplay::configBluetooth(std::string nomPort) {
     comArduino = new ComBluetooth(nomPort);
     return true;
 }
-
