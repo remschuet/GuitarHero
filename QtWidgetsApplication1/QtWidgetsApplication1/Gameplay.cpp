@@ -567,14 +567,14 @@ CouleurBouton Gameplay::choixBouton() {
 
 void Gameplay::setJoueur(Joueur* nouveauJoueur) {
 
-    if (joueurActuel != nullptr) {
+    if (gameStruct.joueur != nullptr) {
         delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
     }
-    joueurActuel = nouveauJoueur;
+    gameStruct.joueur = nouveauJoueur;
 }
 
 Joueur* Gameplay::getJoueur() {
-    return joueurActuel;
+    return gameStruct.joueur;
 }
 
 bool Gameplay::configBluetooth(std::string nomPort) {
