@@ -1,5 +1,12 @@
 ﻿#include "myQtManager.h"
 #include <QGraphicsOpacityEffect>
+#include <QFileDialog>
+#include <QMenu>
+#include <QString>
+#include <QFileDialog>
+#include <QPixmap>
+#include <QMessageBox>
+#include <iostream>
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
@@ -286,8 +293,7 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
     if (G->getJoueur() != nullptr) {
         Joueur* joueurlog = G->getJoueur();
         nom = joueurlog->getNomJoueur();
-     
-        imagePath = QString::fromStdString("../images/avatar.jpeg");
+        imagePath = QString::fromStdString("./images/avatar.jpeg"); // Chemin de l'image
     }
 
     // Layout principal
@@ -334,17 +340,118 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
     infoFrame->setLayout(infoLayout);
     mainLayout->addWidget(infoFrame);
 
-    // Image
+    // Layout pour afficher l'image, le texte et le bouton côte à côte
+    QHBoxLayout* imageLayout = new QHBoxLayout();
+
+    // Charger l'image
     QLabel* imageLabel = new QLabel(window);
-    QPixmap pixmap(imagePath);  // Charger l'image
+    QPixmap pixmap(imagePath);  // Charger l'image de l'avatar
     if (!pixmap.isNull()) {
-        imageLabel->setPixmap(pixmap.scaled(150, 150, Qt::KeepAspectRatio)); // Ajuster la taille de l'image si nécessaire
+        imageLabel->setPixmap(pixmap.scaled(150, 150, Qt::KeepAspectRatio)); // Ajuster la taille de l'image
     }
     else {
         imageLabel->setText("Image non disponible");
     }
 
-    mainLayout->addWidget(imageLabel); // Ajouter l'image au layout
+    // Ajouter un texte à côté de l'image
+    QLabel* textLabel = new QLabel("Avatar utilisé", window);
+    myQt_setFont(textLabel, QT_SUBTITLE);
+    textLabel->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+
+    // Ajouter le bouton "Modifier l'image"
+    QPushButton* modifyButton = new QPushButton("Modifier l'image", window);
+    modifyButton->setStyleSheet(QString(
+        "background-color: %1; color: %2; border: 2px solid %3; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: bold;"
+    ).arg(COULEUR_BOUTON)
+        .arg(COULEUR_TEXTE_BOUTON)
+        .arg(COULEUR_PSEUDO_SCORE));
+
+    // Création du menu déroulant
+
+// Création du menu déroulant
+    QMenu* menu = new QMenu(modifyButton);
+
+    // Appliquer un style personnalisé au QMenu
+    menu->setStyleSheet(R"(
+    QMenu {
+        background-color: #333333;  /* Couleur de fond du menu */
+        border: 2px solid #0078D7;  /* Bordure de couleur */
+        padding: 5px;
+        width: 200px; /* Largeur fixe du menu (doit correspondre au bouton) */
+    }
+
+    QMenu::item {
+        background-color: #444444; /* Couleur de fond des items */
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+    }
+
+    QMenu::item:selected {
+        background-color: #0078D7; /* Couleur de fond lors du survol */
+        color: white;
+    }
+)");
+
+    // Création des actions du menu
+    QAction* actionDefaultImage = new QAction("Mettre image par défaut", menu);
+    QAction* actionTakePhoto = new QAction("Prendre une photo", menu);
+
+    // Ajouter les actions au menu
+    menu->addAction(actionDefaultImage);
+    menu->addAction(actionTakePhoto);
+
+    // Appliquer la taille du bouton au menu
+    menu->setFixedWidth(modifyButton->width());
+
+    // Associer le menu au bouton
+    modifyButton->setMenu(menu);
+
+    // Connecter l'action "Mettre image par défaut"
+    QObject::connect(actionDefaultImage, &QAction::triggered, [G, imageLabel]() {
+        if (G != nullptr && G->getJoueur() != nullptr) {
+            std::string defaultImagePath = "./images/avatar.jpeg";  // Chemin de l'image par défaut
+            G->getJoueur()->setNouvelleImage();  // Met à jour l'image par défaut
+
+            QPixmap newPixmap(QString::fromStdString(defaultImagePath));  // Charge l'image par défaut
+            if (!newPixmap.isNull()) {
+                imageLabel->setPixmap(newPixmap.scaled(150, 150, Qt::KeepAspectRatio));
+            }
+            else {
+                std::cerr << "Erreur : Impossible de charger l'image par défaut." << std::endl;
+            }
+        }
+        });
+
+    // Connecter l'action "Prendre une photo"
+    QObject::connect(actionTakePhoto, &QAction::triggered, [G, imageLabel]() {
+        if (G != nullptr) {  // Vérifie que Gameplay existe
+            G->PrendreImage();  // Capture l'image avec OpenCV
+
+            if (G->getJoueur() != nullptr) {  // Vérifie que le joueur existe
+                QString newImagePath = QString::fromStdString(G->getJoueur()->getImage());
+                QPixmap newPixmap(newImagePath);
+                if (!newPixmap.isNull()) {
+                    imageLabel->setPixmap(newPixmap.scaled(150, 150, Qt::KeepAspectRatio));
+                }
+                else {
+                    std::cerr << "Erreur : Impossible de charger l'image prise." << std::endl;
+                }
+            }
+        }
+        });
+    // Connecter le bouton à l'affichage du menu
+    QObject::connect(modifyButton, &QPushButton::clicked, [menu]() {
+        menu->exec(QCursor::pos());  // Afficher le menu contextuel
+        });
+
+    // Ajouter l'image, le texte et le bouton dans le layout horizontal
+    imageLayout->addWidget(imageLabel);
+    imageLayout->addWidget(textLabel);
+    imageLayout->addWidget(modifyButton);
+
+    // Ajouter le layout de l'image, du texte et du bouton au layout principal
+    mainLayout->addLayout(imageLayout);
 
     // Retour
     QPushButton* backButton = new QPushButton("Retour", window);
@@ -360,6 +467,8 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
 
     stack->addWidget(window);
 }
+
+
 
 
 void myQtManager::qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G)
@@ -424,7 +533,7 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     //font.setPointSize(25);  // Définir la taille de la police ici
     //btnRetour->setFont(font);
 
-    btnRetour->setFixedSize(500, 125);
+    btnRetour->setFixedSize(500, 100);
 
     // Ajouter le bouton "Retour" en haut à gauche (cellule (0, 0))
     layout->addWidget(btnRetour, 0, 0, Qt::AlignLeft | Qt::AlignTop);
@@ -447,14 +556,12 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     layout->addWidget(spacerTop, 1, 0, 1, 3);  // Ajouter un widget vide comme espacement
 
     // Liste des boutons
-    QStringList buttonNames = { "Difficulté", "Paramètre de la manette", "Informations joueur", "Mode Admin" };
+    QStringList buttonNames = { "Difficulté", "Paramètre de la manette", "Mode Admin" };
     QVector<QPushButton*> buttons;
 
     // Création des boutons avec un style uniforme
     for (int i = 0; i < buttonNames.size(); ++i) {
         QPushButton* button = new QPushButton(buttonNames[i]);
-
-
         //QFont fontButton = button->font();
         //fontButton.setPointSize(25);  // Définir la taille de la police ici
         //button->setFont(fontButton);
@@ -472,7 +579,7 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
                 "    color: white; "                 // Couleur du texte au survol
                 "}"
             );
-        button->setFixedSize(500, 125);
+        button->setFixedSize(500, 100);
         buttons.append(button);
 
         // Ajouter les boutons en ligne, un sous l'autre
@@ -490,11 +597,13 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         });
 
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
-        // Créer un QLabel pour afficher l'image
-        QLabel* paraManette = new QLabel(pageParametre);  // "pageParametre" est le parent de l'image
+        // Créer un widget qui contiendra l'image et le bouton
+        QWidget* overlayWidget = new QWidget(pageParametre); // parent = pageParametre
+        overlayWidget->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // Position et taille du widget
 
-        // Charger l'image
-        QPixmap ManettePixmap("./images/guitare.jpg");
+        // Créer un QLabel pour afficher l'image
+        QLabel* paraManette = new QLabel(overlayWidget);  // Ajouter l'image au nouveau widget
+        QPixmap ManettePixmap("./images/test.jpg");
 
         // Vérifier si l'image a été correctement chargée
         if (ManettePixmap.isNull()) {
@@ -504,35 +613,50 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 
         // Afficher l'image dans le QLabel
         paraManette->setPixmap(ManettePixmap);
-        paraManette->setScaledContents(true);  // Redimensionner l'image pour s'adapter au QLabel
         paraManette->setAlignment(Qt::AlignCenter);  // Centrer l'image dans le QLabel
 
-        // Positionner le QLabel en haut de tous les autres widgets
-        paraManette->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // Recouvrir toute la fenêtre
+        // Fixer la taille du QLabel à la taille de l'écran
+        paraManette->setFixedSize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // S'assurer que le QLabel prend toute la taille de l'écran
 
-        // Appliquer un effet de transparence si nécessaire
-        //QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
-        //opacityEffect->setOpacity(0.5);
-        //paraManette->setGraphicsEffect(opacityEffect);
+        // S'assurer que l'image s'adapte à la taille du QLabel
+        paraManette->setScaledContents(true);  // Redimensionner l'image pour s'adapter au QLabel
 
-        // Ajouter l'image au layout actuel
-        layout->addWidget(paraManette, 0, Qt::AlignCenter); // Centrer l'image dans le layout
+        // Créer un bouton "Retour aux Paramètres"
+        QPushButton* btnRetourParametre = new QPushButton("Retour", overlayWidget);
+        btnRetourParametre->setStyleSheet(
+            "QPushButton { "
+            "    background-color: green; "
+            "    color: white; "
+            "    font-size: 25px; "
+            "    border-radius: 5px; "
+            "    padding: 5px 10px; "
+            "} "
+            "QPushButton:hover { "
+            "    background-color: gray; "
+            "    color: white; "
+            "} "
+        );
+        btnRetourParametre->setFixedSize(500, 100);
+        btnRetourParametre->setGeometry(0, 0, 500, 100);  // Positionner le bouton
 
-        // Assurer que l'image reste au-dessus des autres widgets
-        paraManette->raise(); // Met l'image au-dessus des autres éléments
+        // Ajouter l'overlayWidget à la pageParametre, au-dessus de tous les autres éléments
+        layout->addWidget(overlayWidget, 0, 0, 0, 0);  // Assurez-vous qu'il couvre toute la page
+
+        // Assurer que le bouton et l'image sont bien au-dessus des autres widgets
+        overlayWidget->raise();  // Met l'overlayWidget (contenant l'image et le bouton) au-dessus des autres éléments
+
+        // Connexion du bouton "Retour aux Paramètres"
+        QObject::connect(btnRetourParametre, &QPushButton::clicked, [=]() {
+            // Supprimer l'overlay (image et bouton) quand on clique sur "Retour"
+            paraManette->deleteLater();  // Supprimer l'image
+            btnRetourParametre->deleteLater();  // Supprimer le bouton
+            overlayWidget->deleteLater();  // Supprimer l'overlayWidget complet
+            });
         });
 
 
 
-    QObject::connect(buttons[2], &QPushButton::clicked, [&]() {
-        if (imageLabel) {
-            layout->removeWidget(imageLabel);  // Retirer l'image du layout
-            delete imageLabel;  // Supprimer l'objet QLabel pour libérer la mémoire
-            imageLabel = nullptr;  // Réinitialiser la variable pour éviter d'accéder à un objet supprimé
-        }
-        });
-
-    QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
+    QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
         changerDePage(stack, QtFenetre, G);
         });
