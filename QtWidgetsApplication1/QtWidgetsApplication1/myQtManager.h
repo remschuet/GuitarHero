@@ -27,6 +27,8 @@ public:
 
     static void qtPageInformations(QWidget* window, QStackedWidget* stack, Gameplay* G);
 
+    static void qtPageAdmin(QWidget* pageAdmin, QStackedWidget* stack, Gameplay* G);
+
     static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G);
 
     static void qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G);
