@@ -351,7 +351,7 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     //font.setPointSize(25);  // Définir la taille de la police ici
     //btnRetour->setFont(font);
 
-    btnRetour->setFixedSize(500, 125);
+    btnRetour->setFixedSize(500, 100);
 
     // Ajouter le bouton "Retour" en haut à gauche (cellule (0, 0))
     layout->addWidget(btnRetour, 0, 0, Qt::AlignLeft | Qt::AlignTop);
@@ -379,14 +379,12 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
     layout->addWidget(spacerTop, 1, 0, 1, 3);  // Ajouter un widget vide comme espacement
 
     // Liste des boutons
-    QStringList buttonNames = { "Difficulté", "Paramètre de la manette", "Informations joueur", "Mode Admin" };
+    QStringList buttonNames = { "Difficulté", "Paramètre de la manette", "Mode Admin" };
     QVector<QPushButton*> buttons;
 
     // Création des boutons avec un style uniforme
     for (int i = 0; i < buttonNames.size(); ++i) {
         QPushButton* button = new QPushButton(buttonNames[i]);
-
-
         //QFont fontButton = button->font();
         //fontButton.setPointSize(25);  // Définir la taille de la police ici
         //button->setFont(fontButton);
@@ -404,7 +402,7 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
                 "    color: white; "                 // Couleur du texte au survol
                 "}"
             );
-        button->setFixedSize(500, 125);
+        button->setFixedSize(500, 100);
         buttons.append(button);
 
         // Ajouter les boutons en ligne, un sous l'autre
@@ -422,11 +420,13 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         });
 
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
-        // Créer un QLabel pour afficher l'image
-        QLabel* paraManette = new QLabel(pageParametre);  // "pageParametre" est le parent de l'image
+        // Créer un widget qui contiendra l'image et le bouton
+        QWidget* overlayWidget = new QWidget(pageParametre); // parent = pageParametre
+        overlayWidget->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // Position et taille du widget
 
-        // Charger l'image
-        QPixmap ManettePixmap("./images/guitare.jpg");
+        // Créer un QLabel pour afficher l'image
+        QLabel* paraManette = new QLabel(overlayWidget);  // Ajouter l'image au nouveau widget
+        QPixmap ManettePixmap("./images/test.jpg");
 
         // Vérifier si l'image a été correctement chargée
         if (ManettePixmap.isNull()) {
@@ -436,35 +436,50 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 
         // Afficher l'image dans le QLabel
         paraManette->setPixmap(ManettePixmap);
-        paraManette->setScaledContents(true);  // Redimensionner l'image pour s'adapter au QLabel
         paraManette->setAlignment(Qt::AlignCenter);  // Centrer l'image dans le QLabel
 
-        // Positionner le QLabel en haut de tous les autres widgets
-        paraManette->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // Recouvrir toute la fenêtre
+        // Fixer la taille du QLabel à la taille de l'écran
+        paraManette->setFixedSize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // S'assurer que le QLabel prend toute la taille de l'écran
 
-        // Appliquer un effet de transparence si nécessaire
-        //QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
-        //opacityEffect->setOpacity(0.5);
-        //paraManette->setGraphicsEffect(opacityEffect);
+        // S'assurer que l'image s'adapte à la taille du QLabel
+        paraManette->setScaledContents(true);  // Redimensionner l'image pour s'adapter au QLabel
 
-        // Ajouter l'image au layout actuel
-        layout->addWidget(paraManette, 0, Qt::AlignCenter); // Centrer l'image dans le layout
+        // Créer un bouton "Retour aux Paramètres"
+        QPushButton* btnRetourParametre = new QPushButton("Retour aux Paramètres", overlayWidget);
+        btnRetourParametre->setStyleSheet(
+            "QPushButton { "
+            "    background-color: red; "
+            "    color: white; "
+            "    font-size: 25px; "
+            "    border-radius: 5px; "
+            "    padding: 5px 10px; "
+            "} "
+            "QPushButton:hover { "
+            "    background-color: gray; "
+            "    color: white; "
+            "} "
+        );
+        btnRetourParametre->setFixedSize(500, 100);
+        btnRetourParametre->setGeometry(100, 50, 500, 100);  // Positionner le bouton
 
-        // Assurer que l'image reste au-dessus des autres widgets
-        paraManette->raise(); // Met l'image au-dessus des autres éléments
+        // Ajouter l'overlayWidget à la pageParametre, au-dessus de tous les autres éléments
+        layout->addWidget(overlayWidget, 0, 0, 1, 3);  // Assurez-vous qu'il couvre toute la page
+
+        // Assurer que le bouton et l'image sont bien au-dessus des autres widgets
+        overlayWidget->raise();  // Met l'overlayWidget (contenant l'image et le bouton) au-dessus des autres éléments
+
+        // Connexion du bouton "Retour aux Paramètres"
+        QObject::connect(btnRetourParametre, &QPushButton::clicked, [=]() {
+            // Supprimer l'overlay (image et bouton) quand on clique sur "Retour"
+            paraManette->deleteLater();  // Supprimer l'image
+            btnRetourParametre->deleteLater();  // Supprimer le bouton
+            overlayWidget->deleteLater();  // Supprimer l'overlayWidget complet
+            });
         });
 
 
 
-    QObject::connect(buttons[2], &QPushButton::clicked, [&]() {
-        if (imageLabel) {
-            layout->removeWidget(imageLabel);  // Retirer l'image du layout
-            delete imageLabel;  // Supprimer l'objet QLabel pour libérer la mémoire
-            imageLabel = nullptr;  // Réinitialiser la variable pour éviter d'accéder à un objet supprimé
-        }
-        });
-
-    QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
+    QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
         fenetres QtFenetre = Accueil;
         changerDePage(stack, QtFenetre, G);
         });
