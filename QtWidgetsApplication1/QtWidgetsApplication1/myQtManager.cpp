@@ -238,7 +238,6 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
 
 
-// Autres fonctions (à implémenter )
 void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G)
 {
     QWidget* window = new QWidget(parent);
@@ -246,11 +245,13 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
 
     std::string nom = "Inconnu";
     int score = 0;
-    
+    QString imagePath = "";
 
     if (G->getJoueur() != nullptr) {
         Joueur* joueurlog = G->getJoueur();
         nom = joueurlog->getNomJoueur();
+     
+        imagePath = QString::fromStdString("../images/avatar.jpeg");
     }
 
     // Layout principal
@@ -299,7 +300,15 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
 
     // Image
     QLabel* imageLabel = new QLabel(window);
+    QPixmap pixmap(imagePath);  // Charger l'image
+    if (!pixmap.isNull()) {
+        imageLabel->setPixmap(pixmap.scaled(150, 150, Qt::KeepAspectRatio)); // Ajuster la taille de l'image si nécessaire
+    }
+    else {
+        imageLabel->setText("Image non disponible");
+    }
 
+    mainLayout->addWidget(imageLabel); // Ajouter l'image au layout
 
     // Retour
     QPushButton* backButton = new QPushButton("Retour", window);
@@ -315,6 +324,7 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
 
     stack->addWidget(window);
 }
+
 
 void myQtManager::qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G)
 {
