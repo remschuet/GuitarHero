@@ -18,6 +18,7 @@
 #include <qstackedwidget>
 #include <QVBoxLayout>
 #include <QObject>
+#include "myQtManager.h"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
@@ -37,8 +38,8 @@ public:
     void gotoxy(int x, int y);
     void affichageTitre(QLabel* Label);
     void affichageProgression(QLabel* Label);
-    void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel);
-    void demarrerPartie(QLabel* Label);
+    void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager);
+    void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
     void finPartie();
     void SelectionJoueur(QLabel* Label);
     void loopMenu();
