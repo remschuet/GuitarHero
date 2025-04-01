@@ -1,19 +1,4 @@
 ﻿#include "Gameplay.h"
-#include "ComBluetooth.h"
-#include "ComFichierTexte.h"
-#include "ComClavier.h"
-#include "DAOSqlite.h"
-#include <iostream>
-#include <vector>
-#include <CONST.h>
-#include <conio.h> // Pour _getch()
-#include "CONST_QT.h"
-#include <QThread>
-#include <qcoreapplication.h>
-#include <qstackedwidget>
-#include <QVBoxLayout>
-#include <QLabel>
-//#include <QObject>
 
 using namespace std;
 
