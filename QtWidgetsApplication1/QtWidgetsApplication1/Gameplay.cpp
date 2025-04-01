@@ -13,7 +13,7 @@
 #include <qstackedwidget>
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QObject>
+//#include <QObject>
 
 using namespace std;
 
