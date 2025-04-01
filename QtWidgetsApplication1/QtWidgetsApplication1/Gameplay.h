@@ -7,11 +7,20 @@
 #include <vector>
 #include <QLabel>
 #include <QTimer>
+#include "ComFichierTexte.h"
+#include "ComClavier.h"
+#include "DAOSqlite.h"
+#include <CONST.h>
+#include <conio.h> // Pour _getch()
+#include "CONST_QT.h"
+#include <QThread>
+#include <qcoreapplication.h>
+#include <qstackedwidget>
+#include <QVBoxLayout>
 #include <QObject>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
-#include <iostream>
 
 #include <windows.h>
 #pragma comment(lib, "User32.lib")
