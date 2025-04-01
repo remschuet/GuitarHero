@@ -251,7 +251,7 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
         Joueur* joueurlog = G->getJoueur();
         nom = joueurlog->getNomJoueur();
      
-        imagePath = QString::fromStdString("../images/avatar.jpeg");
+        imagePath = QString::fromStdString("./images/avatar.jpeg");
     }
 
     // Layout principal
