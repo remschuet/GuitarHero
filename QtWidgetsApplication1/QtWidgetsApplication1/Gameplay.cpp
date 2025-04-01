@@ -106,7 +106,8 @@ void Gameplay::gotoxy(int x, int y) {
 
 void Gameplay::affichageTitre(QLabel* label) {
     label->clear();
-    label->setText("GUITAR HERO");
+
+	label->setText("GUITAR HERO");
     label->setFont(QFont("Arial", 24, QFont::Bold));
     label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
     /*system("cls");
@@ -335,7 +336,7 @@ void Gameplay::SelectionJoueur(QLabel* label)                    //cout à enlev
 {
     string nomJoueur = "";
 
-    //system("cls"); // Efface l'écran avant d'afficher le menu
+   //system("cls"); // Efface l'écran avant d'afficher le menu
     label->clear();
     // Affichage du cadre
     gotoxy(10, 2);
