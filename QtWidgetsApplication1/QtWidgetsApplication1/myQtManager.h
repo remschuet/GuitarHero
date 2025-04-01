@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QStackedLayout>
 #include <QLabel>
+#include <QPixmap>
 #include <qdebug.h>
 #include <QStackedWidget>
 #include <QPushButton>
@@ -36,5 +37,7 @@ public:
     static void qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G);
 
     static void qtPageGameplay(QWidget* parent, QStackedWidget* stack, Gameplay* G);
+
+    static void afficherImage(QWidget* parentWidget, const QString& imagePath);
 
 };
