@@ -7,6 +7,7 @@
 #include <qdebug.h>
 #include <QStackedWidget>
 #include <QPushButton>
+#include <Qdialog>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QMessageBox>
