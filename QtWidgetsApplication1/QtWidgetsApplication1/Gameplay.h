@@ -7,7 +7,7 @@
 #include <vector>
 #include <QLabel>
 #include <QTimer>
-//#include <QObject>
+#include <QObject>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
