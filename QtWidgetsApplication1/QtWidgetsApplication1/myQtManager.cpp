@@ -16,6 +16,7 @@
 #include "MyQtPageMeilleurScore.h"
 
 
+
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
     font.setPointSize(tailleFont);
@@ -190,11 +191,11 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
             return;
         }
 
-        G->setJoueur(new Joueur(nomJoueur.toStdString()));
+        // G->setJoueur(new Joueur(nomJoueur.toStdString()));
 
         // Enregistrement du joueur dans la base de données
         DAOSqlite* sqlite = DAOSqlite::getInstance();
-        sqlite->ajouterJoueur(nomJoueur.toStdString(), 0, "");
+        G->gameStruct.joueur = sqlite->getJoueur(nomJoueur.toStdString());
 
         // Aller au menu
         qtPageMenu(parent, stack, G, manager);
@@ -307,14 +308,16 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
     QWidget* window = new QWidget(parent);
     window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
 
-    std::string nom = "Inconnu";
-    int score = 0;
-    QString imagePath = "";
+    std::string nom;
+    //int score;
+    QString imagePath;
 
     if (G->getJoueur() != nullptr) {
         Joueur* joueurlog = G->getJoueur();
         nom = joueurlog->getNomJoueur();
-        imagePath = QString::fromStdString("./images/avatar.jpeg"); // Chemin de l'image
+        imagePath = (G && G->getJoueur())
+            ? QString::fromStdString(G->getJoueur()->getImage())
+            : "./images/avatar.jpg";
     }
 
     // Layout principal
@@ -348,11 +351,11 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
     QLabel* scoreLabel = new QLabel("Score :", window);
     myQt_setFont(scoreLabel, QT_SUBTITLE);
     scoreLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
-    QLabel* scoreValue = new QLabel(QString::number(score), window);
-    myQt_setFont(scoreValue, QT_SUBTITLE);
-    scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
-    scoreLayout->addWidget(scoreLabel);
-    scoreLayout->addWidget(scoreValue);
+    //QLabel* scoreValue = new QLabel(QString::number(score), window);
+    //myQt_setFont(scoreValue, QT_SUBTITLE);
+    //scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    //scoreLayout->addWidget(scoreLabel);
+    //scoreLayout->addWidget(scoreValue);
 
     QVBoxLayout* detailsLayout = new QVBoxLayout();
     detailsLayout->addLayout(pseudoLayout);
@@ -866,7 +869,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
             QLabel* imageLabel = new QLabel();
             QString imagePath = (G && G->getJoueur() && scores[i].first == G->getJoueur()->getNomJoueur())
                 ? QString::fromStdString(G->getJoueur()->getImage())
-                : "./images/guitare.jpg";
+                : "./images/avatar.jpg";
 
             QPixmap pixmap(imagePath);
             if (!pixmap.isNull()) {

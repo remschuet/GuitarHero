@@ -43,9 +43,6 @@
     <ClCompile Include="QtHelper.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="myQtManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SerialPort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -83,6 +80,36 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sqlite3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="myQtManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageAccueil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageAdmin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageFinPartie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageGameplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageInfoJoueur.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageMeilleurScore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyQtPageSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,6 +176,33 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Gameplay.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageAccueil.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageAdmin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageFinPartie.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageGameplay.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageInfoJoueur.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageMeilleurScore.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageMenu.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyQtPageSettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
