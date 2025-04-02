@@ -15,7 +15,30 @@
 #include "MyQtPageAccueil.h"
 #include "MyQtPageMeilleurScore.h"
 
+QVBoxLayout* myQtManager::GlobalLayout = nullptr;
 
+
+QLabel* myQtManager::getUnusedLabel() {
+	for (QLabel* label : labels) {
+		if (label->property("noteStatus") == "UNUSED" ){
+			return label;
+		}
+	}
+    return nullptr;
+}
+
+QWidget* myQtManager::getParentWidget() {
+    return parentWidget;
+}
+
+QLabel* myQtManager::getLabelForNote(const Note& note) {
+	for (QLabel* label : labels) {
+		if (label->property("noteStatus") == "ACTIVE" && label->property("noteColor") == note.couleur) {
+			return label;
+		}
+	}
+	return nullptr;
+}
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
@@ -947,27 +970,27 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
 void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
     QWidget* pageGame = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout(pageGame);
+    QVBoxLayout* layoutGame = new QVBoxLayout(pageGame);
 
     QLabel* gameLabel = new QLabel(pageGame);
     gameLabel->setAlignment(Qt::AlignCenter);
-    layout->addWidget(gameLabel);
+    layoutGame->addWidget(gameLabel);
 
     QLabel* titleLabel = new QLabel(pageGame);
-    layout->addWidget(titleLabel);
+    layoutGame->addWidget(titleLabel);
 
     QLabel* ProgressionLabel = new QLabel(pageGame);
-    layout->addWidget(ProgressionLabel);
+    layoutGame->addWidget(ProgressionLabel);
 
     int pageIndex = stack->addWidget(pageGame); // Add the page and get its index
     qDebug() << "PageGame ajouté à l'index :" << pageIndex;
 
-    QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel, titleLabel, ProgressionLabel, manager](int index) {
+    QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel, titleLabel, ProgressionLabel, manager, layoutGame](int index) {
         qDebug() << "Index actuel changé à :" << index;
         if (stack->widget(index) == pageGame) {
             qDebug() << "PageGame est affichée!";
             G->gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
-            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager);
+            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, layoutGame);
         }
         });
     stack->addWidget(pageGame);

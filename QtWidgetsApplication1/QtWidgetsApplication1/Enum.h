@@ -31,7 +31,8 @@ enum NotesAction {
 	APPUYE,
 	RELACHE,
 	INITIALE,
-	MORTE
+	MORTE,
+	UNUSED
 };
 
 enum ComMode {

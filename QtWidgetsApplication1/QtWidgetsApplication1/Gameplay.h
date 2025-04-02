@@ -40,8 +40,8 @@ public:
     void gotoxy(int x, int y);
     void affichageTitre(QLabel* Label);
     void affichageProgression(QLabel* Label);
-    void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager);
-    void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
+    void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame);
+    void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame);
     void finPartie(myQtManager* manager);
     void SelectionJoueur(QLabel* Label);
     void loopMenu();
@@ -63,6 +63,6 @@ private:
     int tick = 0;
     void modifierLeProfile();
     QTimer* gameTimer;
-private slots:
-    void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
+//private slots:
+  //  void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
 };
