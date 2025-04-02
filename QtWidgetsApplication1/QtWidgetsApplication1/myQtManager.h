@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QStackedLayout>
 #include <QLabel>
+#include <QScrollArea>
 #include <QPixmap>
 #include <qdebug.h>
 #include <QStackedWidget>

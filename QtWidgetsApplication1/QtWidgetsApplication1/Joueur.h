@@ -5,7 +5,7 @@ class Joueur
 {
 public:
 	std::string nomJoueur;
-	std::string Icone = "";
+	std::string Icone = "./images/guitare.jpg";
 	int ScoreMax = 0;
 	int ScoreActuel = 0;
 

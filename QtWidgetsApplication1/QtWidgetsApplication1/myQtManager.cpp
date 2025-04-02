@@ -675,42 +675,53 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
 {
     QWidget* pageMeilleursScores = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout(pageMeilleursScores);
-    mainLayout->setContentsMargins(20, 20, 20, 20); // Marge globale
+    mainLayout->setContentsMargins(20, 10, 20, 10); // Marges réduites
 
     // Image de fond
     QLabel* backgroundLabel = new QLabel(pageMeilleursScores);
     backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("./images/meilleurscore.png");
-    backgroundLabel->setPixmap(resizedPixmap);
+    if (!resizedPixmap.isNull()) {
+        backgroundLabel->setPixmap(resizedPixmap);
+    }
     backgroundLabel->setScaledContents(true);
-    backgroundLabel->lower(); // Assurer que l'image reste en arrière-plan
+    backgroundLabel->lower();
 
-    // Titre "Meilleur Score"
-    QLabel* titre = new QLabel("Meilleur Score");
+    // Titre
+    QLabel* titre = new QLabel("Meilleurs Scores");
     titre->setAlignment(Qt::AlignHCenter);
-    QFont fontTitre("Arial", 20, QFont::Bold);
+    QFont fontTitre("Arial", 18, QFont::Bold); // Taille réduite
     titre->setFont(fontTitre);
     titre->setStyleSheet(COULEUR_FOND);
     mainLayout->addWidget(titre);
 
-    // Espacement après le titre
-    mainLayout->addSpacing(10);
+    // Conteneur avec défilement
+    QScrollArea* scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setStyleSheet("QScrollArea { border: none; background: transparent; }");
 
-    // Debug
-    qDebug() << "qtPageMeilleurScore appelée\n";
+    QWidget* scoreContainer = new QWidget();
+    QVBoxLayout* scoreLayout = new QVBoxLayout(scoreContainer);
+    scoreLayout->setContentsMargins(0, 5, 0, 5); // Marges réduites
+    scoreLayout->setSpacing(6); // Espacement réduit entre les lignes
 
     // Récupération des meilleurs scores
     std::pair<std::string, int> scores[10];
     DAOSqlite* sqlite = DAOSqlite::getInstance();
     sqlite->getMeilleurScore(scores);
 
-    // Layout contenant la liste des scores
-    QVBoxLayout* scoreLayout = new QVBoxLayout();
-    scoreLayout->setSpacing(8); // Espacement entre chaque score
-
-    // Affichage des scores
     for (size_t i = 0; i < 10; ++i) {
-        if (scores[i].first != "") {
+        QFrame* scoreCard = new QFrame();
+        scoreCard->setStyleSheet("background-color: rgba(128, 128, 128, 0.5); "
+            "border: 2px solid transparent; "
+            "border-radius: 8px; padding: 3px;"); // Bordures et padding réduits
+        scoreCard->setFixedHeight(70); // Hauteur réduite
+
+        QHBoxLayout* rowLayout = new QHBoxLayout(scoreCard);
+        rowLayout->setContentsMargins(10, 0, 10, 0); // Marges réduites
+
+        if (i < 10 && scores[i].first != "") {
             QString medal, borderColor, nameBgColor, positionTextColor, textColor = COULEUR_TEXTE_BOUTON;
 
             if (i == 0) {
@@ -726,60 +737,81 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
                 nameBgColor = COULEUR_TEXTE_BOUTON; positionTextColor = "#000000";
             }
 
-            // Cadre contenant un score
-            QFrame* scoreCard = new QFrame();
             scoreCard->setStyleSheet("background-color: rgba(128, 128, 128, 0.5); "
                 "border: 2px solid " + borderColor + "; "
-                "border-radius: 10px; "
-                "padding: 5px;");
-            scoreCard->setFixedHeight(50);
+                "border-radius: 8px; padding: 3px;");
 
-            QHBoxLayout* rowLayout = new QHBoxLayout(scoreCard);
-            rowLayout->setContentsMargins(10, 5, 10, 5);
+            // Image du joueur (taille réduite)
+            QLabel* imageLabel = new QLabel();
+            QString imagePath = (G && G->getJoueur() && scores[i].first == G->getJoueur()->getNomJoueur())
+                ? QString::fromStdString(G->getJoueur()->getImage())
+                : "./images/guitare.jpg";
+
+            QPixmap pixmap(imagePath);
+            if (!pixmap.isNull()) {
+                imageLabel->setPixmap(pixmap.scaled(60, 60, Qt::KeepAspectRatio));
+            }
+            imageLabel->setScaledContents(true);
+            imageLabel->setFixedSize(60, 60);
+            rowLayout->addWidget(imageLabel, 0, Qt::AlignVCenter);
 
             // Position + Médaille
             QLabel* position = new QLabel(QString::number(i + 1) + ". " + medal);
-            position->setFixedWidth(50);
-            position->setStyleSheet("font-weight: bold; color: " + positionTextColor + ";");
-            rowLayout->addWidget(position);
+            position->setFixedWidth(60); // Largeur réduite
+            position->setStyleSheet("font-weight: bold; color: " + positionTextColor + "; font-size: 16px;");
+            rowLayout->addWidget(position, 0, Qt::AlignVCenter);
 
             // Nom du joueur
             QLabel* nomJoueur = new QLabel(QString::fromStdString(scores[i].first));
-            nomJoueur->setFixedWidth(150);
-            nomJoueur->setFixedHeight(30);
+            nomJoueur->setFixedWidth(180); // Largeur réduite
+            nomJoueur->setFixedHeight(40); // Hauteur réduite
             nomJoueur->setStyleSheet("font-weight: bold; color: #000000; "
                 "background-color: " + nameBgColor + "; "
-                "border-radius: 5px; "
-                "padding: 5px;");
-            rowLayout->addWidget(nomJoueur);
+                "border-radius: 5px; padding: 3px; font-size: 14px;"); // Taille de police réduite
+            rowLayout->addWidget(nomJoueur, 0, Qt::AlignVCenter);
 
             // Score
             QLabel* score = new QLabel(QString::number(scores[i].second));
-            score->setFixedWidth(60);
-            score->setStyleSheet("font-weight: bold; color: " + textColor + ";");
-            rowLayout->addWidget(score);
-
-            scoreLayout->addWidget(scoreCard);
+            score->setFixedWidth(60); // Largeur réduite
+            score->setStyleSheet("font-weight: bold; color: " + textColor + "; font-size: 16px;");
+            rowLayout->addWidget(score, 0, Qt::AlignVCenter);
         }
+        else {
+            // Lignes vides avec des placeholders invisibles
+            QLabel* imageLabel = new QLabel();
+            imageLabel->setFixedSize(60, 60);
+            rowLayout->addWidget(imageLabel);
+
+            QLabel* position = new QLabel("");
+            position->setFixedWidth(60);
+            rowLayout->addWidget(position);
+
+            QLabel* nomJoueur = new QLabel("");
+            nomJoueur->setFixedWidth(180);
+            nomJoueur->setFixedHeight(40);
+            rowLayout->addWidget(nomJoueur);
+
+            QLabel* score = new QLabel("");
+            score->setFixedWidth(60);
+            rowLayout->addWidget(score);
+        }
+
+        scoreLayout->addWidget(scoreCard);
     }
 
-    mainLayout->addLayout(scoreLayout);
+    scrollArea->setWidget(scoreContainer);
+    mainLayout->addWidget(scrollArea);
 
-    // Espacement avant le bouton retour
-    mainLayout->addSpacing(15);
-
-    // Bouton retour aligné en bas à droite
+    // Bouton retour
     QPushButton* btnRetour = new QPushButton("Retour");
-    btnRetour->setStyleSheet("background-color: red; color: white; padding: 5px 10px;");
-    btnRetour->setFixedSize(100, 40);
+    btnRetour->setStyleSheet("background-color: red; color: white; padding: 3px 8px; font-size: 14px;");
+    btnRetour->setFixedSize(90, 35); // Taille réduite
 
     QHBoxLayout* btnLayout = new QHBoxLayout();
     btnLayout->addStretch();
     btnLayout->addWidget(btnRetour);
-
     mainLayout->addLayout(btnLayout);
 
-    // Action du bouton retour
     QObject::connect(btnRetour, &QPushButton::clicked, [stack]() {
         stack->setCurrentIndex(Menu);
         });
