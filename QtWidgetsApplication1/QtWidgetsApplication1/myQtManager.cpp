@@ -10,6 +10,11 @@
 #include <QMessageBox>
 #include <iostream>
 #include "MyQtPageAdmin.h"
+#include "MyQtPageMenu.h"
+#include "MyQtPageInfoJoueur.h"
+#include "MyQtPageAccueil.h"
+#include "MyQtPageMeilleurScore.h"
+
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
@@ -31,20 +36,30 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
     // Recréer la page demandée sans créer un QWidget vide !
     switch (page) {
     case Accueil:
-        qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
-        nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
+        stack->addWidget(new MyQtAccueil(stack, G, manager));
+        nouvellePage = stack->widget(stack->count() - 1);
+//        qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
+  //      nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
         break;
     case Menu:
-        qtPageMenu(nullptr, stack, G, manager);
+        stack->addWidget(new MyQtPageMenu(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
+
+        // qtPageMenu(nullptr, stack, G, manager);
+        // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
-        qtPageMeilleurScore(nullptr, stack, G, manager);
+        stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
+        // qtPageMeilleurScore(nullptr, stack, G, manager);
+        // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Informations:
-        qtPageInformations(nullptr, stack, G, manager);
+        stack->addWidget(new MyQtPageInfoJoueur(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
+
+        // qtPageInformations(nullptr, stack, G, manager);
+        // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Parametre:
         qtPageParametres(nullptr, stack, G, manager);

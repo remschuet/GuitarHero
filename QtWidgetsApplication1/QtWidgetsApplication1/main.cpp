@@ -29,13 +29,13 @@ int main(int argc, char* argv[]) {
 
     // Ajouter les fenêtres
     fenetres QtFenetre = Accueil;
-    myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
+    //myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
 
     // Définition de la fenêtre principale avec le stack
     mainWindow.setCentralWidget(stack);
