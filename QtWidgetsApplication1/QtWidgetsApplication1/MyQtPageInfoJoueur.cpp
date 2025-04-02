@@ -74,7 +74,7 @@ MyQtPageInfoJoueur::MyQtPageInfoJoueur(QStackedWidget* stack, Gameplay* G, myQtM
     }
 
     // Ajouter un texte à côté de l'image
-    QLabel* textLabel = new QLabel("Avatar utilisé", window);
+    QLabel* textLabel = new QLabel("Avatar utilise", window);
     myQt_setFont(textLabel, QT_SUBTITLE);
     textLabel->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
 
