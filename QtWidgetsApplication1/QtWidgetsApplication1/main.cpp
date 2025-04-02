@@ -11,6 +11,8 @@
 #include <QDebug>
 #include <QMainWindow>
 
+#include "MyQtPageMenu.h"
+
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
@@ -37,7 +39,7 @@ int main(int argc, char* argv[]) {
     //myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
     // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
 
-    myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
+    MyQtPageMenu::refresh(stack, gameplay, nullptr);
     myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);

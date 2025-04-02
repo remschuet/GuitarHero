@@ -44,8 +44,9 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
     case Menu:
         //stack->addWidget(new MyQtPageMenu(stack, G, manager));
         // nouvellePage = stack->widget(stack->count() - 1);
+        MyQtPageMenu::refresh(stack, G, nullptr);
 
-        qtPageMenu(nullptr, stack, G, manager);
+        // qtPageMenu(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
@@ -70,7 +71,7 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Admin:
-        stack->addWidget(new MyQtPageAdmin(stack, G, manager));
+        MyQtPageAdmin::refresh(stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }

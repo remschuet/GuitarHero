@@ -5,6 +5,10 @@ MyQtPageSettings::MyQtPageSettings(QStackedWidget* stack, Gameplay* G, myQtManag
 
 }
 
+void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
+}
+
 void MyQtPageSettings::setBackground()
 {
 }

@@ -3,10 +3,19 @@
 MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent)
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+
+}
+
+void MyQtPageAdmin::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
+    QWidget* window = new QWidget(parent);
+    // window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
+    QVBoxLayout* layout = new QVBoxLayout(window);
+    // pageAdmin->setStyleSheet("background-color: #222; color: white;");
+
 
     // Zone de texte pour logs
-    QTextEdit* logArea = new QTextEdit(this);
+    QTextEdit* logArea = new QTextEdit(window);
     logArea->setStyleSheet(
         "background-color: black; "
         "color: green; "
@@ -21,7 +30,7 @@ MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* ma
     // Entrées pour Key et Value
     QHBoxLayout* inputLayout = new QHBoxLayout();
 
-    QLineEdit* keyInput = new QLineEdit(this);
+    QLineEdit* keyInput = new QLineEdit(window);
     keyInput->setPlaceholderText("Key");
     keyInput->setStyleSheet(
         "QLineEdit { "
@@ -33,7 +42,7 @@ MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* ma
         "} "
     );
 
-    QLineEdit* valueInput = new QLineEdit(this);
+    QLineEdit* valueInput = new QLineEdit(window);
     valueInput->setPlaceholderText("Value");
     valueInput->setStyleSheet(
         "QLineEdit { "
@@ -45,7 +54,7 @@ MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* ma
         "} "
     );
 
-    QPushButton* sendButton = new QPushButton("Envoyer", this);
+    QPushButton* sendButton = new QPushButton("Envoyer", window);
     sendButton->setStyleSheet(
         "QPushButton { "
         "    background-color: blue; "
@@ -66,7 +75,7 @@ MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* ma
     layout->addLayout(inputLayout);
 
     // Bouton Retour
-    QPushButton* btnRetour = new QPushButton("Retour", this);
+    QPushButton* btnRetour = new QPushButton("Retour", window);
     btnRetour->setFixedSize(120, 40);
     btnRetour->setStyleSheet(
         "QPushButton { "
@@ -75,7 +84,7 @@ MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* ma
         "    font-size: 20px; "
         "    border-radius: 5px; "
         "    padding: 5px 10px; "
-        "} "
+        "    width: 50px;} "
         "QPushButton:hover { "
         "    background-color: gray; "
         "    color: white; "
@@ -83,18 +92,21 @@ MyQtPageAdmin::MyQtPageAdmin(QStackedWidget* stack, Gameplay* G, myQtManager* ma
     );
     layout->addWidget(btnRetour);
 
+
+
     // Connexion du bouton "Envoyer" pour vider les entrées
-    connect(sendButton, &QPushButton::clicked, [=]() {
+    QObject::connect(sendButton, &QPushButton::clicked, [=]() {
         keyInput->clear();
         valueInput->clear();
         });
 
     // Connexion du bouton "Retour" pour revenir à la page précédente
-    connect(btnRetour, &QPushButton::clicked, [=]() {
+    QObject::connect(btnRetour, &QPushButton::clicked, [=]() {
         stack->setCurrentIndex(0); // Exemple : revenir à la première page du stack
         });
+
+    stack->addWidget(window);
 }
 
-void MyQtPageAdmin::setBackground()
-{
+void MyQtPageAdmin::setBackground() {
 }

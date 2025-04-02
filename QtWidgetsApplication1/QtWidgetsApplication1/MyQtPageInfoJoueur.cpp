@@ -188,6 +188,10 @@ MyQtPageInfoJoueur::MyQtPageInfoJoueur(QStackedWidget* stack, Gameplay* G, myQtM
     stack->addWidget(window);
 }
 
+void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
+}
+
 void MyQtPageInfoJoueur::setBackground()
 {
 }
