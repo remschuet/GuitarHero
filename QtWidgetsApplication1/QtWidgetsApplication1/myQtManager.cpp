@@ -43,7 +43,7 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         break;
     case Menu:
         //stack->addWidget(new MyQtPageMenu(stack, G, manager));
-       // nouvellePage = stack->widget(stack->count() - 1);
+        // nouvellePage = stack->widget(stack->count() - 1);
 
         qtPageMenu(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
