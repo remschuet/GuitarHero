@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     // myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
     // myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
     // myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
+    //myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
     // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
 
     // Définition de la fenêtre principale avec le stack
