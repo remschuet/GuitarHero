@@ -112,6 +112,15 @@
     <ClCompile Include="DAOSqlite.cpp" />
     <ClCompile Include="Gameplay.cpp" />
     <ClCompile Include="Joueur.cpp" />
+    <ClCompile Include="MyQtPage.cpp" />
+    <ClCompile Include="MyQtPageAccueil.cpp" />
+    <ClCompile Include="MyQtPageAdmin.cpp" />
+    <ClCompile Include="MyQtPageFinPartie.cpp" />
+    <ClCompile Include="MyQtPageGameplay.cpp" />
+    <ClCompile Include="MyQtPageInfoJoueur.cpp" />
+    <ClCompile Include="MyQtPageMeilleurScore.cpp" />
+    <ClCompile Include="MyQtPageMenu.cpp" />
+    <ClCompile Include="MyQtPageSettings.cpp" />
     <ClCompile Include="Note.cpp" />
     <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="sqlite3.c" />
@@ -119,7 +128,12 @@
     <QtRcc Include="QtWidgetsApplication1.qrc" />
     <QtUic Include="QtWidgetsApplication1.ui" />
     <QtMoc Include="QtWidgetsApplication1.h" />
-    <ClCompile Include="myQtManager.cpp" />
+    <ClCompile Include="myQtManager.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="QtHelper.h" />
     <ClCompile Include="QtWidgetsApplication1.cpp" />
     <ClCompile Include="main.cpp" />
@@ -140,6 +154,15 @@
     <ClInclude Include="Joueur.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="myQtManager.h" />
+    <QtMoc Include="MyQtPage.h" />
+    <QtMoc Include="MyQtPageAccueil.h" />
+    <QtMoc Include="MyQtPageAdmin.h" />
+    <QtMoc Include="MyQtPageFinPartie.h" />
+    <QtMoc Include="MyQtPageGameplay.h" />
+    <QtMoc Include="MyQtPageInfoJoueur.h" />
+    <QtMoc Include="MyQtPageMeilleurScore.h" />
+    <QtMoc Include="MyQtPageMenu.h" />
+    <QtMoc Include="MyQtPageSettings.h" />
     <ClInclude Include="Note.h" />
     <ClInclude Include="SerialPort.h" />
     <ClInclude Include="sqlite3.h" />

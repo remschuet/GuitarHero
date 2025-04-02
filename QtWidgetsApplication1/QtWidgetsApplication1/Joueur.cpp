@@ -52,7 +52,7 @@ int Joueur::ScorePartie(int ScoreActuel, int augmentation)
 
 void Joueur::setNouvelleImage() {
 	DAOSqlite* sqlite = DAOSqlite::getInstance();
-	bool retour = sqlite->updateImageJoueur(nomJoueur, nomJoueur + ".jpeg");
+	bool retour = sqlite->updateImageJoueur(nomJoueur, "./images/" + nomJoueur + ".jpeg");
 
 	if (retour) {
 		Joueur* j = sqlite->getJoueur(nomJoueur);
