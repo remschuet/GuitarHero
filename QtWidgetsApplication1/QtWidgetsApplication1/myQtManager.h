@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include <qdebug.h>
 #include <QStackedWidget>
+#include <QInputDialog>
 #include <QPushButton>
 #include <Qdialog>
 #include <QVBoxLayout>
