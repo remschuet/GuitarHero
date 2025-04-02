@@ -12,6 +12,14 @@
 #include <QMainWindow>
 
 #include "MyQtPageMenu.h"
+#include "MyQtPageAdmin.h"
+#include "MyQtPageMenu.h"
+#include "MyQtPageInfoJoueur.h"
+#include "MyQtPageAccueil.h"
+#include "MyQtPageMeilleurScore.h"
+#include "MyQtPageSettings.h"
+#include "MyQtPageFinPartie.h"
+#include "MyQtPageGameplay.h"
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
@@ -31,38 +39,24 @@ int main(int argc, char* argv[]) {
 
     // Ajouter les fenêtres
     fenetres QtFenetre = Accueil;
-    // myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
-    //myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
-    // myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
-    // myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
-    // myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
-    //myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
-    // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
-
-    MyQtPageMenu::refresh(stack, gameplay, nullptr);
+    myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
-    // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
+    myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
 
-    // Définition de la fenêtre principale avec le stack
+    //MyQtPageSettings::refresh(stack, gameplay, nullptr);
+    //MyQtPageAdmin::refresh(stack, gameplay, nullptr);
+    //MyQtPageInfoJoueur::refresh(stack, gameplay, nullptr);
+
+
     mainWindow.setCentralWidget(stack);
 
-    // Mode plein écran
     mainWindow.showFullScreen();
 
-    // Définir la page d'accueil comme première page affichée
     stack->setCurrentIndex(Accueil);
 
     return app.exec();
 }
-/*int main(int argc, char* argv[]) {    //main projet 1
-
-    const ComMode MODE = CLAVIER;
-    const std::string NOM_PORT = "COM3";
-
-    Gameplay gameplay(NOM_PORT, MODE);
-    gameplay.SelectionJoueur();
-}*/

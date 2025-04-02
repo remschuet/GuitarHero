@@ -3,6 +3,11 @@
 MyQtPageInfoJoueur::MyQtPageInfoJoueur(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent) {
 
+}
+
+void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
+
     QWidget* window = new QWidget(parent);
     window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
 
@@ -186,10 +191,6 @@ MyQtPageInfoJoueur::MyQtPageInfoJoueur(QStackedWidget* stack, Gameplay* G, myQtM
     mainLayout->addWidget(backButton, 0, Qt::AlignLeft);
 
     stack->addWidget(window);
-}
-
-void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
-{
 }
 
 void MyQtPageInfoJoueur::setBackground()
