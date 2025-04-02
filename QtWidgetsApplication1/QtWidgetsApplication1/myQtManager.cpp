@@ -36,22 +36,22 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
     // Recréer la page demandée sans créer un QWidget vide !
     switch (page) {
     case Accueil:
-        stack->addWidget(new MyQtAccueil(stack, G, manager));
-        nouvellePage = stack->widget(stack->count() - 1);
-//        qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
-  //      nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
+        //stack->addWidget(new MyQtAccueil(stack, G, manager));
+        //nouvellePage = stack->widget(stack->count() - 1);
+        qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
+        nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
         break;
     case Menu:
-        stack->addWidget(new MyQtPageMenu(stack, G, manager));
-        nouvellePage = stack->widget(stack->count() - 1);
+        //stack->addWidget(new MyQtPageMenu(stack, G, manager));
+       // nouvellePage = stack->widget(stack->count() - 1);
 
-        // qtPageMenu(nullptr, stack, G, manager);
-        // nouvellePage = stack->widget(stack->count() - 1);
+        qtPageMenu(nullptr, stack, G, manager);
+        nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
         stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
-        nouvellePage = stack->widget(stack->count() - 1);
-        // qtPageMeilleurScore(nullptr, stack, G, manager);
+         nouvellePage = stack->widget(stack->count() - 1);
+        //qtPageMeilleurScore(nullptr, stack, G, manager);
         // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Informations:
