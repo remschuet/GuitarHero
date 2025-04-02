@@ -49,17 +49,17 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
-        stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
-         nouvellePage = stack->widget(stack->count() - 1);
-        //qtPageMeilleurScore(nullptr, stack, G, manager);
-        // nouvellePage = stack->widget(stack->count() - 1);
+        //stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
+         // nouvellePage = stack->widget(stack->count() - 1);
+        qtPageMeilleurScore(nullptr, stack, G, manager);
+        nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Informations:
-        stack->addWidget(new MyQtPageInfoJoueur(stack, G, manager));
-        nouvellePage = stack->widget(stack->count() - 1);
+        //stack->addWidget(new MyQtPageInfoJoueur(stack, G, manager));
+        //nouvellePage = stack->widget(stack->count() - 1);
 
-        // qtPageInformations(nullptr, stack, G, manager);
-        // nouvellePage = stack->widget(stack->count() - 1);
+        qtPageInformations(nullptr, stack, G, manager);
+        nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Parametre:
         qtPageParametres(nullptr, stack, G, manager);
