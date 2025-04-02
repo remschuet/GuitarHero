@@ -27,13 +27,15 @@ int main(int argc, char* argv[]) {
     // Initialisation du jeu
     Gameplay* gameplay = new Gameplay(NOM_PORT, MODE);
 
-    // Ajout des pages au QStackedWidget
-    myQtManager::qtPageMenu(nullptr, stack, gameplay);
-    myQtManager::qtPageAccueil(nullptr, stack, gameplay);
-    myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay);
-    myQtManager::qtPageInformations(nullptr, stack, gameplay);
-    myQtManager::qtPageParametres(nullptr, stack, gameplay);
-    myQtManager::qtPageGame(nullptr, stack, gameplay);
+    // Ajouter les fenêtres
+    fenetres QtFenetre = Accueil;
+    // myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
+    //myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
+    myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
 
     // Définition de la fenêtre principale avec le stack
     mainWindow.setCentralWidget(stack);

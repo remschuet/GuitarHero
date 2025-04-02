@@ -110,6 +110,7 @@ void Gameplay::affichageTitre(QLabel* label) {
 	label->setText("GUITAR HERO");
     label->setFont(QFont("Arial", 24, QFont::Bold));
     label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    QCoreApplication::processEvents();
     /*system("cls");
     gotoxy(10, 2);
     std::cout << "===========================";
@@ -121,15 +122,17 @@ void Gameplay::affichageTitre(QLabel* label) {
 
 void Gameplay::affichageProgression(QLabel* label) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+    //QCoreApplication::processEvents();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+    //QCoreApplication::processEvents();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
     if (dureeTotale <= 0) return; // Évite la division par zéro
 
     int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
     progression = (progression > 20) ? 20 : progression; // Limite à 20 blocs
-
-    gotoxy(10, 29);
+    //QCoreApplication::processEvents();
+    /*gotoxy(10, 29);
     std::cout << "[";
     for (int i = 0; i < 20; i++) {
         if (i < progression)
@@ -137,21 +140,24 @@ void Gameplay::affichageProgression(QLabel* label) {
         else
             std::cout << "-";  // Bloc vide
     }
-    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s    " << pourcentage << "%" << endl;
+    std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s    " << pourcentage << "%" << endl;*/
 
 }
 
-void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
     while (true) {
-        long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
+        long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
+        //QCoreApplication::processEvents();
         long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
-
+        //QCoreApplication::processEvents();
         affichageTitre(titleLabel);
+        //QCoreApplication::processEvents();
         affichageProgression(ProgressionLabel);
+        //QCoreApplication::processEvents();
         tick++;
 
         //Barre d'infos du joueur
-        gotoxy(40, 3);
+       /* gotoxy(40, 3);
         cout << "SCORE: " << gameStruct.score;
         gotoxy(40, 2);
         cout << "MAX_SCORE: " << gameStruct.joueur->getMeilleurScore();
@@ -162,26 +168,30 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
         std::cout << "------------------------------------";
         gotoxy(6, 26);
         std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
+        */
 
         // mettre à jours les vecteurs
         gameStruct.chansonEnCours->tick(delaiAffichage);
+        //QCoreApplication::processEvents();
 
         vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
+        //QCoreApplication::processEvents();
 
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
             Sleep(120);
-            //loopGame();
+            loopGame(titleLabel, ProgressionLabel, manager);
         }
 
         // chrono en fonction de la musique
         long long chrono = gameStruct.chansonEnCours->getChrono();
+        //QCoreApplication::processEvents();
 
         // Affichage de toute les notes à l'ecran
         for (auto& note : *vecteur) {
             if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.duree >= chrono) {
 
-                int posX = 0;
+               /* int posX = 0;
 
                 switch (note.couleur) {
                 case ROUGE: posX = 8; break;
@@ -199,11 +209,12 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
                         gotoxy(posX, positionY - y);
                         std::cout << "X";
                     }
-                }
+                }*/
             }
         }
 
         CouleurBouton btn = choixBouton();
+        //QCoreApplication::processEvents();
 
         // Logique du joystick, si on appuis dessus et qu on a une note appuyer proche dans le temps on fait 3 points supplementaire
         if (btn == JOYSTICK) {
@@ -211,6 +222,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
                 // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
                 if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
                     gameStruct.score += 3;
+                    //QCoreApplication::processEvents();
                 }
             }
         }
@@ -224,34 +236,38 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
                     note.action = APPUYE;
                     aTouche = true;
                     gameStruct.score++;
+                   // QCoreApplication::processEvents();
                     break;
                 }
             }
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
                 gameStruct.score--;
+               // QCoreApplication::processEvents();
             }
         }
 
 
         // Si une note n'a pas ete appuye, la mettre morte
         for (auto& note : *vecteur) {
-            if (chrono > note.tempsDepart + note.duree + 400 &&
-                note.action == INITIALE) {
+            if (chrono > note.tempsDepart + note.duree + 400 && note.action == INITIALE) {
                 note.action = MORTE;
                 gameStruct.score--;
+                //QCoreApplication::processEvents();
             }
         }
 
         // valeurs de fps en ms
         Sleep(120);
         if (btn == QUITTER || tempsEcoule >= dureeTotale) {
-            finPartie();
+            //QCoreApplication::processEvents();
+            finPartie(manager);
+            //manager->qtPageFinPartie(nullptr, nullptr, this);
         }
     }
 }
 
-void Gameplay::demarrerPartie(QLabel* label) {
+void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
     qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
     label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
@@ -272,12 +288,12 @@ void Gameplay::demarrerPartie(QLabel* label) {
     label->clear();
     tick = 0;
     gameStruct.chansonEnCours->startChrono();
-    gameTimer->start(120);
+    //gameTimer->start(120);
     qDebug() << "Partie demarree";
-    //loopGame();
+    loopGame(titleLabel, ProgressionLabel, manager);
 }
 
-void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
+void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
@@ -286,15 +302,16 @@ void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel) {
     tick++;
 
     if (tempsEcoule >= dureeTotale) {
-        finPartie();
+        finPartie(manager);
     }
 }
 
-void Gameplay::finPartie() {
+void Gameplay::finPartie(myQtManager* manager) {
     gameTimer->stop();
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
+    manager->qtPageFinPartie(nullptr, nullptr, this);
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //la fonction pour afficher la page de fin de partie doit être dans myQtManager pour que la fct soit accepté...

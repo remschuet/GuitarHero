@@ -1,5 +1,7 @@
 ﻿#include "myQtManager.h"
 #include <QGraphicsOpacityEffect>
+#include <QTextEdit>
+#include <QListWidget>
 #include <QFileDialog>
 #include <QMenu>
 #include <QString>
@@ -7,6 +9,12 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <iostream>
+#include "MyQtPageAdmin.h"
+#include "MyQtPageMenu.h"
+#include "MyQtPageInfoJoueur.h"
+#include "MyQtPageAccueil.h"
+#include "MyQtPageMeilleurScore.h"
+
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
@@ -14,7 +22,7 @@ void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     q->setFont(font);
 }
 
-void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G)
+void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G, myQtManager* manager)
 {
     // Supprimer l'ancienne page si elle existe
     QWidget* anciennePage = stack->widget(page);
@@ -28,35 +36,48 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
     // Recréer la page demandée sans créer un QWidget vide !
     switch (page) {
     case Accueil:
-        qtPageAccueil(nullptr, stack, G);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
-        nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
+        stack->addWidget(new MyQtAccueil(stack, G, manager));
+        nouvellePage = stack->widget(stack->count() - 1);
+//        qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
+  //      nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
         break;
     case Menu:
-        qtPageMenu(nullptr, stack, G);
+        stack->addWidget(new MyQtPageMenu(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
+
+        // qtPageMenu(nullptr, stack, G, manager);
+        // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
-        qtPageMeilleurScore(nullptr, stack, G);
+        stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
+        // qtPageMeilleurScore(nullptr, stack, G, manager);
+        // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Informations:
-        qtPageInformations(nullptr, stack, G);
+        stack->addWidget(new MyQtPageInfoJoueur(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
+
+        // qtPageInformations(nullptr, stack, G, manager);
+        // nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Parametre:
-        qtPageParametres(nullptr, stack, G);
+        qtPageParametres(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Game:
-        qtPageGame(nullptr, stack, G);
+        qtPageGame(nullptr, stack, G, manager);
+        nouvellePage = stack->widget(stack->count() - 1);
+        break;
+    case Admin:
+        stack->addWidget(new MyQtPageAdmin(stack, G, manager));
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }
 
-
     if (nouvellePage != nullptr) {
         stack->setCurrentIndex(stack->indexOf(nouvellePage));  // ✅ Afficher la nouvelle page
-    }
+    };
 }
 
 void myQtManager::afficherImage(QWidget* parentWidget, const QString& imagePath)
@@ -87,7 +108,7 @@ void myQtManager::afficherImage(QWidget* parentWidget, const QString& imagePath)
 }
 
 
-void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
+void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager) {
     QWidget* page = new QWidget(parent);
     page->setStyleSheet("background-color: " + COULEUR_FOND + "; border-radius: 25px;");
 
@@ -176,7 +197,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
         sqlite->ajouterJoueur(nomJoueur.toStdString(), 0, "");
 
         // Aller au menu
-        qtPageMenu(parent, stack, G);
+        qtPageMenu(parent, stack, G, manager);
         stack->setCurrentIndex(Menu);
         });
 
@@ -185,7 +206,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 }
 
 
-void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G) {
+void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager) {
     // Créer un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
     pageMenu->setStyleSheet("background-color: " + COULEUR_FOND + ";");
@@ -263,25 +284,25 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        changerDePage(stack, Game, G);
+        changerDePage(stack, Game, G, manager);
         });
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
-        changerDePage(stack, MeilleursScores, G);
+        changerDePage(stack, MeilleursScores, G, manager);
         });
     QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
-        changerDePage(stack, Informations, G);
+        changerDePage(stack, Informations, G, manager);
         });
     QObject::connect(buttons[3], &QPushButton::clicked, [=]() {
-        changerDePage(stack, Parametre, G);
+        changerDePage(stack, Parametre, G, manager);
         });
     QObject::connect(buttons[4], &QPushButton::clicked, [=]() {
-        changerDePage(stack, Accueil, G);
+        changerDePage(stack, Accueil, G, manager);
         });
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
 }
-void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G)
+void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
     QWidget* window = new QWidget(parent);
     window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
@@ -468,6 +489,107 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
     stack->addWidget(window);
 }
 
+void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
+{
+    QWidget* window = new QWidget(parent);
+    // window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
+    QVBoxLayout* layout = new QVBoxLayout(window);
+    // pageAdmin->setStyleSheet("background-color: #222; color: white;");
+
+
+    // Zone de texte pour logs
+    QTextEdit* logArea = new QTextEdit(window);
+    logArea->setStyleSheet(
+        "background-color: black; "
+        "color: green; "
+        "font-size: 18px; "
+        "padding: 10px; "
+        "border-radius: 10px;"
+    );
+    logArea->setReadOnly(true);
+    logArea->setFixedHeight(200);
+    layout->addWidget(logArea);
+
+    // Entrées pour Key et Value
+    QHBoxLayout* inputLayout = new QHBoxLayout();
+
+    QLineEdit* keyInput = new QLineEdit(window);
+    keyInput->setPlaceholderText("Key");
+    keyInput->setStyleSheet(
+        "QLineEdit { "
+        "    background-color: #333; "
+        "    color: white; "
+        "    border-radius: 5px; "
+        "    padding: 5px; "
+        "    font-size: 18px; "
+        "} "
+    );
+
+    QLineEdit* valueInput = new QLineEdit(window);
+    valueInput->setPlaceholderText("Value");
+    valueInput->setStyleSheet(
+        "QLineEdit { "
+        "    background-color: #333; "
+        "    color: white; "
+        "    border-radius: 5px; "
+        "    padding: 5px; "
+        "    font-size: 18px; "
+        "} "
+    );
+
+    QPushButton* sendButton = new QPushButton("Envoyer", window);
+    sendButton->setStyleSheet(
+        "QPushButton { "
+        "    background-color: blue; "
+        "    color: white; "
+        "    font-size: 18px; "
+        "    border-radius: 5px; "
+        "    padding: 5px 10px; "
+        "} "
+        "QPushButton:hover { "
+        "    background-color: lightblue; "
+        "    color: white; "
+        "}"
+    );
+
+    inputLayout->addWidget(keyInput);
+    inputLayout->addWidget(valueInput);
+    inputLayout->addWidget(sendButton);
+    layout->addLayout(inputLayout);
+
+    // Bouton Retour
+    QPushButton* btnRetour = new QPushButton("Retour", window);
+    btnRetour->setFixedSize(120, 40);
+    btnRetour->setStyleSheet(
+        "QPushButton { "
+        "    background-color: green; "
+        "    color: white; "
+        "    font-size: 20px; "
+        "    border-radius: 5px; "
+        "    padding: 5px 10px; "
+        "    width: 50px;} "
+        "QPushButton:hover { "
+        "    background-color: gray; "
+        "    color: white; "
+        "}"
+    );
+    layout->addWidget(btnRetour);
+
+
+
+    // Connexion du bouton "Envoyer" pour vider les entrées
+    QObject::connect(sendButton, &QPushButton::clicked, [=]() {
+        keyInput->clear();
+        valueInput->clear();
+        });
+
+    // Connexion du bouton "Retour" pour revenir à la page précédente
+    QObject::connect(btnRetour, &QPushButton::clicked, [=]() {
+        stack->setCurrentIndex(0); // Exemple : revenir à la première page du stack
+        });
+
+    stack->addWidget(window);
+}
 
 
 
@@ -504,7 +626,7 @@ void myQtManager::qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gamepl
     finPartieDialog->exec();
 }
 
-void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G)
+void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
     QLabel* imageLabel = nullptr;
     // Créer un widget pour la page du menu
@@ -655,11 +777,10 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
         });
 
 
-
     QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = Accueil;
-        changerDePage(stack, QtFenetre, G);
-        });
+        fenetres QtFenetre = Admin;
+        changerDePage(stack, QtFenetre, G, manager);
+    });
 
     QObject::connect(btnRetour, &QPushButton::clicked, [=]() {
         stack->setCurrentIndex(0); // Retour au menu principal
@@ -671,7 +792,7 @@ void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gamep
 
 
 
-void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G)
+void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
     QWidget* pageMeilleursScores = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout(pageMeilleursScores);
@@ -820,7 +941,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     stack->addWidget(pageMeilleursScores);
 }
 
-void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G)
+void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
     QWidget* pageGame = new QWidget();
     QVBoxLayout* layout = new QVBoxLayout(pageGame);
@@ -829,15 +950,23 @@ void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G
     gameLabel->setAlignment(Qt::AlignCenter);
     layout->addWidget(gameLabel);
 
+    QLabel* titleLabel = new QLabel(pageGame);
+    layout->addWidget(titleLabel);
+
+    QLabel* ProgressionLabel = new QLabel(pageGame);
+    layout->addWidget(ProgressionLabel);
+
     int pageIndex = stack->addWidget(pageGame); // Add the page and get its index
     qDebug() << "PageGame ajouté à l'index :" << pageIndex;
 
-    QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel](int index) {
+    QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel, titleLabel, ProgressionLabel, manager](int index) {
         qDebug() << "Index actuel changé à :" << index;
         if (stack->widget(index) == pageGame) {
             qDebug() << "PageGame est affichée!";
-            G->demarrerPartie(gameLabel);
+            G->gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
+            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager);
         }
         });
     stack->addWidget(pageGame);
-}
+}                                   //il manque changer dans ChangerDePage, ajouter QtManager* manager à l'appel de fct
+                                    // et manager à QtPageGame
