@@ -5,6 +5,10 @@ MyQtPageFinPartie::MyQtPageFinPartie(QStackedWidget* stack, Gameplay* G, myQtMan
 
 }
 
+void MyQtPageFinPartie::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
+}
+
 void MyQtPageFinPartie::setBackground()
 {
 }

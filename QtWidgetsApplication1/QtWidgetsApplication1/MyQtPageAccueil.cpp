@@ -4,6 +4,11 @@
 MyQtAccueil::MyQtAccueil(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent) {
 
+}
+
+void MyQtAccueil::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
+
     QWidget* page = new QWidget(parent);
     page->setStyleSheet("background-color: " + COULEUR_FOND + "; border-radius: 25px;");
 
@@ -98,7 +103,6 @@ MyQtAccueil::MyQtAccueil(QStackedWidget* stack, Gameplay* G, myQtManager* manage
 
     // Ajout à la pile des widgets
     stack->addWidget(page);
-
 }
 
 void MyQtAccueil::setBackground()

@@ -9,12 +9,16 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <iostream>
+
+#include "MyQtPageMenu.h"
 #include "MyQtPageAdmin.h"
 #include "MyQtPageMenu.h"
 #include "MyQtPageInfoJoueur.h"
 #include "MyQtPageAccueil.h"
 #include "MyQtPageMeilleurScore.h"
-
+#include "MyQtPageSettings.h"
+#include "MyQtPageFinPartie.h"
+#include "MyQtPageGameplay.h"
 
 
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
@@ -37,41 +41,37 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
     // Recréer la page demandée sans créer un QWidget vide !
     switch (page) {
     case Accueil:
-        //stack->addWidget(new MyQtAccueil(stack, G, manager));
-        //nouvellePage = stack->widget(stack->count() - 1);
+        // MyQtAccueil::refresh(stack, G, manager);
         qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
-        nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
+        nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Menu:
-        //stack->addWidget(new MyQtPageMenu(stack, G, manager));
-        // nouvellePage = stack->widget(stack->count() - 1);
-
-        qtPageMenu(nullptr, stack, G, manager);
+        // MyQtPageMenu::refresh(stack, G, manager);
+        qtPageMenu(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
-        //stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
-         // nouvellePage = stack->widget(stack->count() - 1);
-        qtPageMeilleurScore(nullptr, stack, G, manager);
+        // MyQtPageMeilleurScore::refresh(stack, G, manager);
+        qtPageMeilleurScore(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Informations:
-        //stack->addWidget(new MyQtPageInfoJoueur(stack, G, manager));
-        //nouvellePage = stack->widget(stack->count() - 1);
-
-        qtPageInformations(nullptr, stack, G, manager);
+        // MyQtPageInfoJoueur::refresh(stack, G, manager);
+        qtPageInformations(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Parametre:
+        // MyQtPageSettings::refresh(stack, G, nullptr);
         qtPageParametres(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Game:
+        // MyQtPageGameplay::refresh(stack, G, nullptr);
         qtPageGame(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Admin:
-        stack->addWidget(new MyQtPageAdmin(stack, G, manager));
+        MyQtPageAdmin::refresh(stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }
