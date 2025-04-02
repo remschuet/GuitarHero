@@ -33,7 +33,7 @@ public:
 
     virtual void setBackground() = 0;  // Fonction virtuelle pure
 
-    void myQt_setFont(QLabel* q, int tailleFont);
+    static void myQt_setFont(QLabel* q, int tailleFont);
 
 protected:
     QStackedWidget* stack;

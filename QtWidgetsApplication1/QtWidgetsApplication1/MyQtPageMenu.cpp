@@ -2,6 +2,10 @@
 
 MyQtPageMenu::MyQtPageMenu(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent) {
+}
+
+void MyQtPageMenu::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
     // Créer un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
     pageMenu->setStyleSheet("background-color: " + COULEUR_FOND + ";");
@@ -96,8 +100,8 @@ MyQtPageMenu::MyQtPageMenu(QStackedWidget* stack, Gameplay* G, myQtManager* mana
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
-
 }
+
 
 void MyQtPageMenu::setBackground()
 {

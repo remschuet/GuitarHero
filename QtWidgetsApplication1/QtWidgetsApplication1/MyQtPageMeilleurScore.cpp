@@ -2,6 +2,11 @@
 
 MyQtPageMeilleurScore::MyQtPageMeilleurScore(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent) {
+    
+}
+
+void MyQtPageMeilleurScore::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
+{
     QWidget* pageMeilleursScores = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout(pageMeilleursScores);
     mainLayout->setContentsMargins(20, 20, 20, 20); // Marge globale

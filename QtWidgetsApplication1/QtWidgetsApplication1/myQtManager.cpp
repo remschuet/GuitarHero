@@ -9,6 +9,8 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <iostream>
+
+#include "MyQtPageMenu.h"
 #include "MyQtPageAdmin.h"
 #include "MyQtPageMenu.h"
 #include "MyQtPageInfoJoueur.h"
@@ -16,6 +18,11 @@
 #include "MyQtPageMeilleurScore.h"
 
 QVBoxLayout* myQtManager::GlobalLayout = nullptr;
+
+#include "MyQtPageSettings.h"
+#include "MyQtPageFinPartie.h"
+#include "MyQtPageGameplay.h"
+
 
 
 QLabel* myQtManager::getUnusedLabel() {
@@ -60,41 +67,37 @@ void myQtManager::changerDePage(QStackedWidget* stack, fenetres page, Gameplay* 
     // Recréer la page demandée sans créer un QWidget vide !
     switch (page) {
     case Accueil:
-        //stack->addWidget(new MyQtAccueil(stack, G, manager));
-        //nouvellePage = stack->widget(stack->count() - 1);
+        // MyQtAccueil::refresh(stack, G, manager);
         qtPageAccueil(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
-        nouvellePage = stack->widget(stack->count() - 1);  // Récupère la dernière page ajoutée
+        nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Menu:
-        //stack->addWidget(new MyQtPageMenu(stack, G, manager));
-        // nouvellePage = stack->widget(stack->count() - 1);
-
-        qtPageMenu(nullptr, stack, G, manager);
+        // MyQtPageMenu::refresh(stack, G, manager);
+        qtPageMenu(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case MeilleursScores:
-        //stack->addWidget(new MyQtPageMeilleurScore(stack, G, manager));
-         // nouvellePage = stack->widget(stack->count() - 1);
-        qtPageMeilleurScore(nullptr, stack, G, manager);
+        // MyQtPageMeilleurScore::refresh(stack, G, manager);
+        qtPageMeilleurScore(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Informations:
-        //stack->addWidget(new MyQtPageInfoJoueur(stack, G, manager));
-        //nouvellePage = stack->widget(stack->count() - 1);
-
-        qtPageInformations(nullptr, stack, G, manager);
+        // MyQtPageInfoJoueur::refresh(stack, G, manager);
+        qtPageInformations(nullptr, stack, G, manager);  // Ici, on passe `nullptr` en parent car c'est `qtPageAccueil` qui gère ça.
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Parametre:
+        // MyQtPageSettings::refresh(stack, G, nullptr);
         qtPageParametres(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Game:
+        // MyQtPageGameplay::refresh(stack, G, nullptr);
         qtPageGame(nullptr, stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     case Admin:
-        stack->addWidget(new MyQtPageAdmin(stack, G, manager));
+        MyQtPageAdmin::refresh(stack, G, manager);
         nouvellePage = stack->widget(stack->count() - 1);
         break;
     }
@@ -297,6 +300,28 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
         buttons.append(button);
         menuBoxLayout->addWidget(button, 0, Qt::AlignCenter);
     }
+    // Bouton Quitter le jeu
+    QPushButton* quitterButton = new QPushButton("Quitter le jeu", menuBox);
+    quitterButton->setStyleSheet(
+        "QPushButton { "
+        "    background-color: red; "
+        "    color: white; "
+        "    font-size: 25px; "
+        "    border-radius: 5px; "
+        "    padding: 5px 10px; "
+        "} "
+        "QPushButton:hover { "
+        "    background-color: darkred; "
+        "}"
+    );
+    quitterButton->setFixedSize(250, 50);
+    menuBoxLayout->addWidget(quitterButton, 0, Qt::AlignCenter);
+
+    // Connecter le bouton pour fermer l'application
+    QObject::connect(quitterButton, &QPushButton::clicked, []() {
+        QApplication::quit();
+        });
+
 
     // Ajouter la box centrée dans la page
     QVBoxLayout* mainLayout = new QVBoxLayout(pageMenu);
@@ -326,141 +351,188 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
 }
+
 void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
     QWidget* window = new QWidget(parent);
-    window->setStyleSheet(QString("background-color: %1;").arg(COULEUR_FOND));
 
-    std::string nom;
-    //int score;
-    QString imagePath;
+    // Utiliser un QLabel pour l'image de fond
+    QLabel* backgroundLabel = new QLabel(window);
+    QPixmap backgroundPixmap("./Images/placeholder_background_login.png");
+    if (!backgroundPixmap.isNull()) {
+        backgroundLabel->setPixmap(backgroundPixmap.scaled(window->size(), Qt::KeepAspectRatioByExpanding));
+        backgroundLabel->setScaledContents(true);
+    }
+    else {
+        backgroundLabel->setText("Image de fond non disponible");
+    }
+    backgroundLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    if (G->getJoueur() != nullptr) {
-        Joueur* joueurlog = G->getJoueur();
+    QVBoxLayout* windowLayout = new QVBoxLayout(window);
+    windowLayout->addWidget(backgroundLabel);
+    backgroundLabel->lower();
+
+    std::string nom = "Inconnu";
+    int score = 0;
+    QString imagePath = "./images/avatar.jpg";
+    Joueur* joueurlog = G->getJoueur();
+
+    if (joueurlog != nullptr) {
         nom = joueurlog->getNomJoueur();
-        imagePath = (G && G->getJoueur())
-            ? QString::fromStdString(G->getJoueur()->getImage())
-            : "./images/avatar.jpg";
+        QString tempImagePath = QString::fromStdString(joueurlog->getImage());
+        if (!tempImagePath.isEmpty() && QFile::exists(tempImagePath)) {
+            imagePath = tempImagePath;
+        }
+        score = joueurlog->getMeilleurScore();
     }
 
-    // Layout principal
-    QVBoxLayout* mainLayout = new QVBoxLayout(window);
-    mainLayout->setAlignment(Qt::AlignTop);
+    QVBoxLayout* mainLayout = new QVBoxLayout(backgroundLabel);
+    mainLayout->setAlignment(Qt::AlignCenter);
 
-    QLabel* title = new QLabel("INFORMATIONS", window);
+    QWidget* infoContainer = new QWidget(window);
+    infoContainer->setStyleSheet(
+        "background-color: rgba(255, 255, 255, 180); "
+        "border: 2px solid #333333; "
+        "border-radius: 10px; "
+        "padding: 20px;"
+    );
+    QVBoxLayout* containerLayout = new QVBoxLayout(infoContainer);
+    containerLayout->setAlignment(Qt::AlignCenter);
+
+    QLabel* title = new QLabel("INFORMATIONS", infoContainer);
     myQt_setFont(title, QT_TITLE);
-    title->setStyleSheet(QString("color: %1; border: 3px solid %1; padding: 10px;").arg(COULEUR_TITRE));
+    title->setStyleSheet(QString("color: %1; padding: 20px;").arg(COULEUR_TITRE));
     title->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(title);
+    containerLayout->addWidget(title);
 
-    // Cadre infos
-    QFrame* infoFrame = new QFrame(window);
-    infoFrame->setStyleSheet(QString("border: 3px solid %1; background-color: %2; padding: 15px; border-radius: 15px;")
-        .arg(COULEUR_TITRE));
-    QVBoxLayout* infoLayout = new QVBoxLayout(infoFrame);
+    QHBoxLayout* topContentLayout = new QHBoxLayout();
 
-    // Infos texte
-    QHBoxLayout* pseudoLayout = new QHBoxLayout();
-    QLabel* pseudoLabel = new QLabel("Pseudo :", window);
+    // Layout gauche : Pseudo/Nom et Score Max/Valeur
+    QVBoxLayout* leftLayout = new QVBoxLayout();
+    leftLayout->setAlignment(Qt::AlignCenter);
+
+    // Pseudo et Nom dans une même ligne avec ":"
+    QHBoxLayout* nameLayout = new QHBoxLayout();
+    QLabel* pseudoLabel = new QLabel("Pseudo: ", infoContainer);
     myQt_setFont(pseudoLabel, QT_SUBTITLE);
     pseudoLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
-    QLabel* pseudoValue = new QLabel(QString::fromStdString(nom), window);
+
+    QLabel* pseudoValue = new QLabel(QString::fromStdString(nom), infoContainer);
     myQt_setFont(pseudoValue, QT_SUBTITLE);
     pseudoValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
-    pseudoLayout->addWidget(pseudoLabel);
-    pseudoLayout->addWidget(pseudoValue);
 
+    QPushButton* modiferNomJoueur = new QPushButton("✏️", infoContainer);
+    modiferNomJoueur->setStyleSheet(QString(
+        "background-color: %1; "
+        "color: %2; "
+        "border: 2px solid %3; "
+        "padding: 5px; "
+        "border-radius: 5px; "
+        "font-size: 16px;"
+    ).arg(COULEUR_BOUTON).arg(COULEUR_TEXTE_BOUTON).arg(COULEUR_PSEUDO_SCORE));
+    modiferNomJoueur->setFixedSize(30, 30);
+
+    QObject::connect(modiferNomJoueur, &QPushButton::clicked, [=]() {
+        bool ok;
+        QString nouveauNom = QInputDialog::getText(window, "Modifier le nom du joueur",
+            "Entrez le nouveau nom du joueur :", QLineEdit::Normal, "", &ok);
+        if (ok && !nouveauNom.isEmpty()) {
+            if (joueurlog != nullptr) {
+                joueurlog->setNouveauNomJoueur(nouveauNom.toStdString());
+                pseudoValue->setText(nouveauNom);
+                QMessageBox::information(window, "Nom modifié", "Le nom du joueur a été modifié avec succès.");
+            }
+        }
+        else {
+            QMessageBox::warning(window, "Nom invalide", "Le nom entré est invalide ou vide.");
+        }
+        });
+
+    nameLayout->addWidget(pseudoLabel);
+    nameLayout->addWidget(pseudoValue);
+    nameLayout->addWidget(modiferNomJoueur);
+
+    // Score Max et Valeur dans une même ligne avec ":"
     QHBoxLayout* scoreLayout = new QHBoxLayout();
-    QLabel* scoreLabel = new QLabel("Score :", window);
+    QLabel* scoreLabel = new QLabel("Score Max: ", infoContainer);
     myQt_setFont(scoreLabel, QT_SUBTITLE);
     scoreLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
-    //QLabel* scoreValue = new QLabel(QString::number(score), window);
-    //myQt_setFont(scoreValue, QT_SUBTITLE);
-    //scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
-    //scoreLayout->addWidget(scoreLabel);
-    //scoreLayout->addWidget(scoreValue);
 
-    QVBoxLayout* detailsLayout = new QVBoxLayout();
-    detailsLayout->addLayout(pseudoLayout);
-    detailsLayout->addLayout(scoreLayout);
-    infoLayout->addLayout(detailsLayout);
-    infoFrame->setLayout(infoLayout);
-    mainLayout->addWidget(infoFrame);
+    QLabel* scoreValue = new QLabel(QString::number(score), infoContainer);
+    myQt_setFont(scoreValue, QT_SUBTITLE);
+    scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
 
-    // Layout pour afficher l'image, le texte et le bouton côte à côte
-    QHBoxLayout* imageLayout = new QHBoxLayout();
+    scoreLayout->addWidget(scoreLabel);
+    scoreLayout->addWidget(scoreValue);
 
-    // Charger l'image
-    QLabel* imageLabel = new QLabel(window);
-    QPixmap pixmap(imagePath);  // Charger l'image de l'avatar
+    leftLayout->addLayout(nameLayout);
+    leftLayout->addLayout(scoreLayout);
+
+    // Layout droit : Photo et Bouton
+    QVBoxLayout* rightLayout = new QVBoxLayout();
+    rightLayout->setAlignment(Qt::AlignCenter);
+
+    QLabel* imageLabel = new QLabel(infoContainer);
+    QPixmap pixmap(imagePath);
     if (!pixmap.isNull()) {
-        imageLabel->setPixmap(pixmap.scaled(150, 150, Qt::KeepAspectRatio)); // Ajuster la taille de l'image
+        imageLabel->setPixmap(pixmap.scaled(150, 150, Qt::KeepAspectRatio));
     }
     else {
         imageLabel->setText("Image non disponible");
     }
+    // Obtenir la hauteur totale du bloc contenant le nom et le score
+    int heightReference = leftLayout->sizeHint().height();
 
-    // Ajouter un texte à côté de l'image
-    QLabel* textLabel = new QLabel("Avatar utilisé", window);
-    myQt_setFont(textLabel, QT_SUBTITLE);
-    textLabel->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    // Ajuster la taille de l'image pour correspondre à la hauteur du bloc de texte
+    imageLabel->setPixmap(pixmap.scaledToHeight(heightReference, Qt::SmoothTransformation));
 
-    // Ajouter le bouton "Modifier l'image"
-    QPushButton* modifyButton = new QPushButton("Modifier l'image", window);
+
+    QPushButton* modifyButton = new QPushButton("✏️", infoContainer);
     modifyButton->setStyleSheet(QString(
-        "background-color: %1; color: %2; border: 2px solid %3; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: bold;"
-    ).arg(COULEUR_BOUTON)
-        .arg(COULEUR_TEXTE_BOUTON)
-        .arg(COULEUR_PSEUDO_SCORE));
+        "background-color: %1; "
+        "color: %2; "
+        "border: 2px solid %3; "
+        "padding: 5px; "
+        "border-radius: 5px; "
+        "font-size: 16px;"
+    ).arg(COULEUR_BOUTON).arg(COULEUR_TEXTE_BOUTON).arg(COULEUR_PSEUDO_SCORE));
+    modifyButton->setFixedSize(30, 30);
 
-    // Création du menu déroulant
-
-// Création du menu déroulant
     QMenu* menu = new QMenu(modifyButton);
-
-    // Appliquer un style personnalisé au QMenu
     menu->setStyleSheet(R"(
-    QMenu {
-        background-color: #333333;  /* Couleur de fond du menu */
-        border: 2px solid #0078D7;  /* Bordure de couleur */
-        padding: 5px;
-        width: 200px; /* Largeur fixe du menu (doit correspondre au bouton) */
-    }
+        QMenu {
+            background-color: #333333;
+            border: 2px solid #0078D7;
+            padding: 5px;
+        }
+        QMenu::item {
+            background-color: #444444;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 4px;
+        }
+        QMenu::item:selected {
+            background-color: #00A759;
+            color: white;
+        }
+    )");
 
-    QMenu::item {
-        background-color: #444444; /* Couleur de fond des items */
-        color: white;
-        padding: 8px 20px;
-        border-radius: 4px;
-    }
-
-    QMenu::item:selected {
-        background-color: #0078D7; /* Couleur de fond lors du survol */
-        color: white;
-    }
-)");
-
-    // Création des actions du menu
     QAction* actionDefaultImage = new QAction("Mettre image par défaut", menu);
     QAction* actionTakePhoto = new QAction("Prendre une photo", menu);
-
-    // Ajouter les actions au menu
     menu->addAction(actionDefaultImage);
     menu->addAction(actionTakePhoto);
+    menu->setFixedWidth(500);
 
-    // Appliquer la taille du bouton au menu
-    menu->setFixedWidth(modifyButton->width());
+    QObject::connect(modifyButton, &QPushButton::clicked, [menu, modifyButton]() {
+        QPoint globalPos = modifyButton->mapToGlobal(QPoint(0, modifyButton->height()));
+        menu->exec(globalPos);
+        });
 
-    // Associer le menu au bouton
-    modifyButton->setMenu(menu);
-
-    // Connecter l'action "Mettre image par défaut"
     QObject::connect(actionDefaultImage, &QAction::triggered, [G, imageLabel]() {
         if (G != nullptr && G->getJoueur() != nullptr) {
-            std::string defaultImagePath = "./images/avatar.jpeg";  // Chemin de l'image par défaut
-            G->getJoueur()->setNouvelleImage();  // Met à jour l'image par défaut
-
-            QPixmap newPixmap(QString::fromStdString(defaultImagePath));  // Charge l'image par défaut
+            std::string defaultImagePath = "./images/avatar.jpeg";
+            G->getJoueur()->setNouvelleImage();
+            QPixmap newPixmap(QString::fromStdString(defaultImagePath));
             if (!newPixmap.isNull()) {
                 imageLabel->setPixmap(newPixmap.scaled(150, 150, Qt::KeepAspectRatio));
             }
@@ -470,12 +542,10 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
         }
         });
 
-    // Connecter l'action "Prendre une photo"
     QObject::connect(actionTakePhoto, &QAction::triggered, [G, imageLabel]() {
-        if (G != nullptr) {  // Vérifie que Gameplay existe
-            G->PrendreImage();  // Capture l'image avec OpenCV
-
-            if (G->getJoueur() != nullptr) {  // Vérifie que le joueur existe
+        if (G != nullptr) {
+            G->PrendreImage();
+            if (G->getJoueur() != nullptr) {
                 QString newImagePath = QString::fromStdString(G->getJoueur()->getImage());
                 QPixmap newPixmap(newImagePath);
                 if (!newPixmap.isNull()) {
@@ -487,33 +557,40 @@ void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gam
             }
         }
         });
-    // Connecter le bouton à l'affichage du menu
-    QObject::connect(modifyButton, &QPushButton::clicked, [menu]() {
-        menu->exec(QCursor::pos());  // Afficher le menu contextuel
-        });
 
-    // Ajouter l'image, le texte et le bouton dans le layout horizontal
-    imageLayout->addWidget(imageLabel);
-    imageLayout->addWidget(textLabel);
-    imageLayout->addWidget(modifyButton);
+    rightLayout->addWidget(imageLabel);
+    rightLayout->addWidget(modifyButton, 0, Qt::AlignCenter);
 
-    // Ajouter le layout de l'image, du texte et du bouton au layout principal
-    mainLayout->addLayout(imageLayout);
+    topContentLayout->addLayout(leftLayout);
+    topContentLayout->addSpacing(20);
+    topContentLayout->addLayout(rightLayout);
 
-    // Retour
-    QPushButton* backButton = new QPushButton("Retour", window);
+    containerLayout->addLayout(topContentLayout);
+
+    containerLayout->addSpacing(40);
+
+    QPushButton* backButton = new QPushButton("Retour", infoContainer);
     backButton->setStyleSheet(QString(
-        "background-color: %1; color: %2; border: 2px solid %3; padding: 10px; border-radius: 10px; font-size: 18px; font-weight: bold;"
-    ).arg(COULEUR_BOUTON)
-        .arg(COULEUR_TEXTE_BOUTON)
-        .arg(COULEUR_BOUTON));
+        "background-color: red; "
+        "color: white; "
+        "border: 2px solid red; "
+        "padding: 10px; "
+        "border-radius: 10px; "
+        "font-size: 18px; "
+        "font-weight: bold;"
+    ));
     QObject::connect(backButton, &QPushButton::clicked, [stack]() {
-        stack->setCurrentIndex(Menu); // ou l'index du menu
+        stack->setCurrentIndex(Menu);
         });
-    mainLayout->addWidget(backButton, 0, Qt::AlignLeft);
+    containerLayout->addWidget(backButton, 0, Qt::AlignCenter);
+
+    mainLayout->addStretch();  // Ajoute un espace flexible au-dessus
+    mainLayout->addWidget(infoContainer, 0, Qt::AlignCenter);
+    mainLayout->addStretch();  // Ajoute un espace flexible en dessous    mainLayout->addStretch();
 
     stack->addWidget(window);
 }
+
 
 void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
