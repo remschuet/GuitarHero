@@ -42,14 +42,14 @@ int main(int argc, char* argv[]) {
     myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
     myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
-    myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageInformations(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageParametres(nullptr, stack, gameplay, nullptr);
+    // myQtManager::qtPageAdmin(nullptr, stack, gameplay, nullptr);
 
-    //MyQtPageSettings::refresh(stack, gameplay, nullptr);
-    //MyQtPageAdmin::refresh(stack, gameplay, nullptr);
-    //MyQtPageInfoJoueur::refresh(stack, gameplay, nullptr);
+    MyQtPageSettings::refresh(stack, gameplay, nullptr);
+    MyQtPageAdmin::refresh(stack, gameplay, nullptr);
+    MyQtPageInfoJoueur::refresh(stack, gameplay, nullptr);
 
 
     mainWindow.setCentralWidget(stack);

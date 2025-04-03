@@ -24,6 +24,12 @@ class Gameplay;
 
 class myQtManager {
 public:
+    QLabel* getUnusedLabel();
+	
+    QWidget* getParentWidget();
+
+    QLabel* getLabelForNote(const Note& note);
+
     static void myQt_setFont(QLabel* q, int tailleFont);
 
     static void changerDePage(QStackedWidget* stack, fenetres page, Gameplay* G, myQtManager* manager);
@@ -46,4 +52,9 @@ public:
 
     static void afficherImage(QWidget* parentWidget, const QString& imagePath);
 
+
+    QWidget* parentWidget;
+	QList<QLabel*> labels;
+    //static QWidget* pageGame;
+    static QVBoxLayout* GlobalLayout;
 };

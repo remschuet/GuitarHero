@@ -144,15 +144,15 @@ void Gameplay::affichageProgression(QLabel* label) {
 
 }
 
-void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         //QCoreApplication::processEvents();
         long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
         //QCoreApplication::processEvents();
-        affichageTitre(titleLabel);
+        //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
-        affichageProgression(ProgressionLabel);
+        // affichageProgression(ProgressionLabel);
         //QCoreApplication::processEvents();
         tick++;
 
@@ -180,7 +180,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
             Sleep(120);
-            loopGame(titleLabel, ProgressionLabel, manager);
+            loopGame(titleLabel, ProgressionLabel, manager, layoutGame);
         }
 
         // chrono en fonction de la musique
@@ -191,20 +191,35 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         for (auto& note : *vecteur) {
             if (note.tempsDepart <= chrono + delaiAffichage && note.tempsDepart + note.duree >= chrono) {
 
-               /* int posX = 0;
+				QLabel* noteLabel = new QLabel();
+                //manager->labels.append(noteLabel);
+                QCoreApplication::processEvents();
+                
+               /* QLabel* noteLabel = manager->getUnusedLabel();
+                if (!noteLabel) {
+					noteLabel = new QLabel(manager->getParentWidget());
+                }
+				//noteLabel->setProperty("noteColor", note.couleur);*/
+                
+                int posX = 0;
 
                 switch (note.couleur) {
-                case ROUGE: posX = 8; break;
-                case BLEU: posX = 15; break;
-                case VERT: posX = 21; break;
-                case JAUNE: posX = 27; break;
-                case MAUVE: posX = 34; break;
+				case ROUGE: posX = 80; noteLabel->setStyleSheet("background-color : red;"); break;           //à changer!!! 
+                case BLEU: posX = 100;noteLabel->setStyleSheet("background-color : blue;"); break;          // ""
+				case VERT: posX = 120; noteLabel->setStyleSheet("background-color : green;"); break;	   // ""
+				case JAUNE: posX = 140;noteLabel->setStyleSheet("background-color : yellow;"); break;	  // ""
+				case MAUVE: posX = 160;noteLabel->setStyleSheet("background-color : purple;"); break;	 // ""
                 }
 
-                int hauteurNote = note.duree / 250;
-                int positionY = 25 - ((note.tempsDepart - chrono) / 250);
-
-                for (int y = 0; y < hauteurNote; y++) {
+                int hauteurNote = note.duree / 2;                         //à changer!!! 
+				int positionY = 700 - ((note.tempsDepart - chrono) / 2);	//à changer!!!
+                
+				noteLabel->setGeometry(posX, positionY, 10, hauteurNote);
+				layoutGame->addWidget(noteLabel);
+     //noteLabel->show();
+				//noteLabel->setProperty("noteStatus", "ACTIVE");
+                QCoreApplication::processEvents();
+               /* for (int y = 0; y < hauteurNote; y++) {
                     if (positionY - y <= 25) { // Empêcher d'afficher hors écran
                         gotoxy(posX, positionY - y);
                         std::cout << "X";
@@ -253,6 +268,12 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             if (chrono > note.tempsDepart + note.duree + 400 && note.action == INITIALE) {
                 note.action = MORTE;
                 gameStruct.score--;
+               // QLabel* noteLabel = manager->getLabelForNote(note);
+                //if (noteLabel) {
+                    //manager->removeLabel(noteLabel);
+					//noteLabel->setProperty("noteStatus", "UNUSED");
+					//noteLabel->hide();
+                //}
                 //QCoreApplication::processEvents();
             }
         }
@@ -267,7 +288,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     }
 }
 
-void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
+void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
     qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
     label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
@@ -290,10 +311,11 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     gameStruct.chansonEnCours->startChrono();
     //gameTimer->start(120);
     qDebug() << "Partie demarree";
-    loopGame(titleLabel, ProgressionLabel, manager);
+    affichageTitre(titleLabel);
+    loopGame(titleLabel, ProgressionLabel, manager, layoutGame);
 }
 
-void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
+/*void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
 
@@ -304,7 +326,7 @@ void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
     if (tempsEcoule >= dureeTotale) {
         finPartie(manager);
     }
-}
+}*/
 
 void Gameplay::finPartie(myQtManager* manager) {
     gameTimer->stop();
