@@ -329,7 +329,9 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        changerDePage(stack, Game, G, manager);
+        afficherPopupSelectionMusique(parent, stack, G, manager);
+        //décommenter la ligne suivante et commenter la précédente pour éviter le choix de musique
+        //changerDePage(stack, Game, G, manager);
         });
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
         changerDePage(stack, MeilleursScores, G, manager);
@@ -347,6 +349,71 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageMenu);
 }
+
+void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager) {
+    QDialog dialog(parent);
+    dialog.setWindowTitle("Sélectionner une musique");
+    dialog.setModal(true);  // Bloque les interactions avec la fenêtre principale
+
+    // Layout principal
+    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+
+    // Liste déroulante pour choisir la difficulté
+    QComboBox* comboBox = new QComboBox();
+    comboBox->addItem("Facile");
+    comboBox->addItem("Intermédiaire");
+    comboBox->addItem("Difficile");
+    comboBox->addItem("Expert");
+
+    layout->addWidget(new QLabel("Choisissez la difficulté :"));
+    layout->addWidget(comboBox);
+
+    // Liste de chansons
+    QListWidget* listWidget = new QListWidget();
+    layout->addWidget(new QLabel("Sélectionnez une musique :"));
+    layout->addWidget(listWidget);
+
+    // Bouton pour valider
+    QPushButton* btnValider = new QPushButton("Sélectionner");
+    layout->addWidget(btnValider);
+
+    // Remplissage des listes selon la difficulté 
+    //****- A modifier pour avoir les constantes des chansons en fonction des dificultés-****
+    QMap<QString, QStringList> chansons = {
+        {"Facile", {"Chanson A", "Chanson B", "Chanson C"}},
+        {"Intermédiaire", {"Chanson D", "Chanson E", "Chanson F"}},
+        {"Difficile", {"Chanson G", "Chanson H", "Chanson I"}},
+        {"Expert", {"Chanson J", "Chanson K", "Chanson L"}}
+    };
+
+    // Remplir la liste des chansons au début
+    QObject::connect(comboBox, &QComboBox::currentTextChanged, [&](const QString& niveau) {
+        listWidget->clear();
+        listWidget->addItems(chansons[niveau]);
+        });
+
+    // Charger la liste par défaut (Facile)
+    listWidget->addItems(chansons["Facile"]);
+
+    // Gestion du bouton sélection
+    QObject::connect(btnValider, &QPushButton::clicked, [&]() {
+        QListWidgetItem* selectedItem = listWidget->currentItem();
+        if (selectedItem) {
+            QString chansonChoisie = selectedItem->text();
+            qDebug() << "Musique sélectionnée :" << chansonChoisie;
+
+            // Fermer le popup
+            dialog.accept();
+
+            // Changer de page vers Game
+            changerDePage(stack, Game, G, manager);
+        }
+        });
+
+    // Affichage de la boîte de dialogue
+    dialog.exec();
+}
+
 
 void myQtManager::qtPageInformations(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {

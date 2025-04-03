@@ -7,6 +7,7 @@
 #include <ctime> 
 #include <chrono>
 #include <mmsystem.h>
+#include <Enum.h>
 
 using namespace std;
 using namespace std::chrono;
