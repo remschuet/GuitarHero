@@ -1,5 +1,6 @@
 #pragma once
 #include "Enum.h"
+#include <QLabel>
 
 struct Note {
     int tempsAffichage;
@@ -8,6 +9,9 @@ struct Note {
     CouleurBouton couleur;
     NotesEtats etat = EN_ATTENTE;
     NotesAction action = INITIALE;
+	bool estQtAffiche = false; // Indique si la note est affichée dans l'interface Qt
+
+    QLabel* noteLabel;
 
     Note(int tAffichage, int tDepart, int tdurree, CouleurBouton couleurBouton)
         : tempsAffichage(tAffichage), tempsDepart(tDepart), duree(tdurree), couleur(couleurBouton) {
