@@ -10,6 +10,12 @@ enum fenetres {
 	Admin
 };
 
+enum difficultés{
+	facile,
+	intermediaire,
+	difficile,
+	extreme
+};
 
 enum NotesEtats {
 	AFFICHER,
