@@ -10,7 +10,7 @@ enum fenetres {
 	Admin
 };
 
-enum difficultés{
+enum difficultes{
 	facile,
 	intermediaire,
 	difficile,
