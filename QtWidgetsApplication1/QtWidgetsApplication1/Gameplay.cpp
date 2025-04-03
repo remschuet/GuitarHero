@@ -164,6 +164,27 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     
     QProgressBar* barProgression = new QProgressBar();
+    barProgression->setFixedWidth(400);
+    barProgression->setStyleSheet(R"(
+        QProgressBar {
+            border: 2px solid #444;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            text-align: center;
+            height: 30px;
+            font-size: 16px;
+            color: #333;
+           
+        }
+
+        QProgressBar::chunk {
+            background: qlineargradient(
+                spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 #4CAF50, stop:1 #2196F3
+            );
+            border-radius: 10px;
+        }
+    )");
    
    
     while (true) {
