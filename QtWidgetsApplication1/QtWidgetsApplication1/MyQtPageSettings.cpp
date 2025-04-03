@@ -1,4 +1,5 @@
 #include "MyQtPageSettings.h"
+#include "MyQtManager.h"
 
 MyQtPageSettings::MyQtPageSettings(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent) {
@@ -57,7 +58,7 @@ void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
     layout->addWidget(spacerTop, 1, 0, 1, 3);  // Ajouter un widget vide comme espacement
 
     // Liste des boutons
-    QStringList buttonNames = { "Difficulte", "Parametre de la manette", "Mode Admin" };
+    QStringList buttonNames = { "Difficulte", "Paramètre de la manette", "Mode Admin" };
     QVector<QPushButton*> buttons;
 
     // Création des boutons avec un style uniforme
