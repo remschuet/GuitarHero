@@ -19,6 +19,7 @@
 #include <QVBoxLayout>
 #include <QObject>
 #include "myQtManager.h"
+#include <QProgressBar>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
@@ -39,7 +40,7 @@ public:
     void PrendreImage();
     void gotoxy(int x, int y);
     void affichageTitre(QLabel* Label);
-    void affichageProgression(QLabel* Label);
+    void affichageProgression(QLabel* Label, QVBoxLayout* layout);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame);
     void finPartie(myQtManager* manager);
@@ -55,6 +56,7 @@ public:
     void setJoueur(Joueur* nouveauJoueur);
 
 private:
+   
     Joueur* joueurActuel = nullptr;
     ComArduino* comArduino;
     ComMode modeCommunication;

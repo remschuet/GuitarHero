@@ -13,6 +13,7 @@
 #include <qstackedwidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QProgressBar>
 
 using namespace std;
 
@@ -120,7 +121,7 @@ void Gameplay::affichageTitre(QLabel* label) {
     std::cout << "===========================";*/
 }
 
-void Gameplay::affichageProgression(QLabel* label) {
+void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     //QCoreApplication::processEvents();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
@@ -130,7 +131,18 @@ void Gameplay::affichageProgression(QLabel* label) {
     if (dureeTotale <= 0) return; // Évite la division par zéro
 
     int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
-    progression = (progression > 20) ? 20 : progression; // Limite à 20 blocs
+    progression = (progression > 20) ? 20 : progression;
+    // Limite à 20 blocs
+    
+
+    label->setText(QString("Progression : %1% (%2s / %3s)")
+        .arg(pourcentage)
+        .arg(tempsEcoule / 1000)
+        .arg(dureeTotale / 1000));
+
+    layout->addWidget(label);
+
+
     //QCoreApplication::processEvents();
     /*gotoxy(10, 29);
     std::cout << "[";
@@ -149,14 +161,48 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	int noteWidth = 80; //largeur de la note
 	int noteHeight = 80; //hauteur de la note
 	int startNote = titleLabel->geometry().bottom() - 10; //position en y haut notes
+
+    
+    QProgressBar* barProgression = new QProgressBar();
+    barProgression->setFixedWidth(400);
+    barProgression->setStyleSheet(R"(
+        QProgressBar {
+            border: 2px solid #444;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            text-align: center;
+            height: 30px;
+            font-size: 16px;
+            color: #333;
+           
+        }
+
+        QProgressBar::chunk {
+            background: qlineargradient(
+                spread:pad, x1:0, y1:0, x2:1, y2:0,
+                stop:0 #4CAF50, stop:1 #2196F3
+            );
+            border-radius: 10px;
+        }
+    )");
+   
+   
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         //QCoreApplication::processEvents();
-        long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+        long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson(); 
+        long long pourcentage = (tempsEcoule * 100 / dureeTotale);
+
+        if (dureeTotale <= 0) return; // Évite la division par zéro
+
+        int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
+        progression = (progression > 20) ? 20 : progression;
+        barProgression->setValue(pourcentage);
+        layoutGame->addWidget(barProgression);
         //QCoreApplication::processEvents();
         //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
-        // affichageProgression(ProgressionLabel);
+        affichageProgression(ProgressionLabel,layoutGame);
         //QCoreApplication::processEvents();
         tick++;
 
