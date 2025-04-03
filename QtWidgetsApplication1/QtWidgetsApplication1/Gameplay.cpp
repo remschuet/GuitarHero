@@ -13,6 +13,7 @@
 #include <qstackedwidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QProgressBar>
 
 using namespace std;
 
@@ -120,7 +121,7 @@ void Gameplay::affichageTitre(QLabel* label) {
     std::cout << "===========================";*/
 }
 
-void Gameplay::affichageProgression(QLabel* label) {
+void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     //QCoreApplication::processEvents();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
@@ -130,7 +131,18 @@ void Gameplay::affichageProgression(QLabel* label) {
     if (dureeTotale <= 0) return; // Évite la division par zéro
 
     int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
-    progression = (progression > 20) ? 20 : progression; // Limite à 20 blocs
+    progression = (progression > 20) ? 20 : progression;
+    // Limite à 20 blocs
+    
+
+    label->setText(QString("Progression : %1% (%2s / %3s)")
+        .arg(pourcentage)
+        .arg(tempsEcoule / 1000)
+        .arg(dureeTotale / 1000));
+
+    layout->addWidget(label);
+
+
     //QCoreApplication::processEvents();
     /*gotoxy(10, 29);
     std::cout << "[";
@@ -145,14 +157,27 @@ void Gameplay::affichageProgression(QLabel* label) {
 }
 
 void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
+
+    
+    QProgressBar* barProgression = new QProgressBar();
+   
+   
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         //QCoreApplication::processEvents();
-        long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+        long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson(); 
+        long long pourcentage = (tempsEcoule * 100 / dureeTotale);
+
+        if (dureeTotale <= 0) return; // Évite la division par zéro
+
+        int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
+        progression = (progression > 20) ? 20 : progression;
+        barProgression->setValue(pourcentage);
+        layoutGame->addWidget(barProgression);
         //QCoreApplication::processEvents();
         //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
-        // affichageProgression(ProgressionLabel);
+        affichageProgression(ProgressionLabel,layoutGame);
         //QCoreApplication::processEvents();
         tick++;
 
