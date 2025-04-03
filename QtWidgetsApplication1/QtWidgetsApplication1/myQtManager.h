@@ -52,9 +52,12 @@ public:
 
     static void afficherImage(QWidget* parentWidget, const QString& imagePath);
 
+    static void afficherPopupSelectionMusique(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
+
 
     QWidget* parentWidget;
 	QList<QLabel*> labels;
     //static QWidget* pageGame;
     static QVBoxLayout* GlobalLayout;
 };
+
