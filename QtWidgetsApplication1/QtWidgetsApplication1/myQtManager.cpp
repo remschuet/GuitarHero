@@ -141,7 +141,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
     //// Image de fond
     QLabel* backgroundLabel = new QLabel(page);
-    backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-330, -200, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("./images/placeholder_background_login.png");
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(true);
@@ -232,14 +232,16 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager) {
     // Créer un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
-    pageMenu->setStyleSheet("background-color: " + COULEUR_FOND + ";");
 
     // Image de fond
     QLabel* backgroundLabel = new QLabel(pageMenu);
-    backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    QPixmap resizedPixmap("./Images/placeholder_background_login.png");
-    backgroundLabel->setPixmap(resizedPixmap);
-    backgroundLabel->setScaledContents(true);
+    backgroundLabel->setGeometry(-330, -200, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+
+    QPixmap pixmap("./Images/placeholder_background_login.png");
+    backgroundLabel->setPixmap(pixmap);
+
+    // Centrer l'image en définissant son alignement
+    backgroundLabel->setAlignment(Qt::AlignCenter);
     backgroundLabel->lower();
 
     // Ajouter une couche semi-transparente au-dessus de l'image pour un effet d'assombrissement
