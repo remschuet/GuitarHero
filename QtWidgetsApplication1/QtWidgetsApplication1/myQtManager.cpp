@@ -162,7 +162,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     containerLayout->setAlignment(Qt::AlignCenter);
 
     // Titre du jeu avec effet glow vert et sans contour gris
-    QLabel* labelTitre = new QLabel("Welcome to Sherby Guitar!");
+    QLabel* labelTitre = new QLabel("Sherby Guitar!");
     labelTitre->setAlignment(Qt::AlignCenter);
     labelTitre->setStyleSheet(
         "font-size: 50px;"
@@ -177,7 +177,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
     // Champ de nom d'utilisateur centré
     QLineEdit* inputNom = new QLineEdit();
-    inputNom->setPlaceholderText("USERNAME");
+    inputNom->setPlaceholderText("Nom du joueur");
     inputNom->setStyleSheet(
         "background-color: white; "
         "color: black; "
@@ -761,37 +761,51 @@ void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* 
 
 
 
-void myQtManager::qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G)
+void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStackedWidget* stack)
 {
-    QDialog* finPartieDialog = new QDialog(window);
-    finPartieDialog->setWindowTitle("Fin de Partie");
-    finPartieDialog->setModal(true); // Pour s'assurer qu'on ne peut pas interagir avec le gameplay
-    finPartieDialog->setFixedSize(300, 200);
+    // Créer une boîte de dialogue
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Fin de la partie");
+    QString message = QString("La partie est terminée !\nScore : %1\nVoulez-vous rejouer ou retourner au menu ?").arg(game->gameStruct.score);
+    msgBox.setText(message);
+    QPushButton* replayButton = msgBox.addButton("Rejouer", QMessageBox::AcceptRole);
+    QPushButton* menuButton = msgBox.addButton("Retour au menu", QMessageBox::RejectRole);
+    QPushButton* cancelButton = msgBox.addButton("Annuler", QMessageBox::RejectRole); // Bouton personnalisé pour Cancel
 
-    QVBoxLayout* layout = new QVBoxLayout(finPartieDialog);
-    QLabel* message = new QLabel("La partie est terminée !", finPartieDialog);
-    message->setAlignment(Qt::AlignCenter);
+    // Exécuter la boîte de dialogue
+    msgBox.exec();
 
-    QPushButton* restartButton = new QPushButton("Rejouer", finPartieDialog);
-    QPushButton* quitButton = new QPushButton("Retourner au menu", finPartieDialog);
-
-    layout->addWidget(message);
-    layout->addWidget(restartButton);
-    layout->addWidget(quitButton);
-
-    // Connexions des boutons
-    QObject::connect(restartButton, &QPushButton::clicked, [stack, finPartieDialog]() {
-        stack->setCurrentIndex(Game); // Supposons que l'index 0 soit celui du gameplay
-        finPartieDialog->accept();
-        });
-
-    QObject::connect(quitButton, &QPushButton::clicked, [stack, finPartieDialog]() {
-        stack->setCurrentIndex(Menu);
-        finPartieDialog->accept();
-        });
-
-    // Affichage de la boîte de dialogue
-    finPartieDialog->exec();
+    if (msgBox.clickedButton() == replayButton) {
+        // Nettoyer le layout actuel pour réinitialiser l'interface
+        if (layoutGame) {
+            QLayoutItem* item;
+            while ((item = layoutGame->takeAt(0)) != nullptr) {
+                delete item->widget();
+                delete item;
+            }
+        }
+        // Relancer la partie
+        QLabel* countdownLabel = new QLabel();
+        QLabel* titleLabel = new QLabel();
+        QLabel* progressionLabel = new QLabel();
+        game->demarrerPartie(countdownLabel, titleLabel, progressionLabel, this, layoutGame, stack);
+    }
+    else if (msgBox.clickedButton() == menuButton) {
+        // Nettoyer le layout avant de retourner au menu pour éviter les résidus
+        if (layoutGame) {
+            QLayoutItem* item;
+            while ((item = layoutGame->takeAt(0)) != nullptr) {
+                delete item->widget();
+                delete item;
+            }
+        }
+        // Retourner au menu principal avec changerDePage
+        changerDePage(stack, Menu, game, this);
+    }
+    else if (msgBox.clickedButton() == cancelButton) {
+        // Afficher "T'abuses" si Cancel est cliqué
+        QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
+    }
 }
 
 void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
@@ -1130,7 +1144,7 @@ void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G
         if (stack->widget(index) == pageGame) {
             qDebug() << "PageGame est affichée!";
             G->gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
-            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, layoutGame);
+            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, layoutGame, stack);
         }
         });
     stack->addWidget(pageGame);
