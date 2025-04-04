@@ -184,6 +184,7 @@ void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->insertWidget(0, label);
 
+    //label->show();
    // label->show();
 
 }
@@ -194,6 +195,7 @@ void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
     label->setFont(QFont("Arial", 16));
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->addWidget(label);
+    //label->show();
   //  label->show();
 
 }
@@ -205,12 +207,13 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
     //if (!layout->children().contains(label)) layout->addWidget(label);
+    //label->show();
    // label->show();
 
 }
 
 
-void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     int endY = 700; //position de la barre de la guitare (à changer)
 	int noteWidth = 50; //largeur de la note
     int tailleNoteBase = 50; //hauteur de la note pour une note de 250 ms
@@ -219,14 +222,22 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     //double pixelsPerMs = static_cast<double>(startNote) / dureeTotale; // Calcul des pixels par milliseconde
 
-	/*QWidget* boiteNotes = new QWidget();
-	boiteNotes->setFixedSize((noteWidth * 6), 700);
-    boiteNotes->setStyleSheet("background-color: COULEUR_IMAGE_BORDURE");
-	boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);*/
+	QVBoxLayout* layoutCentreNote = new QVBoxLayout();
+
+	QWidget* boiteNotes = new QWidget();
+	boiteNotes->setFixedSize((noteWidth * 12), 700);
+    boiteNotes->setStyleSheet("background-color: pink");
+	//boiteNotes->move((TAILLE_ECRAN_X)-((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2)); does not work
+	//boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);
+    
+	layoutCentreNote->addWidget(boiteNotes);
+
+	//QGridLayout* layoutGridNotes = new QGridLayout();
+	//layoutGridNotes->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     //layouts pour les notes
     QVBoxLayout* RougeLayout = new QVBoxLayout();
-    
+   
     QVBoxLayout* BleuLayout = new QVBoxLayout();
     
     QVBoxLayout* VertLayout = new QVBoxLayout();
@@ -243,6 +254,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     NotesLayout->addLayout(JauneLayout);
     NotesLayout->addLayout(MauveLayout);
 
+    boiteNotes->setLayout(NotesLayout);
+
 	//Ajout de layout pour les autres items et ajout au layout principal
 	QVBoxLayout* titleLayout = new QVBoxLayout();
 	titleLayout->addWidget(titleLabel);
@@ -251,6 +264,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	layoutGame->addLayout(titleLayout);
 	layoutGame->addLayout(NotesLayout);
 	//layoutGame->addWidget(boiteNotes);
+	layoutGame->addLayout(layoutCentreNote);
+	layoutCentreNote->setAlignment(Qt::AlignCenter);
     
     QLabel* scoreLabel = new QLabel();
     QLabel* maxScoreLabel = new QLabel();
@@ -278,8 +293,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         "font-size: 18px; "
         "font-weight: bold;"
     ));
-    QObject::connect(backButton, &QPushButton::clicked, [manager]() {
-        manager->qtPageFinPartie(nullptr, nullptr, nullptr); // Retourne au menu principal
+    QObject::connect(backButton, &QPushButton::clicked, [manager,this,stack]() {
+        manager->qtPageFinPartie(this, nullptr, stack); // Retourne au menu principal
         });
 
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
@@ -336,7 +351,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
    
 
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
-        //QCoreApplication::processEvents();
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
         if (dureeTotale <= 0) return; // Évite la division par zéro
@@ -401,7 +415,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 				// Si la note n'est pas déjà affichée
                 if (note.estQtAffiche == false && note.action != MORTE) {    //créer une note seulement si la note n'est pas morte pour éviter de move un pointeur nul
                     // Créer un QLabel pour afficher la note    
-                    note.noteLabel = new QLabel();
+                    note.noteLabel = new QLabel(boiteNotes);
 
 					noteHeight = (note.duree * tailleNoteBase) / 250; // Calculer la hauteur de la note en fonction de sa durée
 
@@ -411,7 +425,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 					//qDebug() << "hauteur sans le minimum" << note.action * pixelsPerMs;
                     note.noteLabel->setFixedSize(noteWidth, noteHeight);
                     //note.noteLabel->setVisible(false); // Rendre invisible jusqu'à ce qu'il soit temps de l'afficher
-                    QCoreApplication::processEvents();
+                    note.noteLabel->show();
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                 }
@@ -425,22 +439,53 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 int posX = (TAILLE_ECRAN_X / 2) - 80;
                 if (note.estQtAffiche) {
                     switch (note.couleur) {
-                    case ROUGE: posX += 0; note.noteLabel->setStyleSheet("background-color : red;"); RougeLayout->addWidget(note.noteLabel); break;           
-                    case BLEU: posX += 80; note.noteLabel->setStyleSheet("background-color : blue;"); BleuLayout->addWidget(note.noteLabel); break;          
-                    case VERT: posX += 160; note.noteLabel->setStyleSheet("background-color : green;"); VertLayout->addWidget(note.noteLabel); break;	   
-                    case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); JauneLayout->addWidget(note.noteLabel); break;	  
-                    case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); MauveLayout->addWidget(note.noteLabel); break;	 
+                    case ROUGE: posX += 0; note.noteLabel->setStyleSheet("background-color : red;"); break;           
+                    case BLEU: posX += 80; note.noteLabel->setStyleSheet("background-color : blue;"); break;          
+                    case VERT: posX += 160; note.noteLabel->setStyleSheet("background-color : green;"); break;	   
+                    case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); break;	  
+                    case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); break;	 
                     }
                   //  NotesLayout->addLayout(progressLayout);
                     //int hauteurNote = static_cast<int>(note.duree * pixelsPerMs);                         //à changer!!! 
                     //int positionY = startNote - ((note.tempsDepart - chrono) * pixelsPerMs);
+					note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
+
+                    int positionY = endY - ((((note.tempsAffichage - chrono) * 50) / 250) + noteHeight);
+
+                    note.noteLabel->move(posX, positionY);
+
+                     if (positionY > endY) {
+
+                         if (noteHeight > 0) {
+                             noteHeight -= 2;
+                             note.noteLabel->setFixedSize(noteWidth, noteHeight);
+                         }
+
+                         if (noteHeight <= 0) {
+                             layoutGame->removeWidget(note.noteLabel);
+                             delete note.noteLabel;
+                             note.noteLabel = nullptr;
+                             note.estQtAffiche = false;
+                         }
+                     }
+                        //gotoxy(posX, positionY - y);
+                        //std::cout << "X";
+                                       
+                    /* int positionY = 25 - ((note.tempsDepart - chrono) / 250);
+
+                    for (int y = 0; y < noteHeight; y++) {
+                        if (positionY - y <= 25) { // Empêcher d'afficher hors écran
+                            gotoxy(posX, positionY - y);
+                            std::cout << "X";
+                        }
+                    }*/
 
                     int hauteurNote = 0;
                     int positionY = 0;
                     
                     //empêcher les notes de sortir de l'écran (endY = bas de l'aire de jeu) à modifier si les notes marchent bien
-                    if (positionY < 0) positionY = 0;
-					if (positionY > endY) positionY = endY;
+                    //if (positionY < 0) positionY = 0;
+					//if (positionY > endY) positionY = endY;
 
                     /*if (positionY >= startNote && positionY <= endY) {
                         note.noteLabel->setVisible(true);
@@ -450,19 +495,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     else {
 						note.noteLabel->setVisible(false);
                     }*/
-					note.noteLabel->setGeometry(posX, positionY, noteWidth, hauteurNote);
-					note.noteLabel->setVisible(true);
+					//note.noteLabel->setGeometry(posX, positionY, noteWidth, noteHeight);
+					//note.noteLabel->setVisible(true);
 
                     //note.noteLabel->setGeometry(posX, positionY, 20, hauteurNote);
                 }
 				//noteLabel->setProperty("noteStatus", "ACTIVE");
                 QCoreApplication::processEvents();
-               /* for (int y = 0; y < hauteurNote; y++) {
-                    if (positionY - y <= 25) { // Empêcher d'afficher hors écran
-                        gotoxy(posX, positionY - y);
-                        std::cout << "X";
-                    }
-                }*/
             }
         }
 
@@ -525,13 +564,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // valeurs de fps en ms
         Sleep(120);
         if (btn == QUITTER || tempsEcoule >= dureeTotale) {
-            finPartie(manager);
-            //manager->qtPageFinPartie(nullptr, nullptr, this);
+            manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
+            return; // Sortir de la boucle
         }
     }
 }
 
-void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
+void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
     label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
@@ -554,6 +593,8 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     gameStruct.chansonEnCours->startChrono();
     //gameTimer->start(120);
     qDebug() << "Partie demarree";
+    affichageTitre(titleLabel);
+    loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
     affichageTitre(titleLabel,layoutGame);
     loopGame(titleLabel, ProgressionLabel, manager, layoutGame);
 }
@@ -571,12 +612,12 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     }
 }*/
 
-void Gameplay::finPartie(myQtManager* manager) {
+void Gameplay::finPartie(myQtManager* manager, QStackedWidget* stack) {
     gameTimer->stop();
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
-    manager->qtPageFinPartie(nullptr, nullptr, this);
+    manager->qtPageFinPartie(this, nullptr, stack);
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //la fonction pour afficher la page de fin de partie doit être dans myQtManager pour que la fct soit accepté...

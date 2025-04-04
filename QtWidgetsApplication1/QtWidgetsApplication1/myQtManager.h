@@ -40,7 +40,7 @@ public:
 
     static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
-    static void qtPageFinPartie(QWidget* window, QStackedWidget* stack, Gameplay* G);
+    void qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStackedWidget* stack);
 
     static void qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
