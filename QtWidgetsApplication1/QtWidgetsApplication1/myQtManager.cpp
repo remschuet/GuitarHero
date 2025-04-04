@@ -188,7 +188,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     inputNom->setFixedSize(300, 50);
     containerLayout->addWidget(inputNom, 0, Qt::AlignHCenter);
        //// Bouton de connexion stylé et centré
-    QPushButton* btnLogin = new QPushButton("LOGIN");
+    QPushButton* btnLogin = new QPushButton("Se connecter");
     btnLogin->setStyleSheet(
         "QPushButton { "
         "    background-color: " + COULEUR_BOUTON + "; "
