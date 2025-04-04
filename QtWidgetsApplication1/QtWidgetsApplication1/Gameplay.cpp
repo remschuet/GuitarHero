@@ -15,6 +15,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <stack>
+#include <QPainter>
 
 using namespace std;
 
@@ -105,8 +106,28 @@ void Gameplay::gotoxy(int x, int y) {
     c.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
 }
+void Gameplay::rotateLabel(QLabel* label, int angle) {
+    QPixmap pixmap(label->size());
+    pixmap.fill(Qt::transparent); // Remplir d'un fond transparent
 
-void Gameplay::affichageTitre(QLabel* label) {
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::TextAntialiasing);
+    painter.translate(label->width() / 2, label->height() / 2); // Translation au centre
+    painter.rotate(angle); // Rotation de l'image
+    painter.translate(-label->width() / 2, -label->height() / 2); // Revenir à l'origine
+
+    QFont font("Arial", 16);
+    painter.setFont(font);
+    painter.setPen(Qt::black);
+    painter.drawText(label->rect(), Qt::AlignCenter, label->text());
+
+    label->setPixmap(pixmap); // Assigner l'image pivotée au QLabel
+    label->setAlignment(Qt::AlignCenter);
+    label->show();
+}
+
+void Gameplay::affichageTitre(QLabel* label, QVBoxLayout* layoutTitre) {
     label->clear();
 
 	label->setText("GUITAR HERO");
@@ -135,7 +156,7 @@ void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
     progression = (progression > 20) ? 20 : progression;
     // Limite à 20 blocs
     
-
+   // rotateLabel(label, 90);
     label->setText(QString("Progression : %1% (%2s / %3s)")
         .arg(pourcentage)
         .arg(tempsEcoule / 1000)
@@ -161,9 +182,9 @@ void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
     label->setText(QString("Score Actuel : %1").arg(gameStruct.score));
     label->setFont(QFont("Arial", 16));
     label->setAlignment(Qt::AlignCenter);
-    if (!layout->children().contains(label)) layout->addWidget(label);
+    if (!layout->children().contains(label)) layout->insertWidget(0, label);
 
-    label->show();
+   // label->show();
 
 }
 void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
@@ -173,7 +194,7 @@ void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
     label->setFont(QFont("Arial", 16));
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->addWidget(label);
-    label->show();
+  //  label->show();
 
 }
 void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
@@ -184,7 +205,7 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
     //if (!layout->children().contains(label)) layout->addWidget(label);
-    label->show();
+   // label->show();
 
 }
 
@@ -204,7 +225,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);*/
 
     //layouts pour les notes
-    QVBoxLayout* RougeLayout = new QVBoxLayout(layoutGame->parentWidget());
+    QVBoxLayout* RougeLayout = new QVBoxLayout();
     
     QVBoxLayout* BleuLayout = new QVBoxLayout();
     
@@ -237,11 +258,14 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
   
     
     
-    QProgressBar* barProgression = new QProgressBar();
-    QHBoxLayout* infolayout = new QHBoxLayout();
-    QVBoxLayout* scoreLayout = new QVBoxLayout();
+    QProgressBar* barProgression = new QProgressBar(layoutGame->parentWidget());
+    barProgression->setOrientation(Qt::Vertical);
+    QHBoxLayout* infolayout = new QHBoxLayout(layoutGame->parentWidget());
+    QVBoxLayout* scoreLayout = new QVBoxLayout(layoutGame->parentWidget());
+    QVBoxLayout* progressLayout = new QVBoxLayout(layoutGame->parentWidget());
 
-    affichageNomJoueur(nomJoueurLabel,infolayout);
+   
+  
     affichageMaxScore(maxScoreLabel, scoreLayout);
     //backbutton
     QPushButton* backButton = new QPushButton("Retour");
@@ -257,9 +281,12 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QObject::connect(backButton, &QPushButton::clicked, [manager]() {
         manager->qtPageFinPartie(nullptr, nullptr, nullptr); // Retourne au menu principal
         });
+
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
+    affichageNomJoueur(nomJoueurLabel,infolayout);
     //progress bar
-    barProgression->setFixedWidth(400);
+    
+    barProgression->setFixedHeight(400);
     barProgression->setStyleSheet(R"(
         QProgressBar {
             border: 2px solid #444;
@@ -280,9 +307,34 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             border-radius: 10px;
         }
     )");
-   
-   
+
+    QWidget* boite = new QWidget();
+    boite->setStyleSheet("background-color: blue;");
+    boite->show();
+    QLabel* label = new QLabel("Note", boite);  // Mettre le label dans la boite
+    label->setStyleSheet("background-color: red; color: white;");
+    label->show();
+
+    boite->setFixedSize(400, 300);
+    label->setGeometry(50, 50, 80, 80); // Positionner à l'intérieur de la boîte
+
+
+    // Utiliser un QTimer pour déplacer la note progressivement
+    QTimer* timer = new QTimer(boite);
+    connect(timer, &QTimer::timeout, [=]() mutable {
+        int newY = label->y() + 1;  // Descend la note de 5 pixels à chaque fois
+
+        if (newY > boite->height()) {
+            newY = 0; // Remet la note en haut lorsqu'elle dépasse la boîte
+        }
+
+        label->move(label->x(), newY);
+        });
+    timer->start(16); // 16 ms = environ 60 FPS
+
     while (true) {
+   
+
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         //QCoreApplication::processEvents();
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
@@ -296,15 +348,18 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         //QCoreApplication::processEvents();
         //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
-        affichageProgression(ProgressionLabel,layoutGame);
+        progressLayout->addWidget(barProgression);
+        affichageProgression(ProgressionLabel, progressLayout);
         QCoreApplication::processEvents();
         affichageScoreActuel(scoreLabel,scoreLayout);
 
-        infolayout->addLayout(scoreLayout);
+        infolayout->insertLayout(0,scoreLayout);
 
 
-        layoutGame->addWidget(barProgression);
+       // layoutGame->addWidget(barProgression);
         layoutGame->addLayout(infolayout);
+
+      
         
         //QCoreApplication::processEvents();
         tick++;
@@ -376,13 +431,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); JauneLayout->addWidget(note.noteLabel); break;	  
                     case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); MauveLayout->addWidget(note.noteLabel); break;	 
                     }
-
+                  //  NotesLayout->addLayout(progressLayout);
                     //int hauteurNote = static_cast<int>(note.duree * pixelsPerMs);                         //à changer!!! 
                     //int positionY = startNote - ((note.tempsDepart - chrono) * pixelsPerMs);
 
                     int hauteurNote = 0;
                     int positionY = 0;
-
+                    
                     //empêcher les notes de sortir de l'écran (endY = bas de l'aire de jeu) à modifier si les notes marchent bien
                     if (positionY < 0) positionY = 0;
 					if (positionY > endY) positionY = endY;
@@ -499,7 +554,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     gameStruct.chansonEnCours->startChrono();
     //gameTimer->start(120);
     qDebug() << "Partie demarree";
-    affichageTitre(titleLabel);
+    affichageTitre(titleLabel,layoutGame);
     loopGame(titleLabel, ProgressionLabel, manager, layoutGame);
 }
 

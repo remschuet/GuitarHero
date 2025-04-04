@@ -39,7 +39,8 @@ public:
     void afficherImage();
     void PrendreImage();
     void gotoxy(int x, int y);
-    void affichageTitre(QLabel* Label);
+    void rotateLabel(QLabel* label, int angle);
+    void affichageTitre(QLabel* Label, QVBoxLayout* layoutTitre);
     void affichageProgression(QLabel* Label, QVBoxLayout* layout);
     void affichageScoreActuel(QLabel* label, QVBoxLayout* layout);
     void affichageMaxScore(QLabel* label, QVBoxLayout* layout);
