@@ -191,10 +191,46 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 
 void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
     int endY = 700; //position de la barre de la guitare (à changer)
-	int noteWidth = 80; //largeur de la note
-	int noteHeight = 80; //hauteur de la note
-	int startNote = titleLabel->geometry().bottom() - 10; //position en y haut notes
+	int noteWidth = 50; //largeur de la note
+    int tailleNoteBase = 50; //hauteur de la note pour une note de 250 ms
+	int noteHeight = 0; 
+	int startNote = 700; //hauteur de la zone de notes = 4000 ms
+    long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
+    //double pixelsPerMs = static_cast<double>(startNote) / dureeTotale; // Calcul des pixels par milliseconde
 
+	/*QWidget* boiteNotes = new QWidget();
+	boiteNotes->setFixedSize((noteWidth * 6), 700);
+    boiteNotes->setStyleSheet("background-color: COULEUR_IMAGE_BORDURE");
+	boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);*/
+
+    //layouts pour les notes
+    QVBoxLayout* RougeLayout = new QVBoxLayout();
+    
+    QVBoxLayout* BleuLayout = new QVBoxLayout();
+    
+    QVBoxLayout* VertLayout = new QVBoxLayout();
+    
+    QVBoxLayout* JauneLayout = new QVBoxLayout();
+    
+    QVBoxLayout* MauveLayout = new QVBoxLayout();
+	
+    QHBoxLayout* NotesLayout = new QHBoxLayout();
+	//ajout des colonnes des notes à un layout horizontal
+	NotesLayout->addLayout(RougeLayout);
+    NotesLayout->addLayout(BleuLayout);
+    NotesLayout->addLayout(VertLayout);
+    NotesLayout->addLayout(JauneLayout);
+    NotesLayout->addLayout(MauveLayout);
+
+	//Ajout de layout pour les autres items et ajout au layout principal
+	QVBoxLayout* titleLayout = new QVBoxLayout();
+	titleLayout->addWidget(titleLabel);
+	titleLayout->addWidget(ProgressionLabel);
+
+	layoutGame->addLayout(titleLayout);
+	layoutGame->addLayout(NotesLayout);
+	//layoutGame->addWidget(boiteNotes);
+    
     QLabel* scoreLabel = new QLabel();
     QLabel* maxScoreLabel = new QLabel();
     QLabel* nomJoueurLabel = new QLabel();
@@ -249,7 +285,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     while (true) {
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         //QCoreApplication::processEvents();
-        long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson(); 
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
         if (dureeTotale <= 0) return; // Évite la division par zéro
@@ -262,6 +297,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
         affichageProgression(ProgressionLabel,layoutGame);
+        QCoreApplication::processEvents();
         affichageScoreActuel(scoreLabel,scoreLayout);
 
         infolayout->addLayout(scoreLayout);
@@ -311,10 +347,18 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 if (note.estQtAffiche == false && note.action != MORTE) {    //créer une note seulement si la note n'est pas morte pour éviter de move un pointeur nul
                     // Créer un QLabel pour afficher la note    
                     note.noteLabel = new QLabel();
+
+					noteHeight = (note.duree * tailleNoteBase) / 250; // Calculer la hauteur de la note en fonction de sa durée
+
+					//noteHeight = static_cast<int>(note.duree * pixelsPerMs); // Calculer la hauteur de la note en fonction de sa durée
+					//noteHeight = std::max(static_cast<int>(note.duree * pixelsPerMs), 10); // Hauteur minimale de 60 pixels
+					//qDebug() << "Hauteur de la note:" << noteHeight;
+					//qDebug() << "hauteur sans le minimum" << note.action * pixelsPerMs;
                     note.noteLabel->setFixedSize(noteWidth, noteHeight);
-                    note.noteLabel->setVisible(false); // Rendre invisible jusqu'à ce qu'il soit temps de l'afficher
+                    //note.noteLabel->setVisible(false); // Rendre invisible jusqu'à ce qu'il soit temps de l'afficher
                     QCoreApplication::processEvents();
                     note.estQtAffiche = true;
+                    note.noteLabel->setVisible(true);
                 }
                 
                /* QLabel* noteLabel = manager->getUnusedLabel();
@@ -326,26 +370,35 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 int posX = (TAILLE_ECRAN_X / 2) - 80;
                 if (note.estQtAffiche) {
                     switch (note.couleur) {
-                    case ROUGE: posX += 0; note.noteLabel->setStyleSheet("background-color : red;"); break;           //à changer!!! 
-                    case BLEU: posX += 80; note.noteLabel->setStyleSheet("background-color : blue;"); break;          // ""
-                    case VERT: posX += 160; note.noteLabel->setStyleSheet("background-color : green;"); break;	   // ""
-                    case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); break;	  // ""
-                    case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); break;	 // ""
+                    case ROUGE: posX += 0; note.noteLabel->setStyleSheet("background-color : red;"); RougeLayout->addWidget(note.noteLabel); break;           
+                    case BLEU: posX += 80; note.noteLabel->setStyleSheet("background-color : blue;"); BleuLayout->addWidget(note.noteLabel); break;          
+                    case VERT: posX += 160; note.noteLabel->setStyleSheet("background-color : green;"); VertLayout->addWidget(note.noteLabel); break;	   
+                    case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); JauneLayout->addWidget(note.noteLabel); break;	  
+                    case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); MauveLayout->addWidget(note.noteLabel); break;	 
                     }
 
-                    int hauteurNote = note.duree / 2;                         //à changer!!! 
-                    int positionY = startNote + ((chrono - note.tempsDepart) / 2);//((note.tempsDepart - chrono) / 2);	//à changer!!!
+                    //int hauteurNote = static_cast<int>(note.duree * pixelsPerMs);                         //à changer!!! 
+                    //int positionY = startNote - ((note.tempsDepart - chrono) * pixelsPerMs);
 
-                    if (positionY >= startNote && positionY <= endY) {
+                    int hauteurNote = 0;
+                    int positionY = 0;
+
+                    //empêcher les notes de sortir de l'écran (endY = bas de l'aire de jeu) à modifier si les notes marchent bien
+                    if (positionY < 0) positionY = 0;
+					if (positionY > endY) positionY = endY;
+
+                    /*if (positionY >= startNote && positionY <= endY) {
                         note.noteLabel->setVisible(true);
                         note.noteLabel->move(posX, positionY);
+                        QCoreApplication::processEvents();
                     }
                     else {
 						note.noteLabel->setVisible(false);
-                    }
+                    }*/
+					note.noteLabel->setGeometry(posX, positionY, noteWidth, hauteurNote);
+					note.noteLabel->setVisible(true);
 
                     //note.noteLabel->setGeometry(posX, positionY, 20, hauteurNote);
-                    layoutGame->addWidget(note.noteLabel);
                 }
 				//noteLabel->setProperty("noteStatus", "ACTIVE");
                 QCoreApplication::processEvents();
@@ -366,7 +419,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
                 if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
                     gameStruct.score += 3;
-                    //QCoreApplication::processEvents();
+                    QCoreApplication::processEvents();
                 }
             }
         }
@@ -386,6 +439,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
                 gameStruct.score--;
+                QCoreApplication::processEvents();
             }
         }
 
@@ -400,6 +454,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 }
                 note.action = MORTE;
                 gameStruct.score--;
+                QCoreApplication::processEvents();
 				                
 				
                 

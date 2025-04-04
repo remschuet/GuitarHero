@@ -1,4 +1,4 @@
-#include "MyQtPageSettings.h"
+ï»¿#include "MyQtPageSettings.h"
 #include "MyQtManager.h"
 
 MyQtPageSettings::MyQtPageSettings(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
@@ -8,169 +8,112 @@ MyQtPageSettings::MyQtPageSettings(QStackedWidget* stack, Gameplay* G, myQtManag
 
 void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
 {
-    QLabel* imageLabel = nullptr;
-    // Créer un widget pour la page du menu
+    // CrÃ©er un widget pour la page des paramÃ¨tres
     QWidget* pageParametre = new QWidget();
-    QGridLayout* layout = new QGridLayout(pageParametre);
 
-    layout->setSpacing(5);  // Espacement entre les widgets dans la grille (réduit au minimum)
-    layout->setContentsMargins(0, 0, 0, 0);  // Pas de marges autour du layout
-
-    // Créer le bouton "Retour"
-    QPushButton* btnRetour = new QPushButton("Retour");
-    btnRetour->setStyleSheet(
-        "QPushButton { "                       // Sélecteur pour QPushButton
-        "    background-color: green; "          // Couleur de fond du bouton
-        "    color: white; "                   // Couleur du texte
-        "    font-size: 25px; "                // Taille de la police
-        "    border-radius: 5px; "             // Coins arrondis
-        "    padding: 5px 10px; "              // Espacement interne du bouton
-        "}"
-        "QPushButton:hover { "                 // Effet au survol
-        "    background-color: gray; "       // Couleur de fond quand la souris survole le bouton
-        "    color: white; "                 // Couleur du texte au survol
-        "}"
-    );
-    //QFont font = btnRetour->font();
-    //font.setPointSize(25);  // Définir la taille de la police ici
-    //btnRetour->setFont(font);
-
-    btnRetour->setFixedSize(500, 100);
-
-    // Ajouter le bouton "Retour" en haut à gauche (cellule (0, 0))
-    layout->addWidget(btnRetour, 0, 0, Qt::AlignLeft | Qt::AlignTop);
-
-    // Titre du menu (centré dans la grille)
-    QLabel* titre = new QLabel("");
-    myQt_setFont(titre, 150);
-    titre->setAlignment(Qt::AlignCenter);
-    layout->addWidget(titre, 0, 0, 0, 0, Qt::AlignHCenter | Qt::AlignTop); // Centrer le titre
-
-    // Image de fond (à l'arrière-plan)
+    // Image de fond (comme dans qtPageMenu)
     QLabel* backgroundLabel = new QLabel(pageParametre);
-    backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    backgroundLabel->setScaledContents(true);  // L'image de fond ne sera pas redimensionnée
+    backgroundLabel->setGeometry(-330, -200, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    QPixmap pixmap("./Images/placeholder_background_login.png");
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setAlignment(Qt::AlignCenter);
     backgroundLabel->lower();
 
-    // Ajouter un espacement entre le titre et les boutons
-    QWidget* spacerTop = new QWidget();
-    spacerTop->setFixedHeight(200);  // Espacement vertical
-    layout->addWidget(spacerTop, 1, 0, 1, 3);  // Ajouter un widget vide comme espacement
+    // Ajouter une couche semi-transparente au-dessus de l'image
+    QWidget* overlay = new QWidget(pageParametre);
+    overlay->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    overlay->setStyleSheet("background-color: rgba(0, 0, 0, 100);");
+    overlay->lower();
 
-    // Liste des boutons
-    QStringList buttonNames = { "Difficulte", "Paramètre de la manette", "Mode Admin" };
+    // Conteneur central pour les paramÃ¨tres
+    QWidget* settingsBox = new QWidget(pageParametre);
+    settingsBox->setStyleSheet("background-color: rgba(0, 0, 0, 150); border-radius: 25px; padding: 20px;");
+    settingsBox->setFixedSize(600, 400);
+
+    // Layout spÃ©cifique pour la boÃ®te des paramÃ¨tres
+    QVBoxLayout* settingsBoxLayout = new QVBoxLayout(settingsBox);
+    settingsBoxLayout->setAlignment(Qt::AlignCenter);
+    settingsBoxLayout->setSpacing(15);
+
+    // Titre des paramÃ¨tres
+    QLabel* titre = new QLabel("ParamÃ¨tres", settingsBox);
+    myQt_setFont(titre, 40);
+    titre->setAlignment(Qt::AlignCenter);
+    titre->setStyleSheet(
+        "color: white; "
+        "font-size: 40px; "
+        "font-weight: bold; "
+        "text-transform: uppercase; "
+        "letter-spacing: 3px; "
+        "text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8); "
+        "border: none; "
+        "padding: 10px; "
+        "background: linear-gradient(to right, #ff0000, #ff6600, #ffff00, #33cc33, #0099ff, #9900cc); "
+        "border-radius: 10px;");
+    settingsBoxLayout->addWidget(titre);
+
+    // Liste des boutons (remplacement de "DifficultÃ©" par "Langue")
+    QStringList buttonNames = { "Langue ðŸˆ´", "Manette", "Mode Admin" }; // "DifficultÃ©" changÃ© en "Langue"
     QVector<QPushButton*> buttons;
 
-    // Création des boutons avec un style uniforme
-    for (int i = 0; i < buttonNames.size(); ++i) {
-        QPushButton* button = new QPushButton(buttonNames[i]);
-        //QFont fontButton = button->font();
-        //fontButton.setPointSize(25);  // Définir la taille de la police ici
-        //button->setFont(fontButton);
-
+    for (const QString& name : buttonNames) {
+        QPushButton* button = new QPushButton(name, settingsBox);
         button->setStyleSheet(
-            "QPushButton { "                       // Sélecteur pour QPushButton
-            "    background-color: green; "          // Couleur de fond du bouton
-            "    color: white; "                   // Couleur du texte
-            "    font-size: 25px; "                // Taille de la police
-            "    border-radius: 5px; "             // Coins arrondis
-            "    padding: 5px 10px; "              // Espacement interne du bouton
-            "}"
-            "QPushButton:hover { "                 // Effet au survol
-            "    background-color: gray; "       // Couleur de fond quand la souris survole le bouton
-            "    color: white; "                 // Couleur du texte au survol
-            "}"
-        );
-        button->setFixedSize(500, 100);
-        buttons.append(button);
-
-        // Ajouter les boutons en ligne, un sous l'autre
-        layout->addWidget(button, 2 + i, 1, Qt::AlignHCenter | Qt::AlignVCenter);
-    }
-
-    // Ajouter un espace après les boutons (espacement vers le bas)
-    QWidget* spacerBottom = new QWidget();
-    spacerBottom->setFixedHeight(600);  // Espacement vertical à la fin
-    layout->addWidget(spacerBottom, 6, 0, 1, 3);  // Ajouter un widget vide comme espacement après les boutons
-
-    // Connexion des boutons aux actions
-    QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = MeilleursScores;
-        });
-
-    QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
-        // Créer un widget qui contiendra l'image et le bouton
-        QWidget* overlayWidget = new QWidget(pageParametre); // parent = pageParametre
-        overlayWidget->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // Position et taille du widget
-
-        // Créer un QLabel pour afficher l'image
-        QLabel* paraManette = new QLabel(overlayWidget);  // Ajouter l'image au nouveau widget
-        QPixmap ManettePixmap("./images/test.jpg");
-
-        // Vérifier si l'image a été correctement chargée
-        if (ManettePixmap.isNull()) {
-            qDebug() << "Erreur de chargement de l'image!";
-            return;
-        }
-
-        // Afficher l'image dans le QLabel
-        paraManette->setPixmap(ManettePixmap);
-        paraManette->setAlignment(Qt::AlignCenter);  // Centrer l'image dans le QLabel
-
-        // Fixer la taille du QLabel à la taille de l'écran
-        paraManette->setFixedSize(TAILLE_ECRAN_X, TAILLE_ECRAN_Y);  // S'assurer que le QLabel prend toute la taille de l'écran
-
-        // S'assurer que l'image s'adapte à la taille du QLabel
-        paraManette->setScaledContents(true);  // Redimensionner l'image pour s'adapter au QLabel
-
-        // Créer un bouton "Retour aux Paramètres"
-        QPushButton* btnRetourParametre = new QPushButton("Retour", overlayWidget);
-        btnRetourParametre->setStyleSheet(
             "QPushButton { "
-            "    background-color: green; "
+            "    background-color: " + COULEUR_BOUTON + "; "
             "    color: white; "
             "    font-size: 25px; "
             "    border-radius: 5px; "
             "    padding: 5px 10px; "
-            "} "
+            "}"
             "QPushButton:hover { "
             "    background-color: gray; "
             "    color: white; "
-            "} "
+            "}"
         );
-        btnRetourParametre->setFixedSize(500, 100);
-        btnRetourParametre->setGeometry(0, 0, 500, 100);  // Positionner le bouton
+        button->setFixedSize(250, 50);
+        buttons.append(button);
+        settingsBoxLayout->addWidget(button, 0, Qt::AlignCenter);
+    }
 
-        // Ajouter l'overlayWidget à la pageParametre, au-dessus de tous les autres éléments
-        layout->addWidget(overlayWidget, 0, 0, 0, 0);  // Assurez-vous qu'il couvre toute la page
+    // Bouton Retour
+    QPushButton* backButton = new QPushButton("Retour", settingsBox);
+    backButton->setStyleSheet(
+        "QPushButton { "
+        "    background-color: red; "
+        "    color: white; "
+        "    font-size: 25px; "
+        "    border-radius: 5px; "
+        "    padding: 5px 10px; "
+        "} "
+        "QPushButton:hover { "
+        "    background-color: darkred; "
+        "}"
+    );
+    backButton->setFixedSize(250, 50);
+    settingsBoxLayout->addWidget(backButton, 0, Qt::AlignCenter);
 
-        // Assurer que le bouton et l'image sont bien au-dessus des autres widgets
-        overlayWidget->raise();  // Met l'overlayWidget (contenant l'image et le bouton) au-dessus des autres éléments
+    // Ajouter la boÃ®te centrÃ©e dans la page
+    QVBoxLayout* mainLayout = new QVBoxLayout(pageParametre);
+    mainLayout->setAlignment(Qt::AlignCenter);
+    mainLayout->addStretch();
+    mainLayout->addWidget(settingsBox, 0, Qt::AlignCenter);
+    mainLayout->addStretch();
+    pageParametre->setLayout(mainLayout);
 
-        // Connexion du bouton "Retour aux Paramètres"
-        QObject::connect(btnRetourParametre, &QPushButton::clicked, [=]() {
-            // Supprimer l'overlay (image et bouton) quand on clique sur "Retour"
-            paraManette->deleteLater();  // Supprimer l'image
-            btnRetourParametre->deleteLater();  // Supprimer le bouton
-            overlayWidget->deleteLater();  // Supprimer l'overlayWidget complet
-            });
+    // Connexion du bouton "Langue" pour afficher un pop-up
+    QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
+        QMessageBox::information(parent, "Langue", "T'abuses"); // Pop-up avec "Abuses"
         });
 
-
-    QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
-        fenetres QtFenetre = Admin;
-        myQtManager::changerDePage(stack, QtFenetre, G, manager);
-        });
-
-    QObject::connect(btnRetour, &QPushButton::clicked, [=]() {
-        stack->setCurrentIndex(0); // Retour au menu principal
+    // Connexion du bouton Retour
+    QObject::connect(backButton, &QPushButton::clicked, [=]() {
+        stack->setCurrentIndex(0);
         });
 
     // Ajouter la page au QStackedWidget
     stack->addWidget(pageParametre);
 }
-
-
 void MyQtPageSettings::setBackground()
 {
 }
