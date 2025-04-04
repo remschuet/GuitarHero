@@ -28,7 +28,7 @@ void MyQtPageGameplay::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
         if (stack->widget(index) == pageGame) {
             qDebug() << "PageGame est affichée!";
             G->gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
-            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, nullptr);
+            G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, nullptr, stack);
         }
         });
     stack->addWidget(pageGame);

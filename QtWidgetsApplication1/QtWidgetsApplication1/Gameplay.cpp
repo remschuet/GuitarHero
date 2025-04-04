@@ -189,7 +189,7 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 }
 
 
-void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
+void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     int endY = 700; //position de la barre de la guitare (à changer)
 	int noteWidth = 50; //largeur de la note
     int tailleNoteBase = 50; //hauteur de la note pour une note de 250 ms
@@ -266,8 +266,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         "font-size: 18px; "
         "font-weight: bold;"
     ));
-    QObject::connect(backButton, &QPushButton::clicked, [manager]() {
-        manager->qtPageFinPartie(nullptr, nullptr, nullptr); // Retourne au menu principal
+    QObject::connect(backButton, &QPushButton::clicked, [manager,this,stack]() {
+        manager->qtPageFinPartie(this, nullptr, stack); // Retourne au menu principal
         });
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
     //progress bar
@@ -503,13 +503,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // valeurs de fps en ms
         Sleep(120);
         if (btn == QUITTER || tempsEcoule >= dureeTotale) {
-            finPartie(manager);
-            //manager->qtPageFinPartie(nullptr, nullptr, this);
+            manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
+            return; // Sortir de la boucle
         }
     }
 }
 
-void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
+void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
     label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
@@ -533,7 +533,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     //gameTimer->start(120);
     qDebug() << "Partie demarree";
     affichageTitre(titleLabel);
-    loopGame(titleLabel, ProgressionLabel, manager, layoutGame);
+    loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
 }
 
 /*void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
@@ -549,12 +549,12 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     }
 }*/
 
-void Gameplay::finPartie(myQtManager* manager) {
+void Gameplay::finPartie(myQtManager* manager, QStackedWidget* stack) {
     gameTimer->stop();
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
-    manager->qtPageFinPartie(nullptr, nullptr, this);
+    manager->qtPageFinPartie(this, nullptr, stack);
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //la fonction pour afficher la page de fin de partie doit être dans myQtManager pour que la fct soit accepté...
