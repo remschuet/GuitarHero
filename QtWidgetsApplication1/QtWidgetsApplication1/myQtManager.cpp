@@ -329,9 +329,9 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        afficherPopupSelectionMusique(parent, stack, G, manager);
+        //afficherPopupSelectionMusique(parent, stack, G, manager);
         //décommenter la ligne suivante et commenter la précédente pour éviter le choix de musique
-        //changerDePage(stack, Game, G, manager);
+        changerDePage(stack, Game, G, manager);
         });
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
         changerDePage(stack, MeilleursScores, G, manager);
@@ -1117,10 +1117,8 @@ void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G
     layoutGame->addWidget(gameLabel);
 
     QLabel* titleLabel = new QLabel(pageGame);
-    layoutGame->addWidget(titleLabel);
 
     QLabel* ProgressionLabel = new QLabel(pageGame);
-    layoutGame->addWidget(ProgressionLabel);
 
     int pageIndex = stack->addWidget(pageGame); // Add the page and get its index
     qDebug() << "PageGame ajouté à l'index :" << pageIndex;
