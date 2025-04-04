@@ -204,7 +204,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);*/
 
     //layouts pour les notes
-    QVBoxLayout* RougeLayout = new QVBoxLayout();
+    QVBoxLayout* RougeLayout = new QVBoxLayout(layoutGame->parentWidget());
     
     QVBoxLayout* BleuLayout = new QVBoxLayout();
     
