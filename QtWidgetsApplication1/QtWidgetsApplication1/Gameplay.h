@@ -41,6 +41,9 @@ public:
     void gotoxy(int x, int y);
     void affichageTitre(QLabel* Label);
     void affichageProgression(QLabel* Label, QVBoxLayout* layout);
+    void affichageScoreActuel(QLabel* label, QVBoxLayout* layout);
+    void affichageMaxScore(QLabel* label, QVBoxLayout* layout);
+    void affichageNomJoueur(QLabel* label, QHBoxLayout* layout);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame);
     void finPartie(myQtManager* manager);

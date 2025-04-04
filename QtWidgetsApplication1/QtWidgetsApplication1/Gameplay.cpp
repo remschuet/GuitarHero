@@ -14,6 +14,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QProgressBar>
+#include <stack>
 
 using namespace std;
 
@@ -155,6 +156,38 @@ void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
     std::cout << "] " << (tempsEcoule / 1000) << "s / " << (dureeTotale / 1000) << "s    " << pourcentage << "%" << endl;*/
 
 }
+void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
+
+    label->setText(QString("Score Actuel : %1").arg(gameStruct.score));
+    label->setFont(QFont("Arial", 16));
+    label->setAlignment(Qt::AlignCenter);
+    if (!layout->children().contains(label)) layout->addWidget(label);
+
+    label->show();
+
+}
+void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
+
+    int maxScore = gameStruct.joueur->getMeilleurScore();
+    label->setText(QString("Meilleur Score : %1").arg(maxScore));
+    label->setFont(QFont("Arial", 16));
+    label->setAlignment(Qt::AlignCenter);
+    if (!layout->children().contains(label)) layout->addWidget(label);
+    label->show();
+
+}
+void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
+
+    QString nomJoueur = QString::fromStdString(gameStruct.joueur->getNomJoueur());
+    label->setText(QString("Joueur : %1").arg(nomJoueur));
+    label->setFont(QFont("Arial", 16));
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+    //if (!layout->children().contains(label)) layout->addWidget(label);
+    label->show();
+
+}
+
 
 void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame) {
     int endY = 700; //position de la barre de la guitare (à changer)
@@ -162,8 +195,34 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	int noteHeight = 80; //hauteur de la note
 	int startNote = titleLabel->geometry().bottom() - 10; //position en y haut notes
 
+    QLabel* scoreLabel = new QLabel();
+    QLabel* maxScoreLabel = new QLabel();
+    QLabel* nomJoueurLabel = new QLabel();
+  
+    
     
     QProgressBar* barProgression = new QProgressBar();
+    QHBoxLayout* infolayout = new QHBoxLayout();
+    QVBoxLayout* scoreLayout = new QVBoxLayout();
+
+    affichageNomJoueur(nomJoueurLabel,infolayout);
+    affichageMaxScore(maxScoreLabel, scoreLayout);
+    //backbutton
+    QPushButton* backButton = new QPushButton("Retour");
+    backButton->setStyleSheet(QString(
+        "background-color: red; "
+        "color: white; "
+        "border: 2px solid red; "
+        "padding: 10px; "
+        "border-radius: 10px; "
+        "font-size: 18px; "
+        "font-weight: bold;"
+    ));
+    QObject::connect(backButton, &QPushButton::clicked, [manager]() {
+        manager->qtPageFinPartie(nullptr, nullptr, nullptr); // Retourne au menu principal
+        });
+    infolayout->addWidget(backButton, 0, Qt::AlignCenter);
+    //progress bar
     barProgression->setFixedWidth(400);
     barProgression->setStyleSheet(R"(
         QProgressBar {
@@ -198,11 +257,19 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         int progression = (tempsEcoule * 20) / dureeTotale; // Calcul du nombre de blocs remplis
         progression = (progression > 20) ? 20 : progression;
         barProgression->setValue(pourcentage);
-        layoutGame->addWidget(barProgression);
+      
         //QCoreApplication::processEvents();
         //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
         affichageProgression(ProgressionLabel,layoutGame);
+        affichageScoreActuel(scoreLabel,scoreLayout);
+
+        infolayout->addLayout(scoreLayout);
+
+
+        layoutGame->addWidget(barProgression);
+        layoutGame->addLayout(infolayout);
+        
         //QCoreApplication::processEvents();
         tick++;
 
