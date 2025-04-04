@@ -163,7 +163,7 @@ void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->addWidget(label);
 
-    label->show();
+    //label->show();
 
 }
 void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
@@ -173,7 +173,7 @@ void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
     label->setFont(QFont("Arial", 16));
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->addWidget(label);
-    label->show();
+    //label->show();
 
 }
 void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
@@ -184,7 +184,7 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
     //if (!layout->children().contains(label)) layout->addWidget(label);
-    label->show();
+    //label->show();
 
 }
 
@@ -207,6 +207,9 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	//boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);
     
 	layoutCentreNote->addWidget(boiteNotes);
+
+	//QGridLayout* layoutGridNotes = new QGridLayout();
+	//layoutGridNotes->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     //layouts pour les notes
     QVBoxLayout* RougeLayout = new QVBoxLayout();
@@ -354,7 +357,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 				// Si la note n'est pas déjà affichée
                 if (note.estQtAffiche == false && note.action != MORTE) {    //créer une note seulement si la note n'est pas morte pour éviter de move un pointeur nul
                     // Créer un QLabel pour afficher la note    
-                    note.noteLabel = new QLabel();
+                    note.noteLabel = new QLabel(boiteNotes);
 
 					noteHeight = (note.duree * tailleNoteBase) / 250; // Calculer la hauteur de la note en fonction de sa durée
 
@@ -364,6 +367,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 					//qDebug() << "hauteur sans le minimum" << note.action * pixelsPerMs;
                     note.noteLabel->setFixedSize(noteWidth, noteHeight);
                     //note.noteLabel->setVisible(false); // Rendre invisible jusqu'à ce qu'il soit temps de l'afficher
+                    note.noteLabel->show();
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                 }
@@ -377,19 +381,20 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 int posX = (TAILLE_ECRAN_X / 2) - 80;
                 if (note.estQtAffiche) {
                     switch (note.couleur) {
-                    case ROUGE: posX += 0; note.noteLabel->setStyleSheet("background-color : red;"); RougeLayout->addWidget(note.noteLabel); break;           
-                    case BLEU: posX += 80; note.noteLabel->setStyleSheet("background-color : blue;"); BleuLayout->addWidget(note.noteLabel); break;          
-                    case VERT: posX += 160; note.noteLabel->setStyleSheet("background-color : green;"); VertLayout->addWidget(note.noteLabel); break;	   
-                    case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); JauneLayout->addWidget(note.noteLabel); break;	  
-                    case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); MauveLayout->addWidget(note.noteLabel); break;	 
+                    case ROUGE: posX += 0; note.noteLabel->setStyleSheet("background-color : red;"); break;           
+                    case BLEU: posX += 80; note.noteLabel->setStyleSheet("background-color : blue;"); break;          
+                    case VERT: posX += 160; note.noteLabel->setStyleSheet("background-color : green;"); break;	   
+                    case JAUNE: posX += 240;note.noteLabel->setStyleSheet("background-color : yellow;"); break;	  
+                    case MAUVE: posX += 320;note.noteLabel->setStyleSheet("background-color : purple;"); break;	 
                     }
 
                     //int hauteurNote = static_cast<int>(note.duree * pixelsPerMs);                         //à changer!!! 
                     //int positionY = startNote - ((note.tempsDepart - chrono) * pixelsPerMs);
+					note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
 
                     int positionY = endY - ((((note.tempsAffichage - chrono) * 50) / 250) + noteHeight);
 
-                     note.noteLabel->move(posX, positionY);
+                    note.noteLabel->move(posX, positionY);
 
                      if (positionY > endY) {
 
