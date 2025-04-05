@@ -141,7 +141,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
     //// Image de fond
     QLabel* backgroundLabel = new QLabel(page);
-    backgroundLabel->setGeometry(-330, -200, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("./images/placeholder_background_login.png");
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(true);
@@ -160,20 +160,6 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     );
     QVBoxLayout* containerLayout = new QVBoxLayout(container);
     containerLayout->setAlignment(Qt::AlignCenter);
-
-    // Titre du jeu avec effet glow vert et sans contour gris
-    QLabel* labelTitre = new QLabel("Sherby Guitar!");
-    labelTitre->setAlignment(Qt::AlignCenter);
-    labelTitre->setStyleSheet(
-        "font-size: 50px;"
-        "font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"
-        "color: " + COULEUR_BOUTON + ";"  // Vert flashy
-        "font-weight: bold;"
-        "letter-spacing: 2px;"
-        "text-shadow: 3px 3px 10px rgba(0, 255, 0, 0.8), 5px 5px 15px rgba(0, 255, 0, 0.5);"
-        "background: none;"
-    );
-    containerLayout->addWidget(labelTitre);
 
     // Champ de nom d'utilisateur centré
     QLineEdit* inputNom = new QLineEdit();
@@ -206,6 +192,8 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
     containerLayout->addWidget(btnLogin, 0, Qt::AlignHCenter);
        layout->addWidget(container);
 
+       layout->addSpacing(-170);
+
     //// Connexion du bouton Login
     QObject::connect(inputNom, &QLineEdit::returnPressed, btnLogin, &QPushButton::click);
     QObject::connect(btnLogin, &QPushButton::clicked, [=]() {
@@ -233,20 +221,29 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     // Créer un widget pour la page du menu
     QWidget* pageMenu = new QWidget();
 
-    // Image de fond
+    // Image de fond 
     QLabel* backgroundLabel = new QLabel(pageMenu);
-    backgroundLabel->setGeometry(-330, -200, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-
+    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
-
-    // Centrer l'image en définissant son alignement
     backgroundLabel->setAlignment(Qt::AlignCenter);
-    backgroundLabel->lower();
+
+    // Appliquer un effet de flou
+    QGraphicsBlurEffect* blurEffect = new QGraphicsBlurEffect();
+    blurEffect->setBlurRadius(10); // Ajustez le rayon de flou (5-20 pour un effet léger à fort)
+
+    // Appliquer une opacité
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+    opacityEffect->setOpacity(0.7); // Opacité de 0 (transparent) à 1 (opaque), ici 70% d'opacité
+
+    // Combiner les effets : d'abord l'opacité, puis le flou
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+    blurEffect->setParent(backgroundLabel); // Nécessaire pour que l'effet soit appliqué après l'opacité
+    backgroundLabel->setGraphicsEffect(blurEffect);
 
     // Ajouter une couche semi-transparente au-dessus de l'image pour un effet d'assombrissement
     QWidget* overlay = new QWidget(pageMenu);
-    overlay->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    overlay->setGeometry(-260, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     overlay->setStyleSheet("background-color: rgba(0, 0, 0, 100);"); // Ajuster l'opacité si nécessaire
     overlay->lower();
 
@@ -982,15 +979,25 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     QVBoxLayout* mainLayout = new QVBoxLayout(pageMeilleursScores);
     mainLayout->setContentsMargins(20, 10, 20, 10); // Marges réduites
 
-    // Image de fond
+    // Image de fond 
     QLabel* backgroundLabel = new QLabel(pageMeilleursScores);
-    backgroundLabel->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
-    QPixmap resizedPixmap("./images/meilleurscore.png");
-    if (!resizedPixmap.isNull()) {
-        backgroundLabel->setPixmap(resizedPixmap);
-    }
-    backgroundLabel->setScaledContents(true);
-    backgroundLabel->lower();
+    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    QPixmap pixmap("./Images/placeholder_background_login.png");
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setAlignment(Qt::AlignCenter);
+
+    // Appliquer un effet de flou
+    QGraphicsBlurEffect* blurEffect = new QGraphicsBlurEffect();
+    blurEffect->setBlurRadius(10); // Ajustez le rayon de flou (5-20 pour un effet léger à fort)
+
+    // Appliquer une opacité
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+    opacityEffect->setOpacity(0.7); // Opacité de 0 (transparent) à 1 (opaque), ici 70% d'opacité
+
+    // Combiner les effets : d'abord l'opacité, puis le flou
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+    blurEffect->setParent(backgroundLabel); // Nécessaire pour que l'effet soit appliqué après l'opacité
+    backgroundLabel->setGraphicsEffect(blurEffect);
 
     // Titre
     QLabel* titre = new QLabel("Meilleurs Scores");

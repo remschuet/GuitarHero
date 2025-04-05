@@ -333,33 +333,9 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
     )");
 
-    /*QWidget* boite = new QWidget();
-    boite->setStyleSheet("background-color: blue;");
-    boite->show();
-    /*
-    QLabel* label = new QLabel("Note", boite);  // Mettre le label dans la boite
-    label->setStyleSheet("background-color: red; color: white;");
-    label->show();
-
-    boite->setFixedSize(400, 300);
-    label->setGeometry(50, 50, 80, 80); // Positionner à l'intérieur de la boîte
-
-
-    // Utiliser un QTimer pour déplacer la note progressivement
-    QTimer* timer = new QTimer(boite);
-    connect(timer, &QTimer::timeout, [=]() mutable {
-        int newY = label->y() + 1;  // Descend la note de 5 pixels à chaque fois
-
-        if (newY > boite->height()) {
-            newY = 0; // Remet la note en haut lorsqu'elle dépasse la boîte
-        }
-
-        label->move(label->x(), newY);
-        });
-    timer->start(16); // 16 ms = environ 60 FPS
-    */
     timerTick->start(100);
     timerBtn->start(40); // 25 ms
+
     
     while (true) {
    
