@@ -7,23 +7,42 @@ MyQtPageInfoJoueur::MyQtPageInfoJoueur(QStackedWidget* stack, Gameplay* G, myQtM
 
 void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
 {
-    QWidget* window = new QWidget(parent);
+    QWidget* window = new QWidget();
 
-    // Utiliser un QLabel pour l'image de fond
+    // Image de fond (comme dans qtPageMenu)
     QLabel* backgroundLabel = new QLabel(window);
-    QPixmap backgroundPixmap("./Images/placeholder_background_login.png");
-    if (!backgroundPixmap.isNull()) {
-        backgroundLabel->setPixmap(backgroundPixmap.scaled(window->size(), Qt::KeepAspectRatioByExpanding));
-        backgroundLabel->setScaledContents(true);
-    }
-    else {
-        backgroundLabel->setText("Image de fond non disponible");
-    }
-    backgroundLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    QPixmap pixmap("./Images/placeholder_background_login.png");
+    backgroundLabel->setPixmap(pixmap);
+    backgroundLabel->setAlignment(Qt::AlignCenter);
 
-    QVBoxLayout* windowLayout = new QVBoxLayout(window);
-    windowLayout->addWidget(backgroundLabel);
+    // Appliquer un effet de flou
+    QGraphicsBlurEffect* blurEffect = new QGraphicsBlurEffect();
+    blurEffect->setBlurRadius(10); // Ajustez le rayon de flou (5-20 pour un effet léger à fort)
+
+    // Appliquer une opacité
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+    opacityEffect->setOpacity(0.7); // Opacité de 0 (transparent) à 1 (opaque), ici 70% d'opacité
+
+    // Combiner les effets : d'abord l'opacité, puis le flou
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+    blurEffect->setParent(backgroundLabel); // Nécessaire pour que l'effet soit appliqué après l'opacité
+    backgroundLabel->setGraphicsEffect(blurEffect);
+
     backgroundLabel->lower();
+
+    QWidget* infoContainer = new QWidget(window);
+    infoContainer->setGeometry(0, 0, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    infoContainer->setStyleSheet("background-color: rgba(0, 0, 0, 100);");
+    infoContainer->lower();
+
+    QWidget* Box = new QWidget(window);
+    Box->setStyleSheet("background-color: rgba(0, 0, 0, 150); border-radius: 25px; padding: 20px;");
+    Box->setFixedSize(600, 400);
+
+    QVBoxLayout* BoxLayout = new QVBoxLayout(Box);
+    BoxLayout->setAlignment(Qt::AlignCenter);
+    BoxLayout->setSpacing(15);
 
     std::string nom = "Inconnu";
     int score = 0;
@@ -39,24 +58,20 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
         score = joueurlog->getMeilleurScore();
     }
 
-    QVBoxLayout* mainLayout = new QVBoxLayout(backgroundLabel);
-    mainLayout->setAlignment(Qt::AlignCenter);
-
-    QWidget* infoContainer = new QWidget(window);
-    infoContainer->setStyleSheet(
-        "background-color: rgba(255, 255, 255, 180); "
-        "border: 2px solid #333333; "
-        "border-radius: 10px; "
-        "padding: 20px;"
-    );
-    QVBoxLayout* containerLayout = new QVBoxLayout(infoContainer);
-    containerLayout->setAlignment(Qt::AlignCenter);
-
-    QLabel* title = new QLabel("INFORMATIONS", infoContainer);
-    myQt_setFont(title, QT_TITLE);
-    title->setStyleSheet(QString("color: %1; padding: 20px;").arg(COULEUR_TITRE));
-    title->setAlignment(Qt::AlignCenter);
-    containerLayout->addWidget(title);
+    QLabel* titre = new QLabel("INFORMATIONS", infoContainer);
+    myQt_setFont(titre, 40);
+    titre->setAlignment(Qt::AlignCenter);
+    titre->setStyleSheet(
+        "color: white; "
+        "font-size: 40px; "
+        "font-weight: bold; "
+        "text-transform: uppercase; "
+        "letter-spacing: 3px; "
+        "text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8); "
+        "border: none; "
+        "padding: 10px; "
+        "background: linear-gradient(to right, #ff0000, #ff6600, #ffff00, #33cc33, #0099ff, #9900cc); "
+        "border-radius: 10px;");
 
     QHBoxLayout* topContentLayout = new QHBoxLayout();
 
@@ -126,9 +141,9 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
     rightLayout->setAlignment(Qt::AlignCenter);
 
     QLabel* imageLabel = new QLabel(infoContainer);
-    QPixmap pixmap(imagePath);
-    if (!pixmap.isNull()) {
-        imageLabel->setPixmap(pixmap.scaled(150, 150, Qt::KeepAspectRatio));
+    QPixmap pixmap_profil(imagePath);
+    if (!pixmap_profil.isNull()) {
+        imageLabel->setPixmap(pixmap_profil.scaled(150, 150, Qt::KeepAspectRatio));
     }
     else {
         imageLabel->setText("Image non disponible");
@@ -137,7 +152,7 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
     int heightReference = leftLayout->sizeHint().height();
 
     // Ajuster la taille de l'image pour correspondre à la hauteur du bloc de texte
-    imageLabel->setPixmap(pixmap.scaledToHeight(heightReference, Qt::SmoothTransformation));
+    imageLabel->setPixmap(pixmap_profil.scaledToHeight(heightReference, Qt::SmoothTransformation));
 
 
     QPushButton* modifyButton = new QPushButton("✏️", infoContainer);
@@ -218,9 +233,9 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
     topContentLayout->addSpacing(20);
     topContentLayout->addLayout(rightLayout);
 
-    containerLayout->addLayout(topContentLayout);
+    BoxLayout->addLayout(topContentLayout);
 
-    containerLayout->addSpacing(40);
+    BoxLayout->addSpacing(40);
 
     QPushButton* backButton = new QPushButton("Retour", infoContainer);
     backButton->setStyleSheet(QString(
@@ -235,11 +250,13 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
     QObject::connect(backButton, &QPushButton::clicked, [stack]() {
         stack->setCurrentIndex(Menu);
         });
-    containerLayout->addWidget(backButton, 0, Qt::AlignCenter);
+    BoxLayout->addWidget(backButton, 0, Qt::AlignCenter);
 
-    mainLayout->addStretch();  // Ajoute un espace flexible au-dessus
-    mainLayout->addWidget(infoContainer, 0, Qt::AlignCenter);
-    mainLayout->addStretch();  // Ajoute un espace flexible en dessous    mainLayout->addStretch();
+    QVBoxLayout* windowLayout = new QVBoxLayout(window);
+    windowLayout->addStretch();  // Espace flexible en haut
+    windowLayout->addWidget(Box, 0, Qt::AlignCenter); // Centre la Box
+    windowLayout->addStretch();  // Espace flexible en bas
+
 
     stack->addWidget(window);
 }

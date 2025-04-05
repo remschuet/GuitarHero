@@ -13,10 +13,24 @@ void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
 
     // Image de fond (comme dans qtPageMenu)
     QLabel* backgroundLabel = new QLabel(pageParametre);
-    backgroundLabel->setGeometry(-330, -200, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setAlignment(Qt::AlignCenter);
+
+    // Appliquer un effet de flou
+    QGraphicsBlurEffect* blurEffect = new QGraphicsBlurEffect();
+    blurEffect->setBlurRadius(10); // Ajustez le rayon de flou (5-20 pour un effet léger à fort)
+
+    // Appliquer une opacité
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
+    opacityEffect->setOpacity(0.7); // Opacité de 0 (transparent) à 1 (opaque), ici 70% d'opacité
+
+    // Combiner les effets : d'abord l'opacité, puis le flou
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+    blurEffect->setParent(backgroundLabel); // Nécessaire pour que l'effet soit appliqué après l'opacité
+    backgroundLabel->setGraphicsEffect(blurEffect);
+
     backgroundLabel->lower();
 
     // Ajouter une couche semi-transparente au-dessus de l'image
