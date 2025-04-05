@@ -252,7 +252,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     // Conteneur central pour le menu 
     QWidget* menuBox = new QWidget(pageMenu);
     menuBox->setStyleSheet("background-color: rgba(0, 0, 0, 150); border-radius: 25px; padding: 20px;");
-    menuBox->setFixedSize(600, 400);
+    menuBox->setFixedSize(600, 450);
 
     QVBoxLayout* menuBoxLayout = new QVBoxLayout(menuBox);
     menuBoxLayout->setAlignment(Qt::AlignCenter);
@@ -320,13 +320,17 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
         });
 
 
-    // Ajouter la box centrée dans la page
+    // Ajouter la box plus bas dans la page
     QVBoxLayout* mainLayout = new QVBoxLayout(pageMenu);
-    mainLayout->setAlignment(Qt::AlignCenter);
-    mainLayout->addStretch();
-    mainLayout->addWidget(menuBox, 0, Qt::AlignCenter);
-    mainLayout->addStretch();
+    mainLayout->setAlignment(Qt::AlignTop); // alignement global vers le haut
+
+    mainLayout->addStretch(2); // plus d'espace en haut
+    mainLayout->addWidget(menuBox, 0, Qt::AlignHCenter); // aligné horizontalement
+    mainLayout->addStretch(1); // un peu d'espace en bas
+
+    mainLayout->setContentsMargins(0, 50, 0, 50); // marges pour donner un peu de souffle
     pageMenu->setLayout(mainLayout);
+
 
     // Connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
@@ -796,21 +800,10 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     msgBox.exec();
 
     if (msgBox.clickedButton() == replayButton) {
-        // Nettoyer le layout actuel pour réinitialiser l'interface
-        if (layoutGame) {
-            QLayoutItem* item;
-            while ((item = layoutGame->takeAt(0)) != nullptr) {
-                delete item->widget();
-                delete item;
-            }
-        }
-        game->gameStruct.chansonEnCours->resetChrono();
-        // Relancer la partie
-        QLabel* countdownLabel = new QLabel();
-        QLabel* titleLabel = new QLabel();
-        QLabel* progressionLabel = new QLabel();
-        game->demarrerPartie(countdownLabel, titleLabel, progressionLabel, this, layoutGame, stack);
+
+        QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
     }
+    
     else if (msgBox.clickedButton() == menuButton) {
         // Nettoyer le layout avant de retourner au menu pour éviter les résidus
         if (layoutGame) {
