@@ -3,31 +3,40 @@
 #include "CONST.h"
 #pragma comment(lib, "winmm.lib")
 
-void Chanson::setUpVecteur() {
-    if (nomChansonMp3 == CHANSON_1_MP3) {
-        ComFichierTexte::setListeNotes(CHANSON_1_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
-    }
-    else if (nomChansonMp3 == CHANSON_2_MP3) {
-        ComFichierTexte::setListeNotes(CHANSON_2_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
-    }
-    else if (nomChansonMp3 == CHANSON_2_MP3) {
-        ComFichierTexte::setListeNotes(CHANSON_3_TXT, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
-    }
+Chanson::Chanson(string nom) {
+    nomChansonMp3 = "chanson/" + enleverCrochets(nom) + ".mp3";
+    nomChansonTxt = "chanson/" + nom + ".txt";
+    setUpVecteur(nomChansonTxt);
+}
+
+void Chanson::setUpVecteur(string nomTxt) {
+    ComFichierTexte::setListeNotes(nomTxt, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
+
 }
 
 vector<Note>* Chanson::getVecteurNotesEnCours() {
     return &vecteurEnCours; // ERREUR ! temp est détruit en sortie de fonction
 }
 
+std::string Chanson::enleverCrochets(const std::string& input) {
+    std::string output = input;
+    size_t debut = output.find('[');
+    size_t fin = output.find(']');
+
+    if (debut != std::string::npos && fin != std::string::npos && fin > debut) {
+        output.erase(debut, fin - debut + 1);
+    }
+
+    return output;
+}
+
+
 long long Chanson::getTempsRestantChanson() {
     // A FAIRE
     return 0;
 }
 
-Chanson::Chanson(string nom) {
-    nomChansonMp3 = nom;
-    setUpVecteur();
-}
+
 
 void Chanson::startChrono() {
     // Obtenir le temps actuel en millisecondes
@@ -85,7 +94,7 @@ void Chanson::resetChrono() {  // 🔥 Nouvelle méthode pour réinitialiser le 
 
   //  chronoDemarrage = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
     vecteurEnCours.clear();  // Remet à zéro les notes en cours
-    setUpVecteur();  // Recharge les notes depuis les fichiers texte
+    setUpVecteur(nomChansonTxt);  // Recharge les notes depuis les fichiers texte
 }
 
 //long long Chanson::getChrono() {
