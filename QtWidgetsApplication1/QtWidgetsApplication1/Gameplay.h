@@ -72,6 +72,7 @@ private:
     QTimer* gameTimer;
     QTimer* timerTick;
     QTimer* timerBtn;
+    QTimer* timerGameAffichage;
     CouleurBouton btnGame = UNKNOWN;
     //private slots:
   //  void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);

@@ -41,6 +41,7 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     connect(timerBtn, &QTimer::timeout, this, [=]() {
         choixBoutonGame();
     });
+
     
 }
 
@@ -222,6 +223,10 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 }
 
 
+void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
+
+}
+
 void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     int endY = 700; //position de la barre de la guitare (à changer)
 	int noteWidth = 50; //largeur de la note
@@ -333,8 +338,14 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
     )");
 
+    timerGameAffichage = new QTimer(this);
+    connect(timerGameAffichage, &QTimer::timeout, this, [=]() {
+        loopGameQT(titleLabel, ProgressionLabel, manager, layoutGame, stack);
+    });
+
     timerTick->start(100);
     timerBtn->start(40); // 25 ms
+    timerGameAffichage->start(16); // 25 ms
 
     
     while (true) {
