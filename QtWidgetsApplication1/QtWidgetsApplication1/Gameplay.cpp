@@ -349,9 +349,10 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     timerTick->start(100);
     timerBtn->start(40); // 25 fps
-    timerGameAffichage->start(16); // 60 fps
+    // timerGameAffichage->start(16); // 60 fps
 
     while (true) {
+        QCoreApplication::processEvents();
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
@@ -366,7 +367,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         //QCoreApplication::processEvents();
         progressLayout->addWidget(barProgression);
         affichageProgression(ProgressionLabel, progressLayout);
-        QCoreApplication::processEvents();
         affichageScoreActuel(scoreLabel,scoreLayout);
 
         infolayout->insertLayout(0,scoreLayout);
@@ -381,7 +381,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
-            Sleep(120);
+          //  Sleep(120);
             continue;
         }
 
@@ -445,7 +445,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                          }
                      }
                 }
-                QCoreApplication::processEvents();
             }
         }
 
@@ -457,7 +456,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
                 if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
                     gameStruct.score += 3;
-                    QCoreApplication::processEvents();
                 }
             }
         }
@@ -477,7 +475,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
                 gameStruct.score--;
-                QCoreApplication::processEvents();
             }
         }
 
@@ -498,7 +495,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
                 note.action = MORTE;
                 gameStruct.score--;
-                QCoreApplication::processEvents();
 
                 // Supprimer la note du vecteur, erase retourne le prochain itérateur
                 it = vecteur->erase(it);
@@ -513,7 +509,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
 
         // valeurs de fps en ms
-        Sleep(120);
+        // Sleep(120);
+        QCoreApplication::processEvents();
         if (btnGame == QUITTER || tempsEcoule >= dureeTotale) {
             manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
             return; // Sortir de la boucle
