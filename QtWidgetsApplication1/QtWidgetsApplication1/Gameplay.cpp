@@ -348,13 +348,10 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     });
 
     timerTick->start(100);
-    timerBtn->start(40); // 25 ms
-    timerGameAffichage->start(16); // 25 ms
-
+    timerBtn->start(40); // 25 fps
+    timerGameAffichage->start(16); // 60 fps
 
     while (true) {
-   
-
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
