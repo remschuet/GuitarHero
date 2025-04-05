@@ -776,21 +776,10 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     msgBox.exec();
 
     if (msgBox.clickedButton() == replayButton) {
-        // Nettoyer le layout actuel pour réinitialiser l'interface
-        if (layoutGame) {
-            QLayoutItem* item;
-            while ((item = layoutGame->takeAt(0)) != nullptr) {
-                delete item->widget();
-                delete item;
-            }
-        }
-        game->gameStruct.chansonEnCours->resetChrono();
-        // Relancer la partie
-        QLabel* countdownLabel = new QLabel();
-        QLabel* titleLabel = new QLabel();
-        QLabel* progressionLabel = new QLabel();
-        game->demarrerPartie(countdownLabel, titleLabel, progressionLabel, this, layoutGame, stack);
+
+        QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
     }
+    
     else if (msgBox.clickedButton() == menuButton) {
         // Nettoyer le layout avant de retourner au menu pour éviter les résidus
         if (layoutGame) {
