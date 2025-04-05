@@ -784,6 +784,7 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
                 delete item;
             }
         }
+        game->gameStruct.chansonEnCours->resetChrono();
         // Relancer la partie
         QLabel* countdownLabel = new QLabel();
         QLabel* titleLabel = new QLabel();
@@ -799,6 +800,7 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
                 delete item;
             }
         }
+        game->gameStruct.chansonEnCours->resetChrono();
         // Retourner au menu principal avec changerDePage
         changerDePage(stack, Menu, game, this);
     }

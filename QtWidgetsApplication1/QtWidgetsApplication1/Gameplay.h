@@ -54,6 +54,7 @@ public:
     bool configBluetooth(std::string nomPort);
     bool configFilaire(std::string nomPort);
     void interpreterMsg(std::string);
+    void choixBoutonGame();
     CouleurBouton choixBouton();
     GameStruct gameStruct;
     Joueur* getJoueur();
@@ -69,6 +70,9 @@ private:
     int tick = 0;
     void modifierLeProfile();
     QTimer* gameTimer;
-//private slots:
+    QTimer* timerTick;
+    QTimer* timerBtn;
+    CouleurBouton btnGame = UNKNOWN;
+    //private slots:
   //  void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
 };

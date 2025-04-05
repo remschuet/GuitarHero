@@ -32,6 +32,7 @@ public:
 	string getNomChanson();
 	long long getDureeChanson();
 	long long getChrono();
+	void resetChrono();
 	vector<Note>* getVecteurNotesEnCours();
 	long long getTempsRestantChanson();
 	

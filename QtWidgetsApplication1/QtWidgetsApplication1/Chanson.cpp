@@ -1,4 +1,4 @@
-#include "Chanson.h"
+Ôªø#include "Chanson.h"
 #include "ComFichierTexte.h"
 #include "CONST.h"
 #pragma comment(lib, "winmm.lib")
@@ -16,7 +16,7 @@ void Chanson::setUpVecteur() {
 }
 
 vector<Note>* Chanson::getVecteurNotesEnCours() {
-    return &vecteurEnCours; // ERREUR ! temp est dÈtruit en sortie de fonction
+    return &vecteurEnCours; // ERREUR ! temp est d√©truit en sortie de fonction
 }
 
 long long Chanson::getTempsRestantChanson() {
@@ -42,12 +42,12 @@ void Chanson::departMusique() {
     std::string command = "open \"" + nomChansonMp3 + "\" type mpegvideo alias myMP3";
     mciSendStringA(command.c_str(), NULL, 0, NULL);
 
-    // Jouer la musique en arriËre-plan
+    // Jouer la musique en arri√®re-plan
     mciSendStringA("play myMP3", NULL, 0, NULL);
 }
 
 void Chanson::arretMusique() {
-    // ArrÍter et fermer la musique
+    // Arr√™ter et fermer la musique
     mciSendStringA("stop myMP3", NULL, 0, NULL);
     mciSendStringA("close myMP3", NULL, 0, NULL);
 }
@@ -61,13 +61,13 @@ long long Chanson::getDureeChanson() {
     char buffer[128];
     mciSendStringA("status myMP3 length", buffer, sizeof(buffer), NULL);
 
-    // VÈrifier que la chaÓne n'est pas vide ou corrompue
+    // V√©rifier que la cha√Æne n'est pas vide ou corrompue
     if (strlen(buffer) > 0 && isdigit(buffer[0])) {
         durreeBackup = atoll(buffer);
-        return durreeBackup; // Convertir et renvoyer la durÈe en millisecondes
+        return durreeBackup; // Convertir et renvoyer la dur√©e en millisecondes
     }
     else {
-        std::cerr << "Erreur lors de la rÈcupÈration de la durÈe de la chanson." << std::endl;
+        std::cerr << "Erreur lors de la r√©cup√©ration de la dur√©e de la chanson." << std::endl;
         return durreeBackup; // Retourner 0 en cas d'erreur
     }
 }
@@ -80,6 +80,14 @@ long long Chanson::getChrono() {
     return atoll(buffer);
 }
 
+void Chanson::resetChrono() {  // üî• Nouvelle m√©thode pour r√©initialiser le chrono
+    arretMusique(); // Arr√™te la musique si elle est en cours
+
+  //  chronoDemarrage = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
+    vecteurEnCours.clear();  // Remet √† z√©ro les notes en cours
+    setUpVecteur();  // Recharge les notes depuis les fichiers texte
+}
+
 //long long Chanson::getChrono() {
   //  return duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - chronoDemarrage;
 //}
@@ -87,12 +95,12 @@ long long Chanson::getChrono() {
 void Chanson::tick(int delaiAffichage) {
     long long tempsActuel = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
 
-    // Utilisation d'itÈrateurs pour supprimer les ÈlÈments tout en les parcourant
+    // Utilisation d'it√©rateurs pour supprimer les √©l√©ments tout en les parcourant
     for (auto it = vecteurRouge.begin(); it != vecteurRouge.end(); ) {
         if (tempsActuel >= (chronoDemarrage + it->tempsDepart - delaiAffichage) && it->etat == EN_ATTENTE) {
             it->etat = AFFICHER;
             vecteurEnCours.push_back(*it);
-            it = vecteurRouge.erase(it); // Supprime l'ÈlÈment et met ‡ jour l'itÈrateur
+            it = vecteurRouge.erase(it); // Supprime l'√©l√©ment et met √† jour l'it√©rateur
         }
         else
         {
