@@ -37,6 +37,11 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     connect(timerTick, &QTimer::timeout, this, [=]() {
         gameStruct.chansonEnCours->tick(delaiAffichage);
     });
+    timerBtn = new QTimer(this);
+    connect(timerBtn, &QTimer::timeout, this, [=]() {
+        choixBoutonGame();
+    });
+    
 }
 
 void Gameplay::afficherImage() {
@@ -225,7 +230,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	int startNote = 700; //hauteur de la zone de notes = 4000 ms
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     //double pixelsPerMs = static_cast<double>(startNote) / dureeTotale; // Calcul des pixels par milliseconde
-
+    btnGame = UNKNOWN;
 	QVBoxLayout* layoutCentreNote = new QVBoxLayout();
 
 	QWidget* boiteNotes = new QWidget();
@@ -352,6 +357,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         });
     timer->start(16); // 16 ms = environ 60 FPS
     timerTick->start(100);
+    timerBtn->start(40); // 25 ms
 
     while (true) {
    
@@ -375,35 +381,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
         infolayout->insertLayout(0,scoreLayout);
 
-
-       // layoutGame->addWidget(barProgression);
         layoutGame->addLayout(infolayout);
 
-      
-        
-        //QCoreApplication::processEvents();
         tick++;
 
-        //Barre d'infos du joueur
-       /* gotoxy(40, 3);
-        cout << "SCORE: " << gameStruct.score;
-        gotoxy(40, 2);
-        cout << "MAX_SCORE: " << gameStruct.joueur->getMeilleurScore();
-        gotoxy(40, 1);
-        cout << "PLAYER: " << gameStruct.joueur->getNomJoueur();
-        // Barre en bas
-        gotoxy(4, 25);
-        std::cout << "------------------------------------";
-        gotoxy(6, 26);
-        std::cout << "ROUGE  BLEU  VERT  JAUNE  MAUVE";
-        */
 
-        // mettre à jours les vecteurs
-        // gameStruct.chansonEnCours->tick(delaiAffichage);
-        //QCoreApplication::processEvents();
-
+        // Recuperer le vecteur
         vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
-        //QCoreApplication::processEvents();
 
         // si aucun vecteur (debut de partie)
         if (!vecteur) {
@@ -413,7 +397,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
         // chrono en fonction de la musique
         long long chrono = gameStruct.chansonEnCours->getChrono();
-        //QCoreApplication::processEvents();
 
         // Affichage de toute les notes à l'ecran
         for (auto& note : *vecteur) {
@@ -436,22 +419,11 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     note.noteLabel->setGeometry(50, 50, 80, 80);
 					noteHeight = (note.duree * tailleNoteBase) / 250; // Calculer la hauteur de la note en fonction de sa durée
 
-					//noteHeight = static_cast<int>(note.duree * pixelsPerMs); // Calculer la hauteur de la note en fonction de sa durée
-					//noteHeight = std::max(static_cast<int>(note.duree * pixelsPerMs), 10); // Hauteur minimale de 60 pixels
-					//qDebug() << "Hauteur de la note:" << noteHeight;
-					//qDebug() << "hauteur sans le minimum" << note.action * pixelsPerMs;
                     note.noteLabel->setFixedSize(noteWidth, noteHeight);
-                    //note.noteLabel->setVisible(false); // Rendre invisible jusqu'à ce qu'il soit temps de l'afficher
                     note.noteLabel->show();
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                 }
-                
-               /* QLabel* noteLabel = manager->getUnusedLabel();
-                if (!noteLabel) {
-					noteLabel = new QLabel(manager->getParentWidget());
-                }
-				//noteLabel->setProperty("noteColor", note.couleur);*/
                 
                 int posX = (TAILLE_ECRAN_X / 2) - 80;
                 if (note.estQtAffiche) {
@@ -462,9 +434,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     case JAUNE: posX = 240;note.noteLabel->setStyleSheet("background-color : yellow;"); break;	  
                     case MAUVE: posX = 320;note.noteLabel->setStyleSheet("background-color : purple;"); break;	 
                     }
-                  //  NotesLayout->addLayout(progressLayout);
-                    //int hauteurNote = static_cast<int>(note.duree * pixelsPerMs);                         //à changer!!! 
-                    //int positionY = startNote - ((note.tempsDepart - chrono) * pixelsPerMs);
 					note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
 
                     int positionY = endY - ((((note.tempsDepart - chrono) * 50) / 250) + noteHeight);
@@ -485,43 +454,15 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                              note.estQtAffiche = false;
                          }
                      }
-                        //gotoxy(posX, positionY - y);
-                        //std::cout << "X";
-                                       
-                    /* int positionY = 25 - ((note.tempsDepart - chrono) / 250);
-
-                    for (int y = 0; y < noteHeight; y++) {
-                        if (positionY - y <= 25) { // Empêcher d'afficher hors écran
-                            gotoxy(posX, positionY - y);
-                            std::cout << "X";
-                        }
-                    }*/
-                                    //empêcher les notes de sortir de l'écran (endY = bas de l'aire de jeu) à modifier si les notes marchent bien
-                    //if (positionY < 0) positionY = 0;
-					//if (positionY > endY) positionY = endY;
-
-                    /*if (positionY >= startNote && positionY <= endY) {
-                        note.noteLabel->setVisible(true);
-                        note.noteLabel->move(posX, positionY);
-                        QCoreApplication::processEvents();
-                    }
-                    else {
-						note.noteLabel->setVisible(false);
-                    }*/
-					//note.noteLabel->setGeometry(posX, positionY, noteWidth, noteHeight);
-					//note.noteLabel->setVisible(true);
-
-                    //note.noteLabel->setGeometry(posX, positionY, 20, hauteurNote);
                 }
-				//noteLabel->setProperty("noteStatus", "ACTIVE");
                 QCoreApplication::processEvents();
             }
         }
 
-        CouleurBouton btn = choixBouton();// UNKNOWN FIX ME avec communication + 
+        btnGame = choixBouton();
 
         // Logique du joystick, si on appuis dessus et qu on a une note appuyer proche dans le temps on fait 3 points supplementaire
-        if (btn == JOYSTICK) {
+        if (btnGame == JOYSTICK) {
             for (auto& note : *vecteur) {
                 // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
                 if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
@@ -531,11 +472,11 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             }
         }
         // Appuyé sur une touche
-        if (btn != UNKNOWN && btn != JOYSTICK && btn != QUITTER) {
+        if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
             bool aTouche = false;
             for (auto& note : *vecteur) {
                 // Si une touche est appuye et que le temps est proche d une note mettre note appuye
-                if (note.couleur == btn &&
+                if (note.couleur == btnGame &&
                     std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
                     note.action = APPUYE;
                     aTouche = true;
@@ -549,7 +490,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 QCoreApplication::processEvents();
             }
         }
-
 
         // Supprime les notes non appuyées devenues "mortes"
         for (auto it = vecteur->begin(); it != vecteur->end(); ) {
@@ -578,10 +518,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             }
         }
 
+        if (btnGame != UNKNOWN) {
+            btnGame = UNKNOWN;
+        }
 
         // valeurs de fps en ms
         Sleep(120);
-        if (btn == QUITTER || tempsEcoule >= dureeTotale) {
+        if (btnGame == QUITTER || tempsEcoule >= dureeTotale) {
             manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
             return; // Sortir de la boucle
         }
@@ -850,6 +793,7 @@ bool Gameplay::configFilaire(std::string nomPort) {
 }
 
 void Gameplay::interpreterMsg(string msg) {
+    try{
     json j = json::parse(msg);
 
     for (auto it = j.begin(); it != j.end(); ++it) {
@@ -860,7 +804,65 @@ void Gameplay::interpreterMsg(string msg) {
             std::cout << "note rouge appuyé" << std::endl;
         }
     }
+    }
+    catch (const std::exception& e) {
+        msg = "";
+
+        // Ignore l'erreur (tu peux aussi logguer si tu veux savoir ce qu’il s’est passé)
+        // std::cerr << "Erreur JSON ignorée : " << e.what() << std::endl;
+    }
 }
+
+void Gameplay::choixBoutonGame() {
+    std::string msg;
+    if (!comArduino->recevoirMessage(msg)) {
+        btnGame = CouleurBouton::UNKNOWN;
+    }
+    json j;
+    try{
+        j = json::parse(msg);
+        if (verbose) {
+            std::cout << j;
+        }
+    }
+    catch (const std::exception& e) {
+        btnGame = CouleurBouton::UNKNOWN;
+        // Ignore l'erreur (tu peux aussi logguer si tu veux savoir ce qu’il s’est passé)
+        // std::cerr << "Erreur JSON ignorée : " << e.what() << std::endl;
+    }
+
+    for (auto it = j.begin(); it != j.end(); ++it) {
+
+        if (it.key() == BTN_BLEU && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::BLEU;
+        }
+        else if (it.key() == BTN_ROUGE && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::ROUGE;
+        }
+        else if (it.key() == BTN_VERT && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::VERT;
+        }
+        else if (it.key() == BTN_JAUNE && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::JAUNE;
+        }
+        else if (it.key() == BTN_MAUVE && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::MAUVE;
+        }
+        else if (it.key() == BTN_QUITTER && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::QUITTER;
+        }
+        else if (it.key() == BTN_JOYSTICK && it.value() == BTN_RELACHE) {
+            btnGame = CouleurBouton::JOYSTICK;
+        }
+
+        else {
+            btnGame = CouleurBouton::UNKNOWN;
+        }
+    }
+
+    btnGame = CouleurBouton::UNKNOWN;
+}
+
 
 CouleurBouton Gameplay::choixBouton() {
     std::string msg;
