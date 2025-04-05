@@ -69,6 +69,7 @@ private:
     int tick = 0;
     void modifierLeProfile();
     QTimer* gameTimer;
+    QTimer* timerTick;
 //private slots:
   //  void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
 };

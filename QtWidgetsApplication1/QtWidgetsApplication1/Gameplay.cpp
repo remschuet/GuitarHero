@@ -33,6 +33,10 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     else {
         comArduino = new ComClavier();
     }
+    timerTick = new QTimer(this);
+    connect(timerTick, &QTimer::timeout, this, [=]() {
+        gameStruct.chansonEnCours->tick(delaiAffichage);
+    });
 }
 
 void Gameplay::afficherImage() {
@@ -347,6 +351,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         label->move(label->x(), newY);
         });
     timer->start(16); // 16 ms = environ 60 FPS
+    timerTick->start(100);
 
     while (true) {
    
@@ -394,7 +399,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         */
 
         // mettre à jours les vecteurs
-        gameStruct.chansonEnCours->tick(delaiAffichage);
+        // gameStruct.chansonEnCours->tick(delaiAffichage);
         //QCoreApplication::processEvents();
 
         vector<Note>* vecteur = gameStruct.chansonEnCours->getVecteurNotesEnCours();
@@ -513,7 +518,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             }
         }
 
-        CouleurBouton btn = choixBouton();
+        CouleurBouton btn = choixBouton();// UNKNOWN FIX ME avec communication + 
 
         // Logique du joystick, si on appuis dessus et qu on a une note appuyer proche dans le temps on fait 3 points supplementaire
         if (btn == JOYSTICK) {
@@ -546,28 +551,33 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
 
 
-        // Si une note n'a pas ete appuye, la mettre morte
-        for (auto& note : *vecteur) {
-            if (chrono > note.tempsDepart + note.duree + 400 && note.action == INITIALE) {
-                if (note.estQtAffiche) {
-                    layoutGame->removeWidget(note.noteLabel);       //Si on veut réutiliser les notes, changer pour hide()
+        // Supprime les notes non appuyées devenues "mortes"
+        for (auto it = vecteur->begin(); it != vecteur->end(); ) {
+            Note& note = *it;
+
+            // Vérifie si la note est expirée et toujours à l'état initial
+            bool noteExpiree = (chrono > note.tempsDepart + note.duree + 400 && note.action == INITIALE);
+
+            if (noteExpiree) {
+                // Si elle est affichée dans l'interface Qt, on la retire et libère la mémoire
+                if (note.estQtAffiche && note.noteLabel != nullptr) {
+                    layoutGame->removeWidget(note.noteLabel);
                     delete note.noteLabel;
                     note.noteLabel = nullptr;
                 }
+
                 note.action = MORTE;
                 gameStruct.score--;
                 QCoreApplication::processEvents();
-				                
-				
-                
-               // QLabel* noteLabel = manager->getLabelForNote(note);
-                //if (noteLabel) {
-                    //manager->removeLabel(noteLabel);
-					//noteLabel->setProperty("noteStatus", "UNUSED");
-					//noteLabel->hide();
-                //}
+
+                // Supprimer la note du vecteur, erase retourne le prochain itérateur
+                it = vecteur->erase(it);
+            }
+            else {
+                ++it;
             }
         }
+
 
         // valeurs de fps en ms
         Sleep(120);

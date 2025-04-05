@@ -10,7 +10,7 @@ const std::string CHANSON_2_MP3 = "Coldplay_Hymn.mp3";
 const std::string CHANSON_3_MP3 = "Blitzkrieg2022.mp3";
 
 const std::string CHANSON_1_TXT = "psycho.txt";
-const std::string CHANSON_2_TXT = "notes tests.txt";
+const std::string CHANSON_2_TXT = "Coldplay_Hymn[EasySingle].txt";
 const std::string CHANSON_3_TXT = "Blitzkrieg2022.txt";
 
 /***************************/
