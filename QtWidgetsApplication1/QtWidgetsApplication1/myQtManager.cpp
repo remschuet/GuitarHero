@@ -763,7 +763,6 @@ void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* 
 
 void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStackedWidget* stack)
 {
-    // Créer une boîte de dialogue
     QMessageBox msgBox;
     msgBox.setWindowTitle("Fin de la partie");
     QString message = QString("La partie est terminée !\nScore : %1\nVoulez-vous rejouer ou retourner au menu ?").arg(game->gameStruct.score);
@@ -776,30 +775,45 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     msgBox.exec();
 
     if (msgBox.clickedButton() == replayButton) {
-        // Nettoyer le layout actuel pour réinitialiser l'interface
+        // 🔥 Réinitialiser complètement le jeu
+        game->gameStruct.score = 0;
+        if (game->gameStruct.chansonEnCours) {
+            game->gameStruct.chansonEnCours->resetChrono(); // Fonction que tu dois créer si elle n'existe pas encore
+        }
+
+        // 🔥 Nettoyer le layout actuel pour réinitialiser l'interface
         if (layoutGame) {
             QLayoutItem* item;
             while ((item = layoutGame->takeAt(0)) != nullptr) {
-                delete item->widget();
+                if (item->widget()) item->widget()->deleteLater();
                 delete item;
             }
         }
-        // Relancer la partie
+
+        // 🔥 Relancer la partie
         QLabel* countdownLabel = new QLabel();
         QLabel* titleLabel = new QLabel();
         QLabel* progressionLabel = new QLabel();
         game->demarrerPartie(countdownLabel, titleLabel, progressionLabel, this, layoutGame, stack);
     }
     else if (msgBox.clickedButton() == menuButton) {
-        // Nettoyer le layout avant de retourner au menu pour éviter les résidus
+        // 🔥 Nettoyer le layout avant de retourner au menu pour éviter les résidus
         if (layoutGame) {
             QLayoutItem* item;
             while ((item = layoutGame->takeAt(0)) != nullptr) {
-                delete item->widget();
+                if (item->widget()) item->widget()->deleteLater();
                 delete item;
             }
         }
-        // Retourner au menu principal avec changerDePage
+
+        // 🔥 Réinitialiser les données du jeu
+        game->gameStruct.score = 0;
+        if (game->gameStruct.chansonEnCours) {
+            delete game->gameStruct.chansonEnCours;
+            game->gameStruct.chansonEnCours = nullptr;
+        }
+
+        // 🔥 Retourner au menu principal
         changerDePage(stack, Menu, game, this);
     }
     else if (msgBox.clickedButton() == cancelButton) {
