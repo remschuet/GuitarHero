@@ -333,9 +333,10 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
     )");
 
-    QWidget* boite = new QWidget();
+    /*QWidget* boite = new QWidget();
     boite->setStyleSheet("background-color: blue;");
     boite->show();
+    /*
     QLabel* label = new QLabel("Note", boite);  // Mettre le label dans la boite
     label->setStyleSheet("background-color: red; color: white;");
     label->show();
@@ -356,9 +357,10 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         label->move(label->x(), newY);
         });
     timer->start(16); // 16 ms = environ 60 FPS
+    */
     timerTick->start(100);
     timerBtn->start(40); // 25 ms
-
+    
     while (true) {
    
 
@@ -408,13 +410,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     note.noteLabel = new QLabel("", boiteNotes);
                     note.noteLabel->setStyleSheet("background-color: red; color: white;");
                     note.noteLabel->show();
-
+/*
                     QLabel* label = new QLabel("", boiteNotes);  // Mettre le label dans la boite
                     label->setStyleSheet("background-color: blue; color: white;");
                     label->setGeometry(10, 380, 50, 50);
                     label->show();
 
-
+                    */
                     boiteNotes->setFixedSize(noteWidth * 12, 700);
                     note.noteLabel->setGeometry(50, 50, 80, 80);
 					noteHeight = (note.duree * tailleNoteBase) / 250; // Calculer la hauteur de la note en fonction de sa durée
