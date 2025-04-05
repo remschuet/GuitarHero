@@ -59,5 +59,6 @@ public:
 	QList<QLabel*> labels;
     //static QWidget* pageGame;
     static QVBoxLayout* GlobalLayout;
+    static std::string nomChanson;
 };
 

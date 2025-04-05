@@ -16,6 +16,9 @@ class Chanson
 {
 private:
 	string nomChansonMp3 = "";
+	string nomChansonTxt = "";
+
+
 	float deltaEntreNote = 0;
 	long long chronoDemarrage;
 	vector<Note> vecteurRouge;
@@ -34,9 +37,10 @@ public:
 	long long getChrono();
 	void resetChrono();
 	vector<Note>* getVecteurNotesEnCours();
+	std::string enleverCrochets(const std::string& input);
 	long long getTempsRestantChanson();
 	
-	void setUpVecteur();
+	void setUpVecteur(string nomTxt);
 	Chanson(std::string nom);
 	void tick(int delaiAffichage);
 	void startChrono();
