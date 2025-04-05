@@ -41,6 +41,7 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     connect(timerBtn, &QTimer::timeout, this, [=]() {
         choixBoutonGame();
     });
+
     
 }
 
@@ -222,6 +223,10 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 }
 
 
+void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
+
+}
+
 void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     int endY = 700; //position de la barre de la guitare (à changer)
 	int noteWidth = 50; //largeur de la note
@@ -269,12 +274,16 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	//Ajout de layout pour les autres items et ajout au layout principal
 	QVBoxLayout* titleLayout = new QVBoxLayout();
 	titleLayout->addWidget(titleLabel);
-	titleLayout->addWidget(ProgressionLabel);
+	//titleLayout->addWidget(ProgressionLabel);
 
 	layoutGame->addLayout(titleLayout);
 	layoutGame->addLayout(NotesLayout);
 	//layoutGame->addWidget(boiteNotes);
-	layoutGame->addLayout(layoutCentreNote);
+    QHBoxLayout* noteBar = new QHBoxLayout();
+    QVBoxLayout* progressLayout = new QVBoxLayout(layoutGame->parentWidget());
+    noteBar->addLayout(layoutCentreNote);
+    noteBar->addLayout(progressLayout);
+    layoutGame->addLayout(noteBar);
 	layoutCentreNote->setAlignment(Qt::AlignCenter);
     
     QLabel* scoreLabel = new QLabel();
@@ -285,11 +294,11 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     
     QProgressBar* barProgression = new QProgressBar(layoutGame->parentWidget());
     barProgression->setOrientation(Qt::Vertical);
+  
     QHBoxLayout* infolayout = new QHBoxLayout(layoutGame->parentWidget());
     QVBoxLayout* scoreLayout = new QVBoxLayout(layoutGame->parentWidget());
-    QVBoxLayout* progressLayout = new QVBoxLayout(layoutGame->parentWidget());
+ 
 
-   
   
     affichageMaxScore(maxScoreLabel, scoreLayout);
     //backbutton
@@ -333,13 +342,16 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
     )");
 
+    timerGameAffichage = new QTimer(this);
+    connect(timerGameAffichage, &QTimer::timeout, this, [=]() {
+        loopGameQT(titleLabel, ProgressionLabel, manager, layoutGame, stack);
+    });
+
     timerTick->start(100);
-    timerBtn->start(40); // 25 ms
+    timerBtn->start(40); // 25 fps
+    timerGameAffichage->start(16); // 60 fps
 
-    
     while (true) {
-   
-
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono(); 
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
 
