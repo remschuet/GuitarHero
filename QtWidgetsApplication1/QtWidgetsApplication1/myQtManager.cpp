@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <iostream>
+#include <Vector>
 
 #include "MyQtPageMenu.h"
 #include "MyQtPageAdmin.h"
@@ -23,6 +24,7 @@ QVBoxLayout* myQtManager::GlobalLayout = nullptr;
 #include "MyQtPageFinPartie.h"
 #include "MyQtPageGameplay.h"
 
+std::string myQtManager::nomChanson;
 
 
 QLabel* myQtManager::getUnusedLabel() {
@@ -331,9 +333,9 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Connexions des boutons
     QObject::connect(buttons[0], &QPushButton::clicked, [=]() {
-        //afficherPopupSelectionMusique(parent, stack, G, manager);
+        afficherPopupSelectionMusique(parent, stack, G, manager);
         //décommenter la ligne suivante et commenter la précédente pour éviter le choix de musique
-        changerDePage(stack, Game, G, manager);
+        //changerDePage(stack, Game, G, manager);
         });
     QObject::connect(buttons[1], &QPushButton::clicked, [=]() {
         changerDePage(stack, MeilleursScores, G, manager);
@@ -381,11 +383,12 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
 
     // Remplissage des listes selon la difficulté 
     //****- A modifier pour avoir les constantes des chansons en fonction des dificultés-****
+    // Remplissage des listes selon la difficulté
     QMap<QString, QStringList> chansons = {
-        {"Facile", {"Chanson A", "Chanson B", "Chanson C"}},
-        {"Intermédiaire", {"Chanson D", "Chanson E", "Chanson F"}},
-        {"Difficile", {"Chanson G", "Chanson H", "Chanson I"}},
-        {"Expert", {"Chanson J", "Chanson K", "Chanson L"}}
+        {"Facile", CHANSON_FACILE},
+        {"Intermédiaire", CHANSON_INTERMEDIAIRE},
+        {"Difficile", CHANSON_DIFFICILE},
+        {"Expert", CHANSON_EXPERT}
     };
 
     // Remplir la liste des chansons au début
@@ -400,8 +403,28 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
     // Gestion du bouton sélection
     QObject::connect(btnValider, &QPushButton::clicked, [&]() {
         QListWidgetItem* selectedItem = listWidget->currentItem();
+        QString niveauChoisi = comboBox->currentText(); // Récupérer le niveau sélectionné
         if (selectedItem) {
             QString chansonChoisie = selectedItem->text();
+
+
+            if (niveauChoisi == "Facile") {
+                myQtManager::nomChanson = chansonChoisie.toStdString() + "[EasySingle]";
+            }
+			else if (niveauChoisi == "Intermédiaire") {
+                myQtManager::nomChanson = chansonChoisie.toStdString() + "[MediumSingle]";
+            }
+			else if (niveauChoisi == "Difficile") {
+                myQtManager::nomChanson = chansonChoisie.toStdString() + "[HardSingle]";
+            }
+			else if (niveauChoisi == "Expert") {
+                myQtManager::nomChanson = chansonChoisie.toStdString() + "[ExpertSingle]";
+            }
+            
+            G->gameStruct.chansonEnCours = new Chanson(myQtManager::nomChanson);
+
+
+            qDebug() << "Niveau sélectionné :" << niveauChoisi; // Ajouter le niveau au print
             qDebug() << "Musique sélectionnée :" << chansonChoisie;
 
             // Fermer le popup
@@ -1145,7 +1168,8 @@ void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G
         qDebug() << "Index actuel changé à :" << index;
         if (stack->widget(index) == pageGame) {
             qDebug() << "PageGame est affichée!";
-            G->gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
+            // Creation de la chanson
+            // Lancement de la partie
             G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, layoutGame, stack);
         }
         });

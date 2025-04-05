@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-
+#include <QStringList>
 /***************************/
 /*     CONFIG GLOBALE      */
 /***************************/
@@ -12,6 +12,14 @@ const std::string CHANSON_3_MP3 = "Blitzkrieg2022.mp3";
 const std::string CHANSON_1_TXT = "psycho.txt";
 const std::string CHANSON_2_TXT = "Coldplay_Hymn[EasySingle].txt";
 const std::string CHANSON_3_TXT = "Blitzkrieg2022.txt";
+
+const QStringList CHANSON_FACILE = { "Muse - Uprising", "Chanson B", "Chanson C" };
+const QStringList CHANSON_INTERMEDIAIRE = { "BillieEilishBadGuy", "Chanson E", "Chanson F" };
+const QStringList CHANSON_DIFFICILE = { "Chanson G", "Chanson H", "Chanson I" };
+const QStringList CHANSON_EXPERT = { "Chanson J", "Chanson K", "Chanson L" };
+
+
+// const string CHANSON_LIST
 
 /***************************/
 /*  MESSAGE ENTRE ARDUINO  */
