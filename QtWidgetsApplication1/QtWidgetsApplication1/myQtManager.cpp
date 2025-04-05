@@ -1137,10 +1137,8 @@ void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G
     QLabel* ProgressionLabel = new QLabel(pageGame);
 
     int pageIndex = stack->addWidget(pageGame); // Add the page and get its index
-    qDebug() << "PageGame ajouté à l'index :" << pageIndex;
 
     QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel, titleLabel, ProgressionLabel, manager, layoutGame](int index) {
-        qDebug() << "Index actuel changé à :" << index;
         if (stack->widget(index) == pageGame) {
             qDebug() << "PageGame est affichée!";
             G->gameStruct.chansonEnCours = new Chanson(CHANSON_2_MP3);
