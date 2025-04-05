@@ -139,7 +139,7 @@ void Gameplay::rotateLabel(QLabel* label, int angle) {
 void Gameplay::affichageTitre(QLabel* label, QVBoxLayout* layoutTitre) {
     label->clear();
 
-	label->setText("GUITAR HERO");
+	label->setText("Sherby Guitar");
     label->setFont(QFont("Arial", 24, QFont::Bold));
     label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
     QCoreApplication::processEvents();
@@ -534,7 +534,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 }
 
 void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
-    qDebug() << "Demarrage de la partie";
+    //qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
     label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
     label->setText("Depart du jeu dans 3 secondes...");
@@ -555,7 +555,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     tick = 0;
     gameStruct.chansonEnCours->startChrono();
     //gameTimer->start(120);
-    qDebug() << "Partie demarree";
+    //qDebug() << "Partie demarree";
    
     affichageTitre(titleLabel,layoutGame);
     loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
