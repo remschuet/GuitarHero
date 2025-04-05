@@ -19,6 +19,7 @@
 #include "GameStruct.h"
 #include "CONST_QT.h"
 #include "Enum.h"
+#include <cstdlib> 
 
 class Gameplay;
 
