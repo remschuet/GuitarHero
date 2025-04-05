@@ -382,6 +382,10 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
     QPushButton* btnValider = new QPushButton("Sélectionner");
     layout->addWidget(btnValider);
 
+    // Bouton random
+    QPushButton* randomMusic = new QPushButton("Musique Aleatoire");
+    layout->addWidget(randomMusic);
+
     // Remplissage des listes selon la difficulté 
     //****- A modifier pour avoir les constantes des chansons en fonction des dificultés-****
     // Remplissage des listes selon la difficulté
@@ -435,6 +439,36 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
             changerDePage(stack, Game, G, manager);
         }
         });
+
+    QObject::connect(randomMusic, &QPushButton::clicked, [&]() {
+        QString niveauChoisi = comboBox->currentText();
+
+        if (!chansons.contains(niveauChoisi) || chansons[niveauChoisi].isEmpty()) {
+            qDebug() << "Aucune chanson disponible pour le niveau :" << niveauChoisi;
+            return;
+        }
+
+        const QStringList& listeChansons = chansons[niveauChoisi];
+        QString chansonChoisie = listeChansons[rand() % listeChansons.size()];
+
+        // Format du nom de chanson utilisé dans le backend
+        QString suffix;
+        if (niveauChoisi == "Facile") suffix = "[EasySingle]";
+        else if (niveauChoisi == "Intermédiaire") suffix = "[MediumSingle]";
+        else if (niveauChoisi == "Difficile") suffix = "[HardSingle]";
+        else if (niveauChoisi == "Expert") suffix = "[ExpertSingle]";
+
+        myQtManager::nomChanson = chansonChoisie.toStdString() + suffix.toStdString();
+
+        G->gameStruct.chansonEnCours = new Chanson(myQtManager::nomChanson);
+
+        qDebug() << "Niveau sélectionné :" << niveauChoisi;
+        qDebug() << "Musique sélectionnée :" << chansonChoisie;
+
+        dialog.accept(); // Fermer le popup
+        changerDePage(stack, Game, G, manager); // Aller au jeu
+        });
+
 
     // Affichage de la boîte de dialogue
     dialog.exec();
