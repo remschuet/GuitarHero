@@ -45,6 +45,7 @@ public:
     void affichageScoreActuel(QLabel* label, QVBoxLayout* layout);
     void affichageMaxScore(QLabel* label, QVBoxLayout* layout);
     void affichageNomJoueur(QLabel* label, QHBoxLayout* layout);
+    void loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
     void finPartie(myQtManager* manager, QStackedWidget* stack);
@@ -72,6 +73,7 @@ private:
     QTimer* gameTimer;
     QTimer* timerTick;
     QTimer* timerBtn;
+    QTimer* timerGameAffichage;
     CouleurBouton btnGame = UNKNOWN;
     //private slots:
   //  void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);
