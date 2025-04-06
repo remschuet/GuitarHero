@@ -133,7 +133,13 @@ void Gameplay::affichageTitre(QLabel* label, QVBoxLayout* layoutTitre) {
 	label->setText("Sherby Guitar");
     label->setFont(QFont("Arial", 24, QFont::Bold));
     label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
-    QCoreApplication::processEvents();
+    layoutTitre->addWidget(label, 0, Qt::AlignHCenter);  // Centre le titre horizontalement
+    layoutTitre->setSpacing(0);  // Pas d'espace supplémentaire entre le titre et les éléments en dessous
+    layoutTitre->setContentsMargins(0, 0, 0, 0); // Pas de marges
+
+    // Ajoute le layout du titre au layout principal (layoutGame)
+
+  //  QCoreApplication::processEvents();
     /*system("cls");
     gotoxy(10, 2);
     std::cout << "===========================";
@@ -283,8 +289,25 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
         }
 
 }
+void clearLayout(QLayout* layout) {
+    if (!layout)
+        return;
+
+    QLayoutItem* item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        if (item->widget()) {
+            item->widget()->deleteLater();  // Supprime les widgets plus tard pour éviter les erreurs de segmentation
+        }
+        if (item->layout()) {
+            clearLayout(item->layout()); // Nettoie récursivement les sous-layouts
+            delete item->layout();       // Supprime le sous-layout
+        }
+        delete item; // Supprime l'élément lui-même
+    }
+}
 
 void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
+    clearLayout(layoutGame);
     int endY = 700; //position de la barre de la guitare (à changer)
     int noteWidth = 50; //largeur de la note
     int tailleNoteBase = 50; //hauteur de la note pour une note de 250 ms
@@ -340,11 +363,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     //Ajout de layout pour les autres items et ajout au layout principal
     QVBoxLayout* titleLayout = new QVBoxLayout();
-    titleLayout->addWidget(titleLabel);
-    //titleLayout->addWidget(ProgressionLabel);
+   // titleLayout->addWidget(titleLabel);
+    
+   affichageTitre(titleLabel,titleLayout);
+   layoutGame->addLayout(titleLayout);
 
-    layoutGame->addLayout(titleLayout);
     layoutGame->addLayout(NotesLayout);
+    
     //layoutGame->addWidget(boiteNotes);
     QHBoxLayout* noteBar = new QHBoxLayout();
     QVBoxLayout* progressLayout = new QVBoxLayout(layoutGame->parentWidget());
@@ -482,7 +507,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         barProgression->setValue(pourcentage);
 
         //QCoreApplication::processEvents();
-        //affichageTitre(titleLabel);
+       
         //QCoreApplication::processEvents();
         progressLayout->addWidget(barProgression,0,Qt::AlignCenter);
         affichageProgression(ProgressionLabel, progressLayout);
@@ -644,13 +669,20 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
         stepGroup->addAnimation(opacityAnim);
         group->addAnimation(stepGroup);
     }
-
+    
     QObject::connect(group, &QSequentialAnimationGroup::finished, [=]() {
+     
+        gameStruct.score = 0;
+        ////system("cls");
         label->clear();
         tick = 0;
         gameStruct.chansonEnCours->startChrono();
-        affichageTitre(titleLabel, layoutGame);
+        //gameTimer->start(120);
+        //qDebug() << "Partie demarree";
+
+      //  affichageTitre(titleLabel, layoutGame);
         loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
+        std::srand(static_cast<unsigned int>(time(nullptr)));
         });
 
     group->start(QAbstractAnimation::DeleteWhenStopped);
