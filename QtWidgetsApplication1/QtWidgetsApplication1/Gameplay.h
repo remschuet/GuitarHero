@@ -24,6 +24,12 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
+#include <QSequentialAnimationGroup>
+#include <QFont>
+#include <QParallelAnimationGroup>
+
 #include <windows.h>
 #pragma comment(lib, "User32.lib")
 
@@ -48,6 +54,7 @@ public:
     void loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack, QWidget*);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
+    int scoreAleatoire();
     void finPartie(myQtManager* manager, QStackedWidget* stack);
     void SelectionJoueur(QLabel* Label);
     void loopMenu();

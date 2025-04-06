@@ -42,6 +42,7 @@ public:
 	
 	void setUpVecteur(string nomTxt);
 	Chanson(std::string nom);
+	~Chanson();
 	void tick(int delaiAffichage);
 	void startChrono();
 	void arretMusique();
