@@ -432,7 +432,6 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
             
             G->gameStruct.chansonEnCours = new Chanson(myQtManager::nomChanson);
 
-
             qDebug() << "Niveau sélectionné :" << niveauChoisi; // Ajouter le niveau au print
             qDebug() << "Musique sélectionnée :" << chansonChoisie;
 

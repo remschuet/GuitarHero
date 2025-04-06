@@ -33,6 +33,10 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     else {
         comArduino = new ComClavier();
     }    
+    timerTick = new QTimer(this);
+    timerGameAffichage = new QTimer(this);
+    timerBonusMuons = new QTimer(this);
+    timerBtn = new QTimer(this);
 }
 
 void Gameplay::afficherImage() {
@@ -313,6 +317,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     int tailleNoteBase = 50; //hauteur de la note pour une note de 250 ms
     int noteHeight = 0;
     int startNote = 700; //hauteur de la zone de notes = 4000 ms
+    bool inGame = true;
+
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     //double pixelsPerMs = static_cast<double>(startNote) / dureeTotale; // Calcul des pixels par milliseconde
     btnGame = UNKNOWN;
@@ -417,8 +423,11 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         "font-size: 18px; "
         "font-weight: bold;"
     ));
-    QObject::connect(backButton, &QPushButton::clicked, [manager, this, stack]() {
-        manager->qtPageFinPartie(this, nullptr, stack); // Retourne au menu principal
+
+    disconnect(backButton, nullptr, nullptr, nullptr);
+    QObject::connect(backButton, &QPushButton::clicked, [manager, this, stack, &inGame]() {
+        inGame = false;
+        // manager->qtPageFinPartie(this, nullptr, stack); // Retourne au menu principal
         });
 
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
@@ -449,10 +458,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     )");
 
     /******** LOGIQUE DES QTIMER *********/
-    timerTick = new QTimer(this);
-    timerGameAffichage = new QTimer(this);
-    timerBonusMuons = new QTimer(this);
-    timerBtn = new QTimer(this);
     
     disconnect(timerTick, nullptr, nullptr, nullptr);
     disconnect(timerGameAffichage, nullptr, nullptr, nullptr);
@@ -494,8 +499,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     // 60 fps
     progressLayout->addWidget(invisible2);
 
-
-    while (true) {
+    while (inGame) {
         QCoreApplication::processEvents();
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
@@ -607,14 +611,22 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // valeurs de fps en ms
         // Sleep(120);
         QCoreApplication::processEvents();
-        if (btnGame == QUITTER || tempsEcoule >= dureeTotale) {
-            manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
-            return; // Sortir de la boucle
+        if (tempsEcoule >= dureeTotale) {
+            inGame = false;
         }
     }
+    
+    manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
 }
 
 void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(label);
+
+    if (label->graphicsEffect()) {
+        delete label->graphicsEffect(); // ou delete si tu veux tout de suite
+    }
+    label->setGraphicsEffect(opacityEffect);
+
     gameStruct.score = 0;
     bonusActiveMuons = false;
     ////system("cls");
@@ -630,8 +642,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     QFont baseFont("Arial", 60, QFont::Bold);  // Taille de base
     label->setFont(baseFont);
 
-    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(label);
-    label->setGraphicsEffect(opacityEffect);
+
 
     QSequentialAnimationGroup* group = new QSequentialAnimationGroup();
 
