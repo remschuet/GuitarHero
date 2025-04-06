@@ -250,8 +250,8 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     label->show();
 
                     */
-                    boiteNotes->setFixedSize(noteWidth * 12, 700);
-                    note.noteLabel->setGeometry(50, 50, 80, 80);
+                    boiteNotes->setFixedSize(noteWidth * 9, 700);
+                    note.noteLabel->setGeometry(50, 50, noteWidth, noteHeight);
 					noteHeight = (note.duree * tailleNoteBase) / 250; // Calculer la hauteur de la note en fonction de sa durée
 
                     note.noteLabel->setFixedSize(noteWidth, noteHeight);
@@ -259,11 +259,11 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
-                        case ROUGE: note.positionXQt = 0; note.noteLabel->setStyleSheet("background-color : red;"); break;
-                        case BLEU: note.positionXQt = 80; note.noteLabel->setStyleSheet("background-color : blue;"); break;
-                        case VERT: note.positionXQt = 160; note.noteLabel->setStyleSheet("background-color : green;"); break;
-                        case JAUNE: note.positionXQt = 240;note.noteLabel->setStyleSheet("background-color : yellow;"); break;
-                        case MAUVE: note.positionXQt = 320;note.noteLabel->setStyleSheet("background-color : purple;"); break;
+                        case ROUGE: note.positionXQt = 0; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
+                        case VERT: note.positionXQt = noteWidth * 4; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
+                        case MAUVE: note.positionXQt = noteWidth * 8;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
                 }
@@ -306,7 +306,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QVBoxLayout* layoutCentreNote = new QVBoxLayout();
 
     QWidget* boiteNotes = new QWidget();
-    boiteNotes->setFixedSize((noteWidth * 12), 700);
+    boiteNotes->setFixedSize((noteWidth * 9), 700);
     boiteNotes->setStyleSheet("background-color: pink");
     boiteNotes->show();
     //boiteNotes->move((TAILLE_ECRAN_X)-((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2)); does not work
@@ -529,31 +529,62 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 }
 
 void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
-    //qDebug() << "Demarrage de la partie";
     gameStruct.score = 0;
-    label->setGeometry((TAILLE_ECRAN_X / 2) - 100, (TAILLE_ECRAN_Y / 2), 0, 0);
-    label->setText("Depart du jeu dans 3 secondes...");
-    QCoreApplication::processEvents();
-    Sleep(1000);                                            //Si ça ne marche pas, essayer QThread::sleep(1); ou QThread::sleep(1000);
-    //QThread::sleep(1);
-    label->setText("Depart du jeu dans 2 secondes...");
-    QCoreApplication::processEvents();
-    //QThread::sleep(1);
-    Sleep(1000);
-    label->setText("Depart du jeu dans 1 secondes...");
-    QCoreApplication::processEvents();
-    //QThread::sleep(1);
-    Sleep(1000);
 
-    ////system("cls");
-    label->clear();
-    tick = 0;
-    gameStruct.chansonEnCours->startChrono();
-    //gameTimer->start(120);
-    //qDebug() << "Partie demarree";
-   
-    affichageTitre(titleLabel,layoutGame);
-    loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
+    label->setAlignment(Qt::AlignCenter);
+    label->setStyleSheet("color: white;");  // Tu peux personnaliser
+    QFont baseFont("Arial", 60, QFont::Bold);  // Taille de base
+    label->setFont(baseFont);
+
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(label);
+    label->setGraphicsEffect(opacityEffect);
+
+    QSequentialAnimationGroup* group = new QSequentialAnimationGroup();
+
+    QStringList countdown = { "3", "2", "1" };
+    for (const QString& number : countdown) {
+        QParallelAnimationGroup* stepGroup = new QParallelAnimationGroup();
+
+        // Animation de la taille du texte
+        QVariantAnimation* fontAnim = new QVariantAnimation();
+        fontAnim->setDuration(700);
+        fontAnim->setStartValue(60);  // Taille de départ
+        fontAnim->setEndValue(120);   // Taille finale
+
+        QObject::connect(fontAnim, &QVariantAnimation::valueChanged, [=](const QVariant& value) {
+            QFont f = baseFont;
+            f.setPointSize(value.toInt());
+            label->setFont(f);
+            });
+
+        // Animation de l'opacité (disparition)
+        QPropertyAnimation* opacityAnim = new QPropertyAnimation(opacityEffect, "opacity");
+        opacityAnim->setDuration(700);
+        opacityAnim->setStartValue(1.0);
+        opacityAnim->setEndValue(0.0);
+
+        QObject::connect(stepGroup, &QParallelAnimationGroup::stateChanged, [=](QAbstractAnimation::State newState, QAbstractAnimation::State) {
+            if (newState == QAbstractAnimation::Running) {
+                label->setText(number);
+                opacityEffect->setOpacity(1.0);
+                label->setFont(baseFont);
+            }
+            });
+
+        stepGroup->addAnimation(fontAnim);
+        stepGroup->addAnimation(opacityAnim);
+        group->addAnimation(stepGroup);
+    }
+
+    QObject::connect(group, &QSequentialAnimationGroup::finished, [=]() {
+        label->clear();
+        tick = 0;
+        gameStruct.chansonEnCours->startChrono();
+        affichageTitre(titleLabel, layoutGame);
+        loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
+        });
+
+    group->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 /*void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {

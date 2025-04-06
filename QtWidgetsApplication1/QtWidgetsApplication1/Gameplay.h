@@ -24,6 +24,12 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
+#include <QSequentialAnimationGroup>
+#include <QFont>
+#include <QParallelAnimationGroup>
+
 #include <windows.h>
 #pragma comment(lib, "User32.lib")
 
