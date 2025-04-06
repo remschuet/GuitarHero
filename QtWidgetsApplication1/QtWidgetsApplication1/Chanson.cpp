@@ -9,6 +9,11 @@ Chanson::Chanson(string nom) {
     setUpVecteur(nomChansonTxt);
 }
 
+Chanson::~Chanson() {
+    resetChrono();
+
+}
+
 void Chanson::setUpVecteur(string nomTxt) {
     ComFichierTexte::setListeNotes(nomTxt, vecteurRouge, vecteurVerte, vecteurJaune, vecteurBleu, vecteurMauve);
 

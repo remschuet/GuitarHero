@@ -315,7 +315,11 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     menuBoxLayout->addWidget(quitterButton, 0, Qt::AlignCenter);
 
     // Connecter le bouton pour fermer l'application
-    QObject::connect(quitterButton, &QPushButton::clicked, []() {
+    QObject::connect(quitterButton, &QPushButton::clicked, [G]() {
+        delete G->gameStruct.chansonEnCours;
+        delete G->gameStruct.joueur;
+        delete G;
+
         QApplication::quit();
         });
 
@@ -821,6 +825,8 @@ void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* 
 
 void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStackedWidget* stack)
 {
+    game->gameStruct.chansonEnCours->resetChrono();
+
     // Créer une boîte de dialogue
     QMessageBox msgBox;
     msgBox.setWindowTitle("Fin de la partie");
