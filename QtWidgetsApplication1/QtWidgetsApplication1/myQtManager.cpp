@@ -820,7 +820,13 @@ void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* 
     stack->addWidget(window);
 }
 
-
+void myQtManager::crashAvecMessage(const QString& message) {
+    QString programme = QCoreApplication::applicationFilePath();
+    QStringList arguments;
+    arguments << message;
+    QProcess::startDetached(programme, arguments);
+    QCoreApplication::exit(-1); // Fin du programme actuel (code d'erreur)
+}
 
 void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStackedWidget* stack)
 {
@@ -861,6 +867,7 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
         }
         game->gameStruct.chansonEnCours->resetChrono();
         // Retourner au menu principal avec changerDePage
+        crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()));
         changerDePage(stack, Menu, game, this);
     }
     else if (msgBox.clickedButton() == cancelButton) {

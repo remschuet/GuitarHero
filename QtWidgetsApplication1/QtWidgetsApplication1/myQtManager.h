@@ -20,6 +20,8 @@
 #include "CONST_QT.h"
 #include "Enum.h"
 #include <cstdlib> 
+#include <QStackedWidget>
+#include <QProcess>
 
 class Gameplay;
 
@@ -38,6 +40,8 @@ public:
     static void qtPageInformations(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
     static void qtPageAdmin(QWidget* pageAdmin, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
+
+    void static crashAvecMessage(const QString& message);
 
     static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
