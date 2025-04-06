@@ -78,7 +78,7 @@ long long Chanson::getDureeChanson() {
     // Vérifier que la chaîne n'est pas vide ou corrompue
     if (strlen(buffer) > 0 && isdigit(buffer[0])) {
         durreeBackup = atoll(buffer);
-        return durreeBackup; // Convertir et renvoyer la durée en millisecondes
+        return durreeBackup / 2; // Convertir et renvoyer la durée en millisecondes
     }
     else {
         std::cerr << "Erreur lors de la récupération de la durée de la chanson." << std::endl;
