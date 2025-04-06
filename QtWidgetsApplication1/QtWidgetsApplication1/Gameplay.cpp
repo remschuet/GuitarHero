@@ -172,7 +172,7 @@ void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
         .arg(tempsEcoule / 1000)
         .arg(dureeTotale / 1000));
 
-    layout->addWidget(label);
+    layout->addWidget(label,10, Qt::AlignCenter);
 
 
     //QCoreApplication::processEvents();
@@ -338,6 +338,16 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     boiteNotes->setLayout(NotesLayout);
 
+    QLabel* invisible = new QLabel();
+   // invisible->setVisible(false);
+
+    invisible->setFixedSize(QT_BLOCINVISIBLE, 100);
+    invisible->setStyleSheet(QString(
+        "background - color: transparent; "
+  
+    ));
+
+
     //Ajout de layout pour les autres items et ajout au layout principal
     QVBoxLayout* titleLayout = new QVBoxLayout();
     titleLayout->addWidget(titleLabel);
@@ -348,7 +358,17 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     //layoutGame->addWidget(boiteNotes);
     QHBoxLayout* noteBar = new QHBoxLayout();
     QVBoxLayout* progressLayout = new QVBoxLayout(layoutGame->parentWidget());
+    noteBar->addWidget(invisible);
     noteBar->addLayout(layoutCentreNote);
+    QLabel* invisible3 = new QLabel();
+    // invisible->setVisible(false);
+
+    invisible3->setFixedSize(100,10);
+    invisible3->setStyleSheet(QString(
+        "background - color: red; "
+
+    ));
+    noteBar->addWidget(invisible3);
     noteBar->addLayout(progressLayout);
     layoutGame->addLayout(noteBar);
     layoutCentreNote->setAlignment(Qt::AlignCenter);
@@ -366,8 +386,11 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QVBoxLayout* scoreLayout = new QVBoxLayout(layoutGame->parentWidget());
 
 
-
     affichageMaxScore(maxScoreLabel, scoreLayout);
+    scoreLayout->setSpacing(2);  // Réduit l'espace entre les éléments à 2 pixels (au lieu de la valeur par défaut qui est souvent 6 ou 10)
+    scoreLayout->setContentsMargins(0, 0, 0, 0);
+    progressLayout->setSpacing(1);
+    progressLayout->setContentsMargins(0, 0, 0, 0);
     //backbutton
     QPushButton* backButton = new QPushButton("Retour");
     backButton->setStyleSheet(QString(
@@ -388,6 +411,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     //progress bar
 
     barProgression->setFixedHeight(400);
+   // progressLayout->setAlignment(Qt::AlignCenter);
     barProgression->setStyleSheet(R"(
         QProgressBar {
             border: 2px solid #444;
@@ -416,7 +440,20 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     timerTick->start(100);
     timerBtn->start(40); // 25 fps
-    timerGameAffichage->start(40); // 60 fps
+    timerGameAffichage->start(40);
+
+    QLabel* invisible2 = new QLabel();
+    // invisible->setVisible(false);
+
+    invisible2->setFixedSize(10, 200);
+    invisible2->setStyleSheet(QString(
+        "background - color: red; "
+
+    ));
+    
+    // 60 fps
+    progressLayout->addWidget(invisible2);
+
 
     while (true) {
         QCoreApplication::processEvents();
@@ -432,8 +469,9 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         //QCoreApplication::processEvents();
         //affichageTitre(titleLabel);
         //QCoreApplication::processEvents();
-        progressLayout->addWidget(barProgression);
+        progressLayout->addWidget(barProgression,0,Qt::AlignCenter);
         affichageProgression(ProgressionLabel, progressLayout);
+
         affichageScoreActuel(scoreLabel, scoreLayout);
 
         infolayout->insertLayout(0, scoreLayout);
