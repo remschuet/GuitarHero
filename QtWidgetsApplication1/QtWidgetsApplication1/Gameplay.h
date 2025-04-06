@@ -48,6 +48,7 @@ public:
     void loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack, QWidget*);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
+    int scoreAleatoire();
     void finPartie(myQtManager* manager, QStackedWidget* stack);
     void SelectionJoueur(QLabel* Label);
     void loopMenu();

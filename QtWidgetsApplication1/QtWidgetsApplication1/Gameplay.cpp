@@ -465,7 +465,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             for (auto& note : *vecteur) {
                 // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
                 if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
-                    gameStruct.score += 3;
+                    gameStruct.score += P_BONUS_JOYSTICK;
                 }
             }
         }
@@ -478,13 +478,13 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
                     note.action = APPUYE;
                     aTouche = true;
-                    gameStruct.score++;
+                    gameStruct.score += scoreAleatoire();
                     break;
                 }
             }
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
-                gameStruct.score--;
+                gameStruct.score += P_MAUVAISE_TOUCHE;
             }
         }
 
@@ -504,7 +504,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                 }
 
                 note.action = MORTE;
-                gameStruct.score--;
+                gameStruct.score += P_MANQUE_NOTE;
 
                 // Supprimer la note du vecteur, erase retourne le prochain itérateur
                 it = vecteur->erase(it);
@@ -554,6 +554,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
    
     affichageTitre(titleLabel,layoutGame);
     loopGame(titleLabel, ProgressionLabel, manager, layoutGame, stack);
+    std::srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 /*void Gameplay::updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager) {
@@ -568,6 +569,10 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
         finPartie(manager);
     }
 }*/
+
+int Gameplay::scoreAleatoire() {
+    return std::rand() % (P_BONNE_NOTE_MAX - P_BONNE_NOTE_MIN + 1) + P_BONNE_NOTE_MIN;
+}
 
 void Gameplay::finPartie(myQtManager* manager, QStackedWidget* stack) {
     gameTimer->stop();
