@@ -830,6 +830,13 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     QPushButton* menuButton = msgBox.addButton("Retour au menu", QMessageBox::RejectRole);
     QPushButton* cancelButton = msgBox.addButton("Annuler", QMessageBox::RejectRole); // Bouton personnalisé pour Cancel
 
+    if (game->gameStruct.joueur->ScoreMax < game->gameStruct.score) {
+        // sauvegarder le score
+        DAOSqlite* sqlite = DAOSqlite::getInstance();
+        sqlite->updateScoreJoueur(game->gameStruct.joueur->getNomJoueur(), game->gameStruct.score);
+        game->gameStruct.joueur->ScoreMax = game->gameStruct.score;
+    }
+
     // Exécuter la boîte de dialogue
     msgBox.exec();
 

@@ -484,7 +484,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             }
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
-                gameStruct.score += P_MAUVAISE_TOUCHE;
+                // gameStruct.score += P_MAUVAISE_TOUCHE;
             }
         }
 
@@ -516,6 +516,9 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
         if (btnGame != UNKNOWN) {
             btnGame = UNKNOWN;
+        }
+        if (gameStruct.score < 0) {
+            gameStruct.score = 12000;
         }
 
         // valeurs de fps en ms
