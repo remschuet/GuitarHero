@@ -23,6 +23,7 @@ enum CouleurBouton {
 	MAUVE,
 	QUITTER,
 	JOYSTICK,
+	MUONS_BONUS,
 	UNKNOWN
 };
 

@@ -41,6 +41,11 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     connect(timerBtn, &QTimer::timeout, this, [=]() {
         choixBoutonGame();
     });
+    
+    connect(timerBonusMuons, &QTimer::timeout, this, [=]() mutable {
+        multiplicateurPoint = 1; // revenir à la normale
+        bonusActiveMuons = false;
+    });
 
     
 }
@@ -434,6 +439,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     )");
 
     timerGameAffichage = new QTimer(this);
+    timerBonusMuons = new QTimer(this);
+    timerBonusMuons->setSingleShot(true); // pour que ça ne redémarre pas en boucle
     connect(timerGameAffichage, &QTimer::timeout, this, [=]() {
         loopGameQT(titleLabel, ProgressionLabel, manager, layoutGame, stack, boiteNotes);
         });
@@ -503,9 +510,14 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             for (auto& note : *vecteur) {
                 // valeurs en milliseconde du chrono a modifier mais mettre plus grande que celui plus bas
                 if (std::abs(note.tempsDepart - chrono) <= 600 && note.action == APPUYE) { // et si note n est pas terminé
-                    gameStruct.score += P_BONUS_JOYSTICK;
+                    gameStruct.score += P_BONUS_JOYSTICK * multiplicateurPoint;
                 }
             }
+        }
+        else if (btnGame == MUONS_BONUS && !bonusActiveMuons) {
+            bonusActiveMuons = true;
+            multiplicateurPoint = P_MULTI_POINTS_BONUS_MUONS;
+            timerBonusMuons->start(P_TEMPS_APPLICABLE_BONUS_MUONS);
         }
         // Appuyé sur une touche
         if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
@@ -516,7 +528,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
                     std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
                     note.action = APPUYE;
                     aTouche = true;
-                    gameStruct.score += scoreAleatoire();
+                    gameStruct.score += scoreAleatoire() * multiplicateurPoint;
                     break;
                 }
             }
@@ -571,6 +583,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
 void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     gameStruct.score = 0;
+    bonusActiveMuons = false;
     ////system("cls");
     label->clear();
     tick = 0;
@@ -931,8 +944,11 @@ void Gameplay::choixBoutonGame() {
         else if (it.key() == BTN_QUITTER && it.value() == BTN_RELACHE) {
             btnGame = CouleurBouton::QUITTER;
         }
-        else if (it.key() == BTN_JOYSTICK && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_JOYSTICK) {
             btnGame = CouleurBouton::JOYSTICK;
+        }
+        else if (it.key() == BTN_BONUS_MUONS) {
+            btnGame = CouleurBouton::MUONS_BONUS;
         }
 
         else {

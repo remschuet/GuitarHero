@@ -23,6 +23,8 @@ const int P_BONNE_NOTE_MAX = 9;
 const int P_BONUS_JOYSTICK = 3;
 const int P_MAUVAISE_TOUCHE = -2;
 const int P_MANQUE_NOTE = -1;
+const double P_MULTI_POINTS_BONUS_MUONS = 2.0;
+const int P_TEMPS_APPLICABLE_BONUS_MUONS = 4000;
 
 // const string CHANSON_LIST
 
@@ -43,6 +45,9 @@ const std::string BTN_QUITTER = "btnQuitter";
 const std::string BTN_JOYSTICK = "Jstick";	//BY?
 
 const std::string BAR_GRAPH = "bG2";	//message : 10 caracteres de 0 et 1 1010101010 -> 1 sur deux barres d'allumer
+
+const std::string BTN_BONUS_MUONS = "A CHOISIR";	//BY?
+
 
 /*****************/
 /*     AUTRES    */
