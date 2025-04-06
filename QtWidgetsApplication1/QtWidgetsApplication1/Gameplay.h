@@ -78,7 +78,7 @@ private:
     bool admin;
     int tick = 0;
     void modifierLeProfile();
-    QTimer* gameTimer;
+    QTimer* gameTimer;  // INUTILE JE CROIS
     QTimer* timerTick;
     QTimer* timerBtn;
     QTimer* timerGameAffichage;

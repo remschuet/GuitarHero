@@ -32,22 +32,7 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     }
     else {
         comArduino = new ComClavier();
-    }
-    timerTick = new QTimer(this);
-    connect(timerTick, &QTimer::timeout, this, [=]() {
-        gameStruct.chansonEnCours->tick(delaiAffichage);
-    });
-    timerBtn = new QTimer(this);
-    connect(timerBtn, &QTimer::timeout, this, [=]() {
-        choixBoutonGame();
-    });
-    
-    connect(timerBonusMuons, &QTimer::timeout, this, [=]() mutable {
-        multiplicateurPoint = 1; // revenir à la normale
-        bonusActiveMuons = false;
-    });
-
-    
+    }    
 }
 
 void Gameplay::afficherImage() {
@@ -438,16 +423,39 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
     )");
 
+    /******** LOGIQUE DES QTIMER *********/
+    timerTick = new QTimer(this);
     timerGameAffichage = new QTimer(this);
     timerBonusMuons = new QTimer(this);
-    timerBonusMuons->setSingleShot(true); // pour que ça ne redémarre pas en boucle
-    connect(timerGameAffichage, &QTimer::timeout, this, [=]() {
-        loopGameQT(titleLabel, ProgressionLabel, manager, layoutGame, stack, boiteNotes);
+    timerBtn = new QTimer(this);
+    
+    disconnect(timerTick, nullptr, nullptr, nullptr);
+    disconnect(timerGameAffichage, nullptr, nullptr, nullptr);
+    disconnect(timerBonusMuons, nullptr, nullptr, nullptr);
+    disconnect(timerBtn, nullptr, nullptr, nullptr);
+
+    connect(timerTick, &QTimer::timeout, this, [=]() {
+        gameStruct.chansonEnCours->tick(delaiAffichage);
+        });
+    
+    connect(timerBtn, &QTimer::timeout, this, [=]() {
+        choixBoutonGame();
         });
 
+    connect(timerBonusMuons, &QTimer::timeout, this, [=]() mutable {
+        multiplicateurPoint = 1; // revenir à la normale
+        bonusActiveMuons = false;
+        });
+
+    connect(timerGameAffichage, &QTimer::timeout, this, [=]() {
+        loopGameQT(titleLabel, ProgressionLabel, manager, layoutGame, stack, boiteNotes);
+    });
+
+    timerBonusMuons->setSingleShot(true);
     timerTick->start(100);
     timerBtn->start(40); // 25 fps
     timerGameAffichage->start(40);
+    /******** FIN LOGIQUE DES QTIMER *********/
 
     QLabel* invisible2 = new QLabel();
     // invisible->setVisible(false);
@@ -666,7 +674,11 @@ int Gameplay::scoreAleatoire() {
 }
 
 void Gameplay::finPartie(myQtManager* manager, QStackedWidget* stack) {
-    gameTimer->stop();
+    // gameTimer->stop();
+    timerTick->stop();
+    timerBtn->stop();
+    timerGameAffichage->stop();
+    timerBonusMuons->stop();
     long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     long long pourcentage = (tempsEcoule * 100 / dureeTotale);
