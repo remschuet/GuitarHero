@@ -10,6 +10,7 @@ struct Note {
     NotesEtats etat = EN_ATTENTE;
     NotesAction action = INITIALE;
 	bool estQtAffiche = false; // Indique si la note est affichée dans l'interface Qt
+    int positionXQt = 0;
 
     QLabel* noteLabel;
 

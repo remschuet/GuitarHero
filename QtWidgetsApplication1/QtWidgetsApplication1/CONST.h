@@ -42,6 +42,6 @@ const std::string BAR_GRAPH = "bG2";	//message : 10 caracteres de 0 et 1 1010101
 /*****************/
 /*     AUTRES    */
 /************** **/
-const int delaiAffichage = 5500; //10000 à la base
+const int delaiAffichage = 5000; //10000 à la base
 const int delaiFillaire = 10; //delai avant choix bouton.		 si plus petit que 100 -> bug
 
