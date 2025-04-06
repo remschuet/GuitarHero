@@ -518,7 +518,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             btnGame = UNKNOWN;
         }
         if (gameStruct.score < 0) {
-            gameStruct.score = 12000;
+            // gameStruct.score = 12000;
         }
 
         // valeurs de fps en ms
