@@ -49,6 +49,24 @@ QLabel* myQtManager::getLabelForNote(const Note& note) {
 	return nullptr;
 }
 
+void myQtManager::departMusiqueMenu() {
+    // Ouvrir le fichier MP3 en mode asynchrone
+    string nomChansonMp3 = "./chanson/menu_musicmp3.mp3";
+
+    std::string command = "open \"" + nomChansonMp3 + "\" type mpegvideo alias myMP3";
+    mciSendStringA(command.c_str(), NULL, 0, NULL);
+
+    // Jouer la musique en arrière-plan
+    mciSendStringA("play myMP3", NULL, 0, NULL);
+}
+
+void myQtManager::arretMusiqueMenu()
+{
+    // Arrêter et fermer la musique
+    mciSendStringA("stop myMP3", NULL, 0, NULL);
+    mciSendStringA("close myMP3", NULL, 0, NULL);
+}
+
 void myQtManager::myQt_setFont(QLabel* q, int tailleFont) {
     QFont font = q->font();
     font.setPointSize(tailleFont);
@@ -213,6 +231,11 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
         qtPageMenu(parent, stack, G, manager);
         stack->setCurrentIndex(Menu);
         });
+
+    QTimer::singleShot(600, []() {
+        //musique de fond
+        departMusiqueMenu();
+    });
 
     //// Ajout à la pile des widgets
     stack->addWidget(page);
@@ -1278,6 +1301,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
 
 void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
+    arretMusiqueMenu();
     QWidget* pageGame = new QWidget();
     QVBoxLayout* layoutGame = new QVBoxLayout(pageGame);
 
