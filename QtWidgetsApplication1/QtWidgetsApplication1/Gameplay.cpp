@@ -751,7 +751,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
 
     QSequentialAnimationGroup* group = new QSequentialAnimationGroup();
 
-    QStringList countdown = { "3", "2", "1", "0", "-1", "Abuse ?"};
+    QStringList countdown = { "3", "2", "1"};
     for (const QString& number : countdown) {
         QParallelAnimationGroup* stepGroup = new QParallelAnimationGroup();
 
