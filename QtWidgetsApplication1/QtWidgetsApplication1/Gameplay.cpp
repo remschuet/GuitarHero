@@ -421,9 +421,18 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     //Ajout de layout pour les autres items et ajout au layout principal
     QVBoxLayout* titleLayout = new QVBoxLayout();
    // titleLayout->addWidget(titleLabel);
-    
-   affichageTitre(titleLabel,titleLayout);
-   layoutGame->addLayout(titleLayout);
+   
+	QLabel* titreChansonLabel = new QLabel(invisible);
+	titreChansonLabel->setText(QString::fromStdString(gameStruct.chansonEnCours->getNomChanson()));
+	titreChansonLabel->setFont(QFont("Arial", 17));
+    titreChansonLabel->setStyleSheet("color : white;");
+	titreChansonLabel->setAlignment(Qt::AlignCenter);
+	titreChansonLabel->setGeometry(0, 0, invisible->width(), invisible->height());
+    titreChansonLabel->show();
+
+
+    affichageTitre(titleLabel,titleLayout);
+    layoutGame->addLayout(titleLayout);
 
     layoutGame->addLayout(NotesLayout);
     
