@@ -18,11 +18,14 @@ const QStringList CHANSON_INTERMEDIAIRE = { "Billie Eilish - Bad Guy", "Coldplay
 const QStringList CHANSON_DIFFICILE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend", "P!nk - So What", "Simple Plan - I'm Just a Kid" };
 const QStringList CHANSON_EXPERT = { "Billie Eilish - Bad Guy", "Boney M - Rasputin", "Coldplay - Hymn for the Weekend", "Guns N' Roses - Welcome to the Jungle", "Katy Perry - I Kissed a Girl","Natasha Bedingfield - Unwritten", "P!nk - So What","Sheet Music Boss - Rush E",  "Simple Plan - I'm Just a Kid", "Tate McRae - Greedy", "Taylor Swift - I Knew You Were Trouble (Taylor's Version)", "Taylor Swift - We Are Never Ever Getting Back Together", "The Lumineers - Ophelia", "Theory of a Deadman - Rx (Medicate)"};
 
+const int G_BUFFER_NOTE = 200;
+const int G_BUFFER_NOTE_MOURIR = 400;
+
 const int P_BONNE_NOTE_MIN = 6;
 const int P_BONNE_NOTE_MAX = 9;
 const int P_BONUS_JOYSTICK = 3;
 const int P_MAUVAISE_TOUCHE = -2;
-const int P_MANQUE_NOTE = -1;
+const int P_MANQUE_NOTE = 0;
 const double P_MULTI_POINTS_BONUS_MUONS = 2.0;
 const int P_TEMPS_APPLICABLE_BONUS_MUONS = 4000;
 

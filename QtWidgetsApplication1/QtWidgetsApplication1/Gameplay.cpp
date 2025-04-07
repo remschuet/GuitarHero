@@ -348,7 +348,7 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
 
                     int positionY = endY - ((((note.tempsDepart - chrono) * 50) / 250) + noteHeight);
 
-                    note.noteLabel->move(note.positionXQt, positionY);
+                    note.noteLabel->move(note.positionXQt, positionY - (65 / 2));
 
                      if (positionY > endY) {
 
@@ -746,25 +746,24 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             case MAUVE: bouton = boutonMauve; break;
             }
 
-            if (bouton) {
-                ajoutEffectLumineux(bouton);
-                //             glowNote->start(250);
-
-            }
-
             for (auto& note : *vecteur) {
                 // Si une touche est appuye et que le temps est proche d une note mettre note appuye
                 if (note.couleur == btnGame &&
-                    std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
+                    std::abs(note.tempsDepart - chrono) <= G_BUFFER_NOTE && note.action == INITIALE) {
                     note.action = APPUYE;
                     aTouche = true;
                     gameStruct.score += scoreAleatoire() * multiplicateurPoint;
                     break;
                 }
             }
+            if (bouton) {
+                ajoutEffectLumineux(bouton);
+                //             glowNote->start(250);
+
+            }
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
-                // gameStruct.score += P_MAUVAISE_TOUCHE;
+                gameStruct.score += P_MAUVAISE_TOUCHE;
             }
         }
 
@@ -773,7 +772,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             Note& note = *it;
 
             // Vérifie si la note est expirée et toujours à l'état initial
-            bool noteExpiree = (chrono > note.tempsDepart + note.duree + 400 && note.action == INITIALE);
+            bool noteExpiree = (chrono > note.tempsDepart + note.duree + G_BUFFER_NOTE_MOURIR && note.action == INITIALE);
 
             if (noteExpiree) {
                 // Si elle est affichée dans l'interface Qt, on la retire et libère la mémoire
