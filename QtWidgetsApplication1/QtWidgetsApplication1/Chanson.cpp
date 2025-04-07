@@ -66,6 +66,18 @@ void Chanson::arretMusique() {
     mciSendStringA("close myMP3", NULL, 0, NULL);
 }
 
+std::vector<std::string> splitString(const std::string& input, char delimiter = '-') {
+    std::vector<std::string> result;
+    std::stringstream ss(input);
+    std::string item;
+
+    while (std::getline(ss, item, delimiter)) {
+        result.push_back(item);
+    }
+
+    return result;
+}
+
 string Chanson::getNomChanson()
 {
 	enleverCrochets(nomChansonMp3);
@@ -78,7 +90,14 @@ string Chanson::getNomChanson()
 	if (dotPos != std::string::npos) {
 		nomChansonMp3 = nomChansonMp3.substr(0, dotPos);
 	}
-    nomChansonMp3 = "Chanson en cours : " + nomChansonMp3;
+
+    // Diviser le titre de la chanson pour obtenir l'auteur et le nom de la chanson
+    std::vector<std::string> parts = splitString(nomChansonMp3, '-');
+    std::string nomAuteur = parts.size() > 0 ? parts[0] : "Inconnu";
+    std::string nomChanson = parts.size() > 1 ? parts[1] : "Inconnue";
+
+
+    nomChansonMp3 = "Artiste : " + nomAuteur + "\n\n" + nomChanson;
     return nomChansonMp3;
 }
 
