@@ -51,6 +51,7 @@ public:
     void affichageScoreActuel(QLabel* label, QVBoxLayout* layout);
     void affichageMaxScore(QLabel* label, QVBoxLayout* layout);
     void affichageNomJoueur(QLabel* label, QHBoxLayout* layout);
+    void ajoutEffectLumineux(QLabel* bouton);
     void loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack, QWidget*);
     void loopGame(QLabel* TitleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
     void demarrerPartie(QLabel* Label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack);
