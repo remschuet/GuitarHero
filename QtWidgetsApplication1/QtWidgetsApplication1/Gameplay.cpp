@@ -1100,7 +1100,7 @@ void Gameplay::interpreterMsg(string msg) {
 void Gameplay::choixBoutonGame() {
     std::string msg;
     if (!comArduino->recevoirMessage(msg)) {
-        btnGame = CouleurBouton::UNKNOWN;
+        // btnGame = CouleurBouton::UNKNOWN;
     }
     json j;
     try{
@@ -1110,7 +1110,8 @@ void Gameplay::choixBoutonGame() {
         }
     }
     catch (const std::exception& e) {
-        btnGame = CouleurBouton::UNKNOWN;
+        // FIXME
+        // btnGame = CouleurBouton::UNKNOWN;
         // Ignore l'erreur (tu peux aussi logguer si tu veux savoir ce qu’il s’est passé)
         // std::cerr << "Erreur JSON ignorée : " << e.what() << std::endl;
     }
@@ -1143,11 +1144,11 @@ void Gameplay::choixBoutonGame() {
         }
 
         else {
-            btnGame = CouleurBouton::UNKNOWN;
+            // btnGame = CouleurBouton::UNKNOWN;
         }
     }
 
-    btnGame = CouleurBouton::UNKNOWN;
+    // btnGame = CouleurBouton::UNKNOWN;
 }
 
 

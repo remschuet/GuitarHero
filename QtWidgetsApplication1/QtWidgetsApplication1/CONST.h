@@ -42,7 +42,7 @@ const std::string BTN_JAUNE = "BtJ";	//BJ?
 const std::string BTN_MAUVE = "BtM";	//BM?
 
 const std::string BTN_QUITTER = "btnQuitter";
-const std::string BTN_JOYSTICK = "Jstick";	//BY?
+const std::string BTN_JOYSTICK = "Mvd";	// 
 
 const std::string BAR_GRAPH = "bG2";	//message : 10 caracteres de 0 et 1 1010101010 -> 1 sur deux barres d'allumer
 
