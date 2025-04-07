@@ -13,7 +13,7 @@ void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
 
     // Image de fond (comme dans qtPageMenu)
     QLabel* backgroundLabel = new QLabel(pageParametre);
-    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-190, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setAlignment(Qt::AlignCenter);
