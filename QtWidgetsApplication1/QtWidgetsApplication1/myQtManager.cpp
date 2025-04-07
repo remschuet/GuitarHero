@@ -873,46 +873,56 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     QDialog dialog;
     dialog.setWindowFlags(Qt::FramelessWindowHint);
     dialog.setMinimumSize(900, 500);
-    dialog.setStyleSheet("background-color: #fefbd8;");
+    dialog.setStyleSheet(R"(
+        background-color: rgba(0, 0, 0, 0.8); /* Noir semi-transparent */
+        border-radius: 20px; /* Bords arrondis */
+        border: 2px solid #00FF00; /* Bordure néon verte */
+        box-shadow: 0 0 15px #00FF00; /* Effet de glow */
+    )");
 
     QVBoxLayout* layout = new QVBoxLayout(&dialog);
     layout->setAlignment(Qt::AlignCenter);
 
-    QLabel* title = new QLabel("🎉 Fin de la Partie 🎉");
-    QFont titleFont("Arial", 36, QFont::Bold);
+    QLabel* title = new QLabel("🎸 Fin de la Partie 🔥");
+    QFont titleFont("Bebas Neue", 40, QFont::Bold); // Police "Bebas Neue" pour un look rock
     title->setFont(titleFont);
-    title->setStyleSheet("color: #333;");
+    title->setStyleSheet("color: #FFFFFF; background-color: transparent; text-shadow: 2px 2px 5px #00FF00;"); // Ombre verte pour un effet néon
     title->setAlignment(Qt::AlignCenter);
     layout->addWidget(title);
 
     QLabel* scoreLabel = new QLabel(QString("Score : %1").arg(score));
-    QFont scoreFont("Arial", 28);
+    QFont scoreFont("Bebas Neue", 32); // Même police pour cohérence
     scoreLabel->setFont(scoreFont);
-    scoreLabel->setStyleSheet("color: #444;");
+    scoreLabel->setStyleSheet("color: #E0E0E0; background-color: transparent; text-shadow: 1px 1px 3px #00FF00;");
     scoreLabel->setAlignment(Qt::AlignCenter);
     layout->addWidget(scoreLabel);
 
     if (nouveauRecord) {
-        QLabel* recordLabel = new QLabel("🏆 Nouveau Record Personnel !");
-        recordLabel->setFont(QFont("Arial", 28, QFont::Bold));
-        recordLabel->setStyleSheet("color: green;");
+        QLabel* recordLabel = new QLabel("🏆 Nouveau Record Personnel ! ✨🎉");
+        recordLabel->setFont(QFont("Bebas Neue", 28, QFont::Bold));
+        recordLabel->setStyleSheet("color: #00FF00; background-color: transparent; text-shadow: 1px 1px 3px #FFFFFF;"); // Vert néon avec ombre blanche
         recordLabel->setAlignment(Qt::AlignCenter);
         layout->addWidget(recordLabel);
     }
 
     layout->addSpacing(50);
 
-    QPushButton* boutonRetour = new QPushButton("🏠 Retour au menu");
+    QPushButton* boutonRetour = new QPushButton("🏠 RETOUR AU MENU"); // Texte en majuscules
     boutonRetour->setMinimumSize(300, 80);
     boutonRetour->setStyleSheet(R"(
         QPushButton {
-            background-color: #4CAF50;
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4CAF50, stop:1 #2E7D32); /* Dégradé vert */
             color: white;
+            font-family: 'Bebas Neue';
             font-size: 28px;
+            font-weight: bold;
             border-radius: 15px;
+            border: 2px solid #00FF00; /* Bordure néon verte */
+            text-shadow: 1px 1px 3px #000000;
         }
         QPushButton:hover {
-            background-color: #45a049;
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #66BB6A, stop:1 #4CAF50); /* Dégradé plus clair au survol */
+            border: 2px solid #FFFFFF; /* Bordure blanche au survol */
         }
     )");
     layout->addWidget(boutonRetour, 0, Qt::AlignCenter);
@@ -938,6 +948,8 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     // crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()), game);
     changerDePage(stack, Menu, game, this);
 }
+
+
 
 void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
@@ -1281,8 +1293,6 @@ void myQtManager::qtPageGame(QWidget* window, QStackedWidget* stack, Gameplay* G
 
     QObject::connect(stack, &QStackedWidget::currentChanged, [stack, pageGame, G, gameLabel, titleLabel, ProgressionLabel, manager, layoutGame](int index) {
         if (stack->widget(index) == pageGame) {
-            qDebug() << "PageGame est affichée!";
-            // Creation de la chanson
             // Lancement de la partie
             G->demarrerPartie(gameLabel, titleLabel, ProgressionLabel, manager, layoutGame, stack);
         }
