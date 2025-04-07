@@ -608,6 +608,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         choixBoutonGame();
         });
 
+<<<<<<< HEAD
 	QLabel* bouton = nullptr;
     connect(glowNote, &QTimer::timeout, this, [=]() mutable {
         if (bouton != nullptr) {
@@ -615,6 +616,16 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         }
         // bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
         });
+=======
+
+    QLabel* bouton = nullptr;
+    //connect(glowNote, &QTimer::timeout, this, [=]() mutable {
+    //    if (bouton != nullptr) {
+    //        bouton->setGraphicsEffect(nullptr);
+    //    }
+    //    // bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
+    //    });
+>>>>>>> 3587cc0c4e18ae21a5f796e4f5c0fb3fc6d94c9e
     //glowNote->setSingleShot(true);
 
 
@@ -707,6 +718,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             bool aTouche = false;
 
             //ajout l'effet de lueur au bouton presse
+<<<<<<< HEAD
             switch (btnGame) {
             case ROUGE: bouton = boutonRouge; break;
             case BLEU: bouton = boutonBleu; break;
@@ -718,6 +730,19 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             if (bouton) {
                 ajoutEffectLumineux(bouton);
                 //             glowNote->start(250);
+=======
+			switch (btnGame) {
+                case ROUGE: bouton = boutonRouge; break;
+			    case BLEU: bouton = boutonBleu; break;
+			    case VERT: bouton = boutonVert; break;
+			    case JAUNE: bouton = boutonJaune; break;
+			    case MAUVE: bouton = boutonMauve; break;
+			}
+
+            if (bouton) {
+                ajoutEffectLumineux(bouton);
+    //             glowNote->start(250);
+>>>>>>> 3587cc0c4e18ae21a5f796e4f5c0fb3fc6d94c9e
             }
 
             for (auto& note : *vecteur) {
@@ -1125,7 +1150,7 @@ void Gameplay::interpreterMsg(string msg) {
 void Gameplay::choixBoutonGame() {
     std::string msg;
     if (!comArduino->recevoirMessage(msg)) {
-        btnGame = CouleurBouton::UNKNOWN;
+        // btnGame = CouleurBouton::UNKNOWN;
     }
     json j;
     try{
@@ -1135,7 +1160,8 @@ void Gameplay::choixBoutonGame() {
         }
     }
     catch (const std::exception& e) {
-        btnGame = CouleurBouton::UNKNOWN;
+        // FIXME
+        // btnGame = CouleurBouton::UNKNOWN;
         // Ignore l'erreur (tu peux aussi logguer si tu veux savoir ce qu’il s’est passé)
         // std::cerr << "Erreur JSON ignorée : " << e.what() << std::endl;
     }
@@ -1168,11 +1194,11 @@ void Gameplay::choixBoutonGame() {
         }
 
         else {
-            btnGame = CouleurBouton::UNKNOWN;
+            // btnGame = CouleurBouton::UNKNOWN;
         }
     }
 
-    btnGame = CouleurBouton::UNKNOWN;
+    // btnGame = CouleurBouton::UNKNOWN;
 }
 
 
@@ -1225,6 +1251,11 @@ void Gameplay::setJoueur(Joueur* nouveauJoueur) {
         delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
     }
     gameStruct.joueur = nouveauJoueur;
+}
+
+ComArduino* Gameplay::getCom()
+{
+    return comArduino;
 }
 
 Joueur* Gameplay::getJoueur() {

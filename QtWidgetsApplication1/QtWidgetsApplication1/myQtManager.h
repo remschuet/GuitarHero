@@ -41,7 +41,7 @@ public:
 
     static void qtPageAdmin(QWidget* pageAdmin, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 
-    void static crashAvecMessage(const QString& message);
+    void static crashAvecMessage(const QString& message, Gameplay* game);
 
     static void qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
 

@@ -6,6 +6,10 @@
 #include <conio.h> // Pour _kbhit() et _getch()
 
 
+void ComClavier::fushPopre()
+{
+}
+
 bool ComClavier::recevoirMessage(std::string& msg) {
     // Création du JSON avec la clé "btnRouge" et la valeur entrée
     nlohmann::json jsonMessage;

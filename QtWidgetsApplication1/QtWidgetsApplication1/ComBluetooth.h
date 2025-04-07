@@ -26,6 +26,7 @@ public:
 
     bool envoyerMessage(const json& j_msg) override;
     bool recevoirMessage(std::string& msg) override;
+    void fushPopre();
 };
 
 

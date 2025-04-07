@@ -32,8 +32,13 @@ void siRelance(Gameplay* game, string nomJoueur) {
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
+<<<<<<< HEAD
     const ComMode MODE = FILAIRE;
     const std::string NOM_PORT = "COM7";
+=======
+    const ComMode MODE = CLAVIER;
+    const std::string NOM_PORT = "COM6";
+>>>>>>> 3587cc0c4e18ae21a5f796e4f5c0fb3fc6d94c9e
 
     // Création de la fenêtre principale
     QMainWindow mainWindow;

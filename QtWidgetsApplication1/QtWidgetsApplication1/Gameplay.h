@@ -68,12 +68,14 @@ public:
     GameStruct gameStruct;
     Joueur* getJoueur();
     void setJoueur(Joueur* nouveauJoueur);
+    ComArduino* getCom();
+    ComArduino* comArduino;
+
 
 private:
     bool bonusActiveMuons = false;
     double multiplicateurPoint = 1.0;
     Joueur* joueurActuel = nullptr;
-    ComArduino* comArduino;
     ComMode modeCommunication;
     bool verbose;
     bool admin;

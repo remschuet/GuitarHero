@@ -94,3 +94,7 @@ bool ComBluetooth::recevoirMessage(std::string& msg) {
     }
     return false;
 }
+
+void ComBluetooth::fushPopre()
+{
+}

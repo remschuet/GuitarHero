@@ -13,6 +13,7 @@ private:
     std::unordered_map<char, bool> toucheEnfoncee;  // Empêche la répétition
 
 public:
+    void fushPopre();
     bool envoyerMessage(const json& j_msg) override { std::cerr << "NON IMPLEMENTER"; return false; };
     bool recevoirMessage(std::string& msg) override;
 };
