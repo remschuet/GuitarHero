@@ -452,6 +452,7 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
         }
 
         const QStringList& listeChansons = chansons[niveauChoisi];
+        srand(time(NULL));
         QString chansonChoisie = listeChansons[rand() % listeChansons.size()];
 
         // Format du nom de chanson utilisé dans le backend
@@ -834,12 +835,33 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
 
     // Créer une boîte de dialogue
     QMessageBox msgBox;
-    msgBox.setWindowTitle("Fin de la partie");
-    QString message = QString("La partie est terminée !\nScore : %1\nVoulez-vous rejouer ou retourner au menu ?").arg(game->gameStruct.score);
+    // msgBox.setWindowTitle("Fin de la partie");
+    QString message = QString("\n\nLa partie est terminée !\t\t\t\t - \n\nScore : %1                               \n").arg(game->gameStruct.score);
+    msgBox.setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint);
     msgBox.setText(message);
-    QPushButton* replayButton = msgBox.addButton("Rejouer", QMessageBox::AcceptRole);
-    QPushButton* menuButton = msgBox.addButton("Retour au menu", QMessageBox::RejectRole);
-    QPushButton* cancelButton = msgBox.addButton("Annuler", QMessageBox::RejectRole); // Bouton personnalisé pour Cancel
+    // QPushButton* replayButton = msgBox.addButton("Rejouer", QMessageBox::AcceptRole);
+    QPushButton* menuButton = msgBox.addButton("Retour au menu", QMessageBox::AcceptRole);
+    // QPushButton* cancelButton = msgBox.addButton("Annuler", QMessageBox::RejectRole); // Bouton personnalisé pour Cancel
+
+    msgBox.setMinimumSize(800, 400); // largeur, hauteur
+
+    // Appliquer un style CSS (QSS)
+    msgBox.setStyleSheet(R"(
+    QMessageBox {
+        background-color: #FFFD55;
+        font-size: 16px;
+    }
+    QPushButton {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        min-width: 120px;
+    }
+    QPushButton:hover {
+        background-color: #45a049;
+    }
+)");
 
     if (game->gameStruct.joueur->ScoreMax < game->gameStruct.score) {
         // sauvegarder le score
@@ -851,12 +873,12 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     // Exécuter la boîte de dialogue
     msgBox.exec();
 
-    if (msgBox.clickedButton() == replayButton) {
+    //if (msgBox.clickedButton() == replayButton) {
 
-        QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
-    }
-    
-    else if (msgBox.clickedButton() == menuButton) {
+    //    QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
+    //}
+    //
+    if (msgBox.clickedButton() == menuButton) {
         // Nettoyer le layout avant de retourner au menu pour éviter les résidus
         if (layoutGame) {
             QLayoutItem* item;
@@ -870,10 +892,10 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
         crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()));
         changerDePage(stack, Menu, game, this);
     }
-    else if (msgBox.clickedButton() == cancelButton) {
-        // Afficher "T'abuses" si Cancel est cliqué
-        QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
-    }
+    //else if (msgBox.clickedButton() == cancelButton) {
+    //    // Afficher "T'abuses" si Cancel est cliqué
+    //    QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
+    //}
 }
 
 void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
