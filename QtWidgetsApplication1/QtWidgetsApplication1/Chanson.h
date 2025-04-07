@@ -8,6 +8,7 @@
 #include <chrono>
 #include <mmsystem.h>
 #include <Enum.h>
+#include <sstream>
 
 using namespace std;
 using namespace std::chrono;

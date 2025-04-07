@@ -181,6 +181,8 @@ void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
         .arg(pourcentage)
         .arg(tempsEcoule / 1000)
         .arg(dureeTotale / 1000));
+    label->setStyleSheet("color : white");
+    label->setFont(QFont("Arial", 17));
 
     layout->addWidget(label,10, Qt::AlignCenter);
 
@@ -202,7 +204,7 @@ void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
     label->setText(QString("Score Actuel : %1").arg(gameStruct.score));
     label->setStyleSheet(
         "color: white; "
-        "font-size: 12px; "
+        "font-size: 17px; "
         "font-weight: bold; "
         "text-transform: uppercase; "
         "letter-spacing: 3px; "
@@ -224,7 +226,7 @@ void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
     label->setText(QString("Meilleur Score : %1").arg(maxScore));
     label->setStyleSheet(
         "color: white; "
-        "font-size: 12px; "
+        "font-size: 17px; "
         "font-weight: bold; "
         "text-transform: uppercase; "
         "letter-spacing: 3px; "
@@ -243,7 +245,8 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 
     QString nomJoueur = QString::fromStdString(gameStruct.joueur->getNomJoueur());
     label->setText(QString("Joueur : %1").arg(nomJoueur));
-    label->setFont(QFont("Arial", 16));
+    label->setFont(QFont("Arial", 17));
+    label->setStyleSheet("color : white");
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
     //if (!layout->children().contains(label)) layout->addWidget(label);
@@ -255,7 +258,7 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 void Gameplay::ajoutEffectLumineux(QLabel* bouton) {
 	// Ajout d'un effet lumineux sur le bouton
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(bouton);
-	effect->setBlurRadius(48);
+	effect->setBlurRadius(63);
 	effect->setOffset(0, 0);
 	effect->setColor(Qt::white);
 	bouton->setGraphicsEffect(effect);
@@ -441,7 +444,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	QLabel* titreChansonLabel = new QLabel(invisible);
 	titreChansonLabel->setText(QString::fromStdString(gameStruct.chansonEnCours->getNomChanson()));
 	titreChansonLabel->setFont(QFont("Arial", 17));
-    titreChansonLabel->setStyleSheet("color : white;");
+    titreChansonLabel->setStyleSheet("color : white; font-weight: bold;");
 	titreChansonLabel->setAlignment(Qt::AlignCenter);
 	titreChansonLabel->setGeometry(0, 0, invisible->width(), invisible->height());
     titreChansonLabel->show();
@@ -686,6 +689,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // Appuyé sur une touche
         if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
             bool aTouche = false;
+            QLabel* bouton = nullptr;
             //ajout l'effet de lueur au bouton presse
 			switch (btnGame) {
 			case ROUGE: ajoutEffectLumineux(boutonRouge); break;
@@ -694,6 +698,15 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 			case JAUNE: ajoutEffectLumineux(boutonJaune); break;
 			case MAUVE: ajoutEffectLumineux(boutonMauve); break;
 			}
+
+            if (bouton) {
+                ajoutEffectLumineux(bouton);
+
+                // Retirer l'effet de lueur après 250 ms
+                QTimer::singleShot(250, [bouton]() {
+					bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
+                    });
+            }
 
             for (auto& note : *vecteur) {
                 // Si une touche est appuye et que le temps est proche d une note mettre note appuye
@@ -774,7 +787,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
     // affichageTitre(titleLabel,layoutGame);
     std::srand(static_cast<unsigned int>(time(nullptr)));
     label->setAlignment(Qt::AlignCenter);
-    label->setStyleSheet("color: black;");  // Tu peux personnaliser
+    label->setStyleSheet("color: blac;");  // Tu peux personnaliser
     QFont baseFont("Arial", 60, QFont::Bold);  // Taille de base
     label->setFont(baseFont);
 
