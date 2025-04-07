@@ -815,6 +815,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
     QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(label);
 
+
+
     if (label->graphicsEffect()) {
         delete label->graphicsEffect(); // ou delete si tu veux tout de suite
     }
