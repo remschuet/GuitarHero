@@ -71,6 +71,10 @@ public:
     ComArduino* getCom();
     ComArduino* comArduino;
 
+    static void demarrerMusiqueJo(string pathMusique);
+    static void arretMusiqueJo();
+
+
 
 private:
     bool bonusActiveMuons = false;

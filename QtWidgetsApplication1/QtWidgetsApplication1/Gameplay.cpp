@@ -39,6 +39,24 @@ Gameplay::Gameplay(string nomPort, ComMode modeCommunication, bool verbose, bool
     timerBtn = new QTimer(this);
 }
 
+void Gameplay::demarrerMusiqueJo(string pathMusique) {
+    // Ouvrir le fichier MP3 en mode asynchrone
+
+    std::string command = "open " + pathMusique + " type mpegvideo alias myMP3";
+    mciSendStringA(command.c_str(), NULL, 0, NULL);
+
+    // Jouer la musique en arrière-plan
+    mciSendStringA("play myMP3", NULL, 0, NULL);
+}
+
+void Gameplay::arretMusiqueJo()
+{
+    // Arrêter et fermer la musique
+    mciSendStringA("stop myMP3", NULL, 0, NULL);
+    mciSendStringA("close myMP3", NULL, 0, NULL);
+}
+
+
 void Gameplay::afficherImage() {
     //Montrer l'image àprès la capture
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_SILENT);
@@ -812,10 +830,16 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     manager->qtPageFinPartie(this, layoutGame, stack); // Remplacez MenuPrincipal par votre enum réelle
 }
 
+
+
 void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack) {
+
+    //arret musique de menu et depart musique 3 2 1 
+    arretMusiqueJo();
+    //musique de fond
+    demarrerMusiqueJo(MUSIQUEDEPARTPARTIE);
+
     QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(label);
-
-
 
     if (label->graphicsEffect()) {
         delete label->graphicsEffect(); // ou delete si tu veux tout de suite
@@ -847,7 +871,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
 
         // Animation de la taille du texte
         QVariantAnimation* fontAnim = new QVariantAnimation();
-        fontAnim->setDuration(700);
+        fontAnim->setDuration(1333);
         fontAnim->setStartValue(60);  // Taille de départ
         fontAnim->setEndValue(120);   // Taille finale
 
@@ -859,7 +883,7 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
 
         // Animation de l'opacité (disparition)
         QPropertyAnimation* opacityAnim = new QPropertyAnimation(opacityEffect, "opacity");
-        opacityAnim->setDuration(700);
+        opacityAnim->setDuration(1000);
         opacityAnim->setStartValue(1.0);
         opacityAnim->setEndValue(0.0);
 
@@ -875,6 +899,9 @@ void Gameplay::demarrerPartie(QLabel* label, QLabel* titleLabel, QLabel* Progres
         stepGroup->addAnimation(opacityAnim);
         group->addAnimation(stepGroup);
     }
+    
+    //arret musique 3 2 1 
+    arretMusiqueJo();
     
     QObject::connect(group, &QSequentialAnimationGroup::finished, [=]() {
      

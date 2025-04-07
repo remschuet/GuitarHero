@@ -1,6 +1,5 @@
 #pragma once
 
-
 const int TAILLE_ECRAN_X = 1920;
 const int TAILLE_ECRAN_Y = 1080;
 
@@ -16,3 +15,5 @@ const QString COULEUR_BOUTON = "#00A759"; // Vert foncé pour le bouton
 const QString COULEUR_TEXTE_BOUTON = "#ffffff"; // Blanc pour le texte du bouton
 const QString COULEUR_IMAGE_BORDURE = "#486a5c"; // Bordure verte pour l'image
 
+const std::string MUSIQUEMENU = "./chanson/menu_musicmp3.mp3";
+const std::string MUSIQUEDEPARTPARTIE = "./chanson/3 - 2 - 1 - countdown.mp3";

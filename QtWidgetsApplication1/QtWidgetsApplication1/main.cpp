@@ -32,7 +32,7 @@ void siRelance(Gameplay* game, string nomJoueur) {
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    const ComMode MODE = FILAIRE;
+    const ComMode MODE = CLAVIER;
     const std::string NOM_PORT = "COM7";
 
     // Création de la fenêtre principale
@@ -68,11 +68,14 @@ int main(int argc, char* argv[]) {
     }
     // Choix de la page d'accueil : Menu si relancé, sinon Accueil
     if (!relanceMessage.isEmpty()) {
+        gameplay->demarrerMusiqueJo(MUSIQUEMENU);
         siRelance(gameplay, relanceMessage.toStdString());
         stack->setCurrentIndex(Menu);
     }
     else {
+        gameplay->demarrerMusiqueJo(MUSIQUEMENU);
         stack->setCurrentIndex(Accueil);
+      
     }
 
     return app.exec();
