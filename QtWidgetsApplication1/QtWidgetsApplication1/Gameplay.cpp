@@ -364,14 +364,19 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     QWidget* boiteNotes = new QWidget();
     boiteNotes->setFixedSize((noteWidth * 9), 700);
-  //  QString imagePath = "./images/grid vert 2.png";
-    boiteNotes->setStyleSheet(QString(
+    QLabel* imagesBoite = new QLabel(boiteNotes);
+
+    imagesBoite->setFixedSize((noteWidth * 9), 700);
+    QString imagePath = "./images/grid final.png";
+
+    imagesBoite->setStyleSheet(QString(
         "background-image: url(%1);"
         "background-repeat: no-repeat;"
         "background-position: center;"
-        "background-size: 10%;"
-        "background-color : rose"
-    ));//.arg(imagePath));
+      
+    ).arg(imagePath));
+    imagesBoite->lower();
+
     boiteNotes->show();
     //boiteNotes->move((TAILLE_ECRAN_X)-((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2)); does not work
     //boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);
