@@ -228,6 +228,14 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 
 }
 
+void Gameplay::ajoutEffectLumineux(QLabel* bouton) {
+	// Ajout d'un effet lumineux sur le bouton
+	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(bouton);
+	effect->setBlurRadius(48);
+	effect->setOffset(0, 0);
+	effect->setColor(Qt::white);
+	bouton->setGraphicsEffect(effect);
+}
 
 void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack, QWidget* boiteNotes) {
     int endY = 700; //position de la barre de la guitare (à changer)
@@ -398,6 +406,57 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     layoutGame->addLayout(noteBar);
     layoutCentreNote->setAlignment(Qt::AlignCenter);
 
+
+
+ /*   QWidget* boitePrecision = new QWidget();
+    boitePrecision->setFixedSize((noteWidth * 9), tailleNoteBase);
+    boitePrecision->setStyleSheet("background-color: skyBlue");
+    boitePrecision->show();
+
+    layoutGame->addWidget(boitePrecision);*/
+
+    //boutons de couleurs indiquant quand jouer la note
+    QLabel* boutonRouge = new QLabel(boiteNotes);
+    QLabel* boutonBleu = new QLabel(boiteNotes);
+    QLabel* boutonVert = new QLabel(boiteNotes);
+    QLabel* boutonJaune = new QLabel(boiteNotes);
+    QLabel* boutonMauve = new QLabel(boiteNotes);
+
+
+                                                           //rouge, bleu, vert orange, gris
+
+    //note.positionXQt = 0; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;");
+
+    boutonRouge->setStyleSheet("background-color: tomato; border-radius: 25px;");
+    boutonRouge->show();
+    boutonRouge->setGeometry(0, 700 - tailleNoteBase/2, noteWidth, tailleNoteBase);
+    boutonRouge->setFixedSize(noteWidth, tailleNoteBase);
+    boutonRouge->show();
+
+    boutonBleu->setStyleSheet("background-color: cyan; border-radius: 25px;");
+    boutonBleu->show();
+    boutonBleu->setGeometry(noteWidth * 2, 700 - tailleNoteBase / 2, noteWidth, tailleNoteBase);
+    boutonBleu->setFixedSize(noteWidth, tailleNoteBase);
+    boutonBleu->show();
+
+    boutonVert->setStyleSheet("background-color: lime; border-radius: 25px;");
+    boutonVert->show();
+    boutonVert->setGeometry(noteWidth * 4, 700 - tailleNoteBase / 2, noteWidth, tailleNoteBase);
+    boutonVert->setFixedSize(noteWidth, tailleNoteBase);
+    boutonVert->show();
+
+    boutonJaune->setStyleSheet("background-color: gold; border-radius: 25px;");
+    boutonJaune->show();
+    boutonJaune->setGeometry(noteWidth * 6, 700 - tailleNoteBase / 2, noteWidth, tailleNoteBase);
+    boutonJaune->setFixedSize(noteWidth, tailleNoteBase);
+    boutonJaune->show();
+
+    boutonMauve->setStyleSheet("background-color: silver; border-radius: 25px;");
+    boutonMauve->show();
+    boutonMauve->setGeometry(noteWidth * 8, 700 - tailleNoteBase / 2, noteWidth, tailleNoteBase);
+    boutonMauve->setFixedSize(noteWidth, tailleNoteBase);
+    boutonMauve->show();
+
     QLabel* scoreLabel = new QLabel();
     QLabel* maxScoreLabel = new QLabel();
     QLabel* nomJoueurLabel = new QLabel();
@@ -535,6 +594,15 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // Appuyé sur une touche
         if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
             bool aTouche = false;
+            //ajout l'effet de lueur au bouton presse
+			switch (btnGame) {
+			case ROUGE: ajoutEffectLumineux(boutonRouge); break;
+			case BLEU: ajoutEffectLumineux(boutonBleu); break;
+			case VERT: ajoutEffectLumineux(boutonVert); break;
+			case JAUNE: ajoutEffectLumineux(boutonJaune); break;
+			case MAUVE: ajoutEffectLumineux(boutonMauve); break;
+			}
+
             for (auto& note : *vecteur) {
                 // Si une touche est appuye et que le temps est proche d une note mettre note appuye
                 if (note.couleur == btnGame &&
