@@ -97,7 +97,7 @@ string Chanson::getNomChanson()
     std::string nomChanson = parts.size() > 1 ? parts[1] : "Inconnue";
 
 
-    nomChansonMp3 = "Artiste : " + nomAuteur + "\n\n" + nomChanson;
+    nomChansonMp3 = nomAuteur + "\n\n" + nomChanson;
     return nomChansonMp3;
 }
 

@@ -258,7 +258,7 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 void Gameplay::ajoutEffectLumineux(QLabel* bouton) {
 	// Ajout d'un effet lumineux sur le bouton
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(bouton);
-	effect->setBlurRadius(48);
+	effect->setBlurRadius(63);
 	effect->setOffset(0, 0);
 	effect->setColor(Qt::white);
 	bouton->setGraphicsEffect(effect);
@@ -689,6 +689,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // Appuyé sur une touche
         if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
             bool aTouche = false;
+            QLabel* bouton = nullptr;
             //ajout l'effet de lueur au bouton presse
 			switch (btnGame) {
 			case ROUGE: ajoutEffectLumineux(boutonRouge); break;
@@ -697,6 +698,15 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 			case JAUNE: ajoutEffectLumineux(boutonJaune); break;
 			case MAUVE: ajoutEffectLumineux(boutonMauve); break;
 			}
+
+            if (bouton) {
+                ajoutEffectLumineux(bouton);
+
+                // Retirer l'effet de lueur après 250 ms
+                QTimer::singleShot(250, [bouton]() {
+					bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
+                    });
+            }
 
             for (auto& note : *vecteur) {
                 // Si une touche est appuye et que le temps est proche d une note mettre note appuye
