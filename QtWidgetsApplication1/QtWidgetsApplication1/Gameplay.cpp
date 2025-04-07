@@ -360,6 +360,22 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     //double pixelsPerMs = static_cast<double>(startNote) / dureeTotale; // Calcul des pixels par milliseconde
     btnGame = UNKNOWN;
+
+    QLabel* backgroudGame = new QLabel(stack);
+    QString imageBackgroundPath = "./images/fondGame.png";
+
+    backgroudGame->setStyleSheet(QString(
+        "QLabel {"
+        "background-image: url(%1);"
+        "background-repeat: no-repeat;"
+        "background-position: center;"
+        "background-color: rgba(255, 255, 255, 150);" // Transparence de l'image (150 = environ 60% opaque)
+        "}"
+    ).arg(imageBackgroundPath));
+    backgroudGame->setFixedSize(stack->width(), stack->height());
+    backgroudGame->lower(); // Met l'image derrière tous les autres widgets
+    backgroudGame->show();
+
     QVBoxLayout* layoutCentreNote = new QVBoxLayout();
 
     QWidget* boiteNotes = new QWidget();
