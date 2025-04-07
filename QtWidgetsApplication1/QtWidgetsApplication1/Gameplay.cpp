@@ -365,11 +365,9 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QWidget* boiteNotes = new QWidget();
     boiteNotes->setFixedSize((noteWidth * 9 + 15), 700);
   //  QString imagePath = "./images/grid vert 2.png";
-    boiteNotes->setStyleSheet(QString(
-    boiteNotes->setFixedSize((noteWidth * 9), 700);
     QLabel* imagesBoite = new QLabel(boiteNotes);
 
-    imagesBoite->setFixedSize((noteWidth * 9), 700);
+    imagesBoite->setFixedSize((noteWidth * 9 +15), 700);
     QString imagePath = "./images/grid final.png";
 
     imagesBoite->setStyleSheet(QString(
