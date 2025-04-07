@@ -22,6 +22,7 @@
 #include <cstdlib> 
 #include <QStackedWidget>
 #include <QProcess>
+#include <string>
 
 class Gameplay;
 
@@ -58,11 +59,6 @@ public:
     static void afficherImage(QWidget* parentWidget, const QString& imagePath);
 
     static void afficherPopupSelectionMusique(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager);
-
-    static void departMusiqueMenu();
-
-    static void arretMusiqueMenu();
-
 
     QWidget* parentWidget;
 	QList<QLabel*> labels;
