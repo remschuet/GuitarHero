@@ -845,45 +845,56 @@ void myQtManager::qtPageAdmin(QWidget* parent, QStackedWidget* stack, Gameplay* 
 }
 
 void myQtManager::crashAvecMessage(const QString& message, Gameplay* game) {
-
-    delete game->comArduino;
-    delete game;
-
+    game->comArduino->fushPopre();
+    // delete game;
+    // game->configFilaire("COM5");
     QString programme = QCoreApplication::applicationFilePath();
     QStringList arguments;
     arguments << message;
-    // QProcess::startDetached(programme, arguments);
-
-    // QTimer::singleShot(200, [game]() {
-        // QCoreApplication::exit(-1);
-        const ComMode MODE = FILAIRE;
-        const std::string NOM_PORT = "COM6";
-
-        // Création du gestionnaire de pages
-        QStackedWidget* stack = new QStackedWidget();
-
-        // Initialisation du jeu
-        Gameplay* gameplay = new Gameplay(NOM_PORT, MODE);
-
-        // Ajouter les fenêtres
-        myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
-        myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
-        myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
-        myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
-
-        MyQtPageSettings::refresh(stack, gameplay, nullptr);
-        MyQtPageAdmin::refresh(stack, gameplay, nullptr);
-        MyQtPageInfoJoueur::refresh(stack, gameplay, nullptr);
-
-        // Vérifie si on a été relancé avec un message
-        QStringList args = QCoreApplication::arguments();
-        QString relanceMessage;
-        
-        stack->setCurrentIndex(Accueil);
-     
-
-       // });
+    QProcess::startDetached(programme, arguments);
+    QCoreApplication::exit(-1); // Fin du programme actuel (code d'erreur)
 }
+
+//void myQtManager::crashAvecMessage(const QString& message, Gameplay* game) {
+//
+//    delete game->comArduino;
+//    delete game;
+//
+//    QString programme = QCoreApplication::applicationFilePath();
+//    QStringList arguments;
+//    arguments << message;
+//    // QProcess::startDetached(programme, arguments);
+//
+//    // QTimer::singleShot(200, [game]() {
+//        // QCoreApplication::exit(-1);
+//        const ComMode MODE = FILAIRE;
+//        const std::string NOM_PORT = "COM6";
+//
+//        // Création du gestionnaire de pages
+//        QStackedWidget* stack = new QStackedWidget();
+//
+//        // Initialisation du jeu
+//        Gameplay* gameplay = new Gameplay(NOM_PORT, MODE);
+//
+//        // Ajouter les fenêtres
+//        myQtManager::qtPageMenu(nullptr, stack, gameplay, nullptr);
+//        myQtManager::qtPageAccueil(nullptr, stack, gameplay, nullptr);
+//        myQtManager::qtPageMeilleurScore(nullptr, stack, gameplay, nullptr);
+//        myQtManager::qtPageGame(nullptr, stack, gameplay, nullptr);
+//
+//        MyQtPageSettings::refresh(stack, gameplay, nullptr);
+//        MyQtPageAdmin::refresh(stack, gameplay, nullptr);
+//        MyQtPageInfoJoueur::refresh(stack, gameplay, nullptr);
+//
+//        // Vérifie si on a été relancé avec un message
+//        QStringList args = QCoreApplication::arguments();
+//        QString relanceMessage;
+//        
+//        stack->setCurrentIndex(Accueil);
+//     
+//
+//       // });
+//}
 
 void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStackedWidget* stack)
 {
@@ -968,7 +979,7 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
         }
     }
     game->gameStruct.chansonEnCours->resetChrono();
-    // crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()), game);
+    crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()), game);
     changerDePage(stack, Menu, game, this);
 }
 
