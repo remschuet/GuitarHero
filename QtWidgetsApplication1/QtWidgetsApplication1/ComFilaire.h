@@ -39,7 +39,9 @@ public:
     }
 
     void fushPopre() override{
-
+        std::cout << "Destruction de ComFilaire" << std::endl;
+        delete arduino;
+        std::cout << "Arduino libéré" << std::endl;
     }
 
     bool recevoirMessage(std::string& msg) override {
