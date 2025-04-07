@@ -602,6 +602,17 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         choixBoutonGame();
         });
 
+
+    QLabel* bouton = nullptr;
+    //connect(glowNote, &QTimer::timeout, this, [=]() mutable {
+    //    if (bouton != nullptr) {
+    //        bouton->setGraphicsEffect(nullptr);
+    //    }
+    //    // bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
+    //    });
+    //glowNote->setSingleShot(true);
+
+
     connect(timerBonusMuons, &QTimer::timeout, this, [=]() mutable {
         multiplicateurPoint = 1; // revenir à la normale
         bonusActiveMuons = false;
@@ -689,23 +700,19 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // Appuyé sur une touche
         if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
             bool aTouche = false;
-            QLabel* bouton = nullptr;
+
             //ajout l'effet de lueur au bouton presse
 			switch (btnGame) {
-			case ROUGE: ajoutEffectLumineux(boutonRouge); break;
-			case BLEU: ajoutEffectLumineux(boutonBleu); break;
-			case VERT: ajoutEffectLumineux(boutonVert); break;
-			case JAUNE: ajoutEffectLumineux(boutonJaune); break;
-			case MAUVE: ajoutEffectLumineux(boutonMauve); break;
+                case ROUGE: bouton = boutonRouge; break;
+			    case BLEU: bouton = boutonBleu; break;
+			    case VERT: bouton = boutonVert; break;
+			    case JAUNE: bouton = boutonJaune; break;
+			    case MAUVE: bouton = boutonMauve; break;
 			}
 
             if (bouton) {
                 ajoutEffectLumineux(bouton);
-
-                // Retirer l'effet de lueur après 250 ms
-                QTimer::singleShot(250, [bouton]() {
-					bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
-                    });
+    //             glowNote->start(250);
             }
 
             for (auto& note : *vecteur) {
@@ -1214,6 +1221,11 @@ void Gameplay::setJoueur(Joueur* nouveauJoueur) {
         delete joueurActuel;  // Supprime l'ancien joueur pour éviter les fuites mémoire
     }
     gameStruct.joueur = nouveauJoueur;
+}
+
+ComArduino* Gameplay::getCom()
+{
+    return comArduino;
 }
 
 Joueur* Gameplay::getJoueur() {

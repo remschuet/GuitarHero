@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
     const ComMode MODE = FILAIRE;
-    const std::string NOM_PORT = "COM5";
+    const std::string NOM_PORT = "COM6";
 
     // Création de la fenêtre principale
     QMainWindow mainWindow;

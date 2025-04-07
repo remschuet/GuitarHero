@@ -10,5 +10,6 @@ class ComArduino {
 public:
     virtual bool envoyerMessage(const json& j_msg) = 0;
     virtual bool recevoirMessage(std::string& msg) = 0;
+    virtual void fushPopre() = 0;
 };
 

@@ -68,12 +68,14 @@ public:
     GameStruct gameStruct;
     Joueur* getJoueur();
     void setJoueur(Joueur* nouveauJoueur);
+    ComArduino* getCom();
+    ComArduino* comArduino;
+
 
 private:
     bool bonusActiveMuons = false;
     double multiplicateurPoint = 1.0;
     Joueur* joueurActuel = nullptr;
-    ComArduino* comArduino;
     ComMode modeCommunication;
     bool verbose;
     bool admin;
@@ -84,6 +86,7 @@ private:
     QTimer* timerBtn;
     QTimer* timerGameAffichage;
     QTimer* timerBonusMuons;
+    QTimer* glowNote;
     CouleurBouton btnGame = UNKNOWN;
     //private slots:
   //  void updateGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager);

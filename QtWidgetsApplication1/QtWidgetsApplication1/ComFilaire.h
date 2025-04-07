@@ -28,12 +28,18 @@ public:
     }
 
     ~ComFilaire() {
+        std::cout << "Destruction de ComFilaire" << std::endl;
         delete arduino;
+        std::cout << "Arduino libéré" << std::endl;
     }
 
     bool envoyerMessage(const json& j_msg) override {
         std::string msg = j_msg.dump();
         return arduino->writeSerialPort(msg.c_str(), msg.length());
+    }
+
+    void fushPopre() override{
+
     }
 
     bool recevoirMessage(std::string& msg) override {
