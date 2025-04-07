@@ -1177,22 +1177,22 @@ void Gameplay::choixBoutonGame() {
 
     for (auto it = j.begin(); it != j.end(); ++it) {
 
-        if (it.key() == BTN_BLEU && it.value() == BTN_RELACHE) {
+        if (it.key() == BTN_BLEU && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::BLEU;
         }
-        else if (it.key() == BTN_ROUGE && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_ROUGE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::ROUGE;
         }
-        else if (it.key() == BTN_VERT && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_VERT && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::VERT;
         }
-        else if (it.key() == BTN_JAUNE && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_JAUNE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::JAUNE;
         }
-        else if (it.key() == BTN_MAUVE && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_MAUVE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::MAUVE;
         }
-        else if (it.key() == BTN_QUITTER && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_QUITTER && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::QUITTER;
         }
         else if (it.key() == BTN_JOYSTICK) {
