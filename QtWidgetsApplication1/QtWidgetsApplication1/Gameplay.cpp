@@ -141,7 +141,17 @@ void Gameplay::affichageTitre(QLabel* label, QVBoxLayout* layoutTitre) {
     label->clear();
 
 	label->setText("Sherby Guitar");
-    label->setFont(QFont("Arial", 24, QFont::Bold));
+    label->setStyleSheet(
+        "color: white; "
+        "font-size: 30px; "
+        "font-weight: bold; "
+        "text-transform: uppercase; "
+        "letter-spacing: 3px; "
+        "text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8); "
+        "border: none; "
+        "padding: 10px; "
+        "background: linear-gradient(to right, #ff0000, #ff6600, #ffff00, #33cc33, #0099ff, #9900cc); "
+        "border-radius: 10px;");
     label->setAlignment(Qt::AlignCenter | Qt::AlignTop);
     layoutTitre->addWidget(label, 0, Qt::AlignHCenter);  // Centre le titre horizontalement
     layoutTitre->setSpacing(0);  // Pas d'espace supplémentaire entre le titre et les éléments en dessous
@@ -196,7 +206,17 @@ void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
 void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
 
     label->setText(QString("Score Actuel : %1").arg(gameStruct.score));
-    label->setFont(QFont("Arial", 16));
+    label->setStyleSheet(
+        "color: white; "
+        "font-size: 12px; "
+        "font-weight: bold; "
+        "text-transform: uppercase; "
+        "letter-spacing: 3px; "
+        "text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8); "
+        "border: none; "
+        "padding: 10px; "
+        "background: linear-gradient(to right, #ff0000, #ff6600, #ffff00, #33cc33, #0099ff, #9900cc); "
+        "border-radius: 10px;");
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->insertWidget(0, label);
 
@@ -208,7 +228,17 @@ void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
 
     int maxScore = gameStruct.joueur->getMeilleurScore();
     label->setText(QString("Meilleur Score : %1").arg(maxScore));
-    label->setFont(QFont("Arial", 16));
+    label->setStyleSheet(
+        "color: white; "
+        "font-size: 12px; "
+        "font-weight: bold; "
+        "text-transform: uppercase; "
+        "letter-spacing: 3px; "
+        "text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8); "
+        "border: none; "
+        "padding: 10px; "
+        "background: linear-gradient(to right, #ff0000, #ff6600, #ffff00, #33cc33, #0099ff, #9900cc); "
+        "border-radius: 10px;");
     label->setAlignment(Qt::AlignCenter);
     if (!layout->children().contains(label)) layout->addWidget(label);
     //label->show();
@@ -330,7 +360,14 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     QWidget* boiteNotes = new QWidget();
     boiteNotes->setFixedSize((noteWidth * 9), 700);
-    boiteNotes->setStyleSheet("background-color: pink");
+  //  QString imagePath = "./images/grid vert 2.png";
+    boiteNotes->setStyleSheet(QString(
+        "background-image: url(%1);"
+        "background-repeat: no-repeat;"
+        "background-position: center;"
+        "background-size: 10%;"
+        "background-color : rose"
+    ));//.arg(imagePath));
     boiteNotes->show();
     //boiteNotes->move((TAILLE_ECRAN_X)-((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2)); does not work
     //boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);
@@ -364,7 +401,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QLabel* invisible = new QLabel();
    // invisible->setVisible(false);
 
-    invisible->setFixedSize(QT_BLOCINVISIBLE, 100);
+    invisible->setFixedSize(QT_BLOCINVISIBLE +75, 100);
     invisible->setStyleSheet(QString(
         "background - color: transparent; "
   
