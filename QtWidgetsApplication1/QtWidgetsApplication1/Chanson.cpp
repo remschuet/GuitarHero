@@ -68,6 +68,17 @@ void Chanson::arretMusique() {
 
 string Chanson::getNomChanson()
 {
+	enleverCrochets(nomChansonMp3);
+	// Extraire le nom de la chanson sans l'extension
+	size_t pos = nomChansonMp3.find_last_of("\\/");
+	if (pos != std::string::npos) {
+		nomChansonMp3 = nomChansonMp3.substr(pos + 1);
+	}
+	size_t dotPos = nomChansonMp3.find_last_of('.');
+	if (dotPos != std::string::npos) {
+		nomChansonMp3 = nomChansonMp3.substr(0, dotPos);
+	}
+    nomChansonMp3 = "Chanson en cours : " + nomChansonMp3;
     return nomChansonMp3;
 }
 

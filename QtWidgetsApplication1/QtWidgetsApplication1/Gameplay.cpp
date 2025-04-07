@@ -298,9 +298,9 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
                         case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;"); break;
-                        case BLEU: note.positionXQt = noteWidth * 2 + 7.5; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
                         case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;"); break;
-                        case JAUNE: note.positionXQt = noteWidth * 6 + 7.5;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
                         case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
@@ -360,18 +360,40 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     long long dureeTotale = gameStruct.chansonEnCours->getDureeChanson();
     //double pixelsPerMs = static_cast<double>(startNote) / dureeTotale; // Calcul des pixels par milliseconde
     btnGame = UNKNOWN;
+
+    QLabel* backgroudGame = new QLabel(stack);
+    QString imageBackgroundPath = "./images/fondGame.png";
+
+    backgroudGame->setStyleSheet(QString(
+        "QLabel {"
+        "background-image: url(%1);"
+        "background-repeat: no-repeat;"
+        "background-position: center;"
+        "background-color: rgba(255, 255, 255, 150);" // Transparence de l'image (150 = environ 60% opaque)
+        "}"
+    ).arg(imageBackgroundPath));
+    backgroudGame->setFixedSize(stack->width(), stack->height());
+    backgroudGame->lower(); // Met l'image derrière tous les autres widgets
+    backgroudGame->show();
+
     QVBoxLayout* layoutCentreNote = new QVBoxLayout();
 
     QWidget* boiteNotes = new QWidget();
     boiteNotes->setFixedSize((noteWidth * 9 + 15), 700);
   //  QString imagePath = "./images/grid vert 2.png";
-    boiteNotes->setStyleSheet(QString(
+    QLabel* imagesBoite = new QLabel(boiteNotes);
+
+    imagesBoite->setFixedSize((noteWidth * 9 +15), 700);
+    QString imagePath = "./images/grid final.png";
+
+    imagesBoite->setStyleSheet(QString(
         "background-image: url(%1);"
         "background-repeat: no-repeat;"
         "background-position: center;"
-        "background-size: 10%;"
-        "background-color : rose"
-    ));//.arg(imagePath));
+      
+    ).arg(imagePath));
+    imagesBoite->lower();
+
     boiteNotes->show();
     //boiteNotes->move((TAILLE_ECRAN_X)-((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2)); does not work
     //boiteNotes->setGeometry((TAILLE_ECRAN_X ) - ((noteWidth * 6) / 2), TAILLE_ECRAN_Y - (700 / 2), (noteWidth * 6), 700);
@@ -405,7 +427,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QLabel* invisible = new QLabel();
    // invisible->setVisible(false);
 
-    invisible->setFixedSize(QT_BLOCINVISIBLE - 70, 100);
+    invisible->setFixedSize(QT_BLOCINVISIBLE + 60, 100);
     invisible->setStyleSheet(QString(
         "background - color: transparent; "
   
@@ -415,9 +437,18 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     //Ajout de layout pour les autres items et ajout au layout principal
     QVBoxLayout* titleLayout = new QVBoxLayout();
    // titleLayout->addWidget(titleLabel);
-    
-   affichageTitre(titleLabel,titleLayout);
-   layoutGame->addLayout(titleLayout);
+   
+	QLabel* titreChansonLabel = new QLabel(invisible);
+	titreChansonLabel->setText(QString::fromStdString(gameStruct.chansonEnCours->getNomChanson()));
+	titreChansonLabel->setFont(QFont("Arial", 17));
+    titreChansonLabel->setStyleSheet("color : white;");
+	titreChansonLabel->setAlignment(Qt::AlignCenter);
+	titreChansonLabel->setGeometry(0, 0, invisible->width(), invisible->height());
+    titreChansonLabel->show();
+
+
+    affichageTitre(titleLabel,titleLayout);
+    layoutGame->addLayout(titleLayout);
 
     layoutGame->addLayout(NotesLayout);
     
@@ -468,7 +499,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     boutonBleu->setStyleSheet("background-color: cyan; border-radius: 32px;");
     boutonBleu->show();
-    boutonBleu->setGeometry(noteWidth * 2 , 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
+    boutonBleu->setGeometry(noteWidth * 2 - 7.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->show();
 
@@ -480,7 +511,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     boutonJaune->setStyleSheet("background-color: gold; border-radius: 32px;");
     boutonJaune->show();
-    boutonJaune->setGeometry(noteWidth * 6, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
+    boutonJaune->setGeometry(noteWidth * 6 +2.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->show();
 
