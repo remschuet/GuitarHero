@@ -256,18 +256,47 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 }
 
 void Gameplay::ajoutEffectLumineux(QLabel* bouton) {
-	// Ajout d'un effet lumineux sur le bouton
-	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(bouton);
-	effect->setBlurRadius(30);
-	effect->setOffset(0, 0);
-	effect->setColor(QColor("lightgoldenrodyellow"));
-	bouton->setGraphicsEffect(effect);
 
-    //effet plus lumineux
-	QGraphicsColorizeEffect* colorEffect = new QGraphicsColorizeEffect(bouton);
-	colorEffect->setColor(QColor("lightgoldenrodyellow"));
-	colorEffect->setStrength(1.0); // Ajuster la force de l'effet
-	bouton->setGraphicsEffect(colorEffect);
+    QPixmap pixmap(bouton->size()); // Create a pixmap with the same size as the label
+    pixmap.fill(Qt::transparent);  // Transparent background
+
+    QPainter painter(&pixmap);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    // Define the rectangle and radial gradient
+    QRectF rect(0, 0, bouton->width(), bouton->height());
+    QRadialGradient gradient(rect.center(), rect.width() / 2);
+    gradient.setColorAt(0.0, QColor("lightgoldenrodyellow")); // Bright center
+    gradient.setColorAt(0.6, QColor("lightgoldenrodyellow").lighter(150)); // Fading glow
+    gradient.setColorAt(1.0, Qt::transparent); // Transparent edges
+
+    painter.setBrush(gradient);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(rect); // Draw the glowing effect
+
+    painter.end();
+
+    // Apply the pixmap to the QLabel
+    bouton->setPixmap(pixmap);
+    bouton->update();
+
+    QTimer::singleShot(250, [bouton]() {
+        bouton->clear(); // Réinitialiser l'image du QLabel
+        });
+
+
+	// Ajout d'un effet lumineux sur le bouton
+	//QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(bouton);
+	//effect->setBlurRadius(15);
+	//effect->setOffset(0, 0);
+	//effect->setColor(QColor("lightgoldenrodyellow"));
+	//bouton->setGraphicsEffect(effect);
+
+ //   //effet plus lumineux
+	//QGraphicsColorizeEffect* colorEffect = new QGraphicsColorizeEffect(bouton);
+	//colorEffect->setColor(QColor("lightgoldenrodyellow"));
+	//colorEffect->setStrength(1.0); // Ajuster la force de l'effet
+	//bouton->setGraphicsEffect(colorEffect);
 }
 
 void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack, QWidget* boiteNotes) {
@@ -608,24 +637,15 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         choixBoutonGame();
         });
 
-<<<<<<< HEAD
 	QLabel* bouton = nullptr;
     connect(glowNote, &QTimer::timeout, this, [=]() mutable {
         if (bouton != nullptr) {
-            bouton->setGraphicsEffect(nullptr);
+            //bouton->setGraphicsEffect(nullptr);
+            //bouton->clear();
         }
         // bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
         });
-=======
 
-    QLabel* bouton = nullptr;
-    //connect(glowNote, &QTimer::timeout, this, [=]() mutable {
-    //    if (bouton != nullptr) {
-    //        bouton->setGraphicsEffect(nullptr);
-    //    }
-    //    // bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
-    //    });
->>>>>>> 3587cc0c4e18ae21a5f796e4f5c0fb3fc6d94c9e
     //glowNote->setSingleShot(true);
 
 
@@ -718,7 +738,6 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             bool aTouche = false;
 
             //ajout l'effet de lueur au bouton presse
-<<<<<<< HEAD
             switch (btnGame) {
             case ROUGE: bouton = boutonRouge; break;
             case BLEU: bouton = boutonBleu; break;
@@ -730,19 +749,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             if (bouton) {
                 ajoutEffectLumineux(bouton);
                 //             glowNote->start(250);
-=======
-			switch (btnGame) {
-                case ROUGE: bouton = boutonRouge; break;
-			    case BLEU: bouton = boutonBleu; break;
-			    case VERT: bouton = boutonVert; break;
-			    case JAUNE: bouton = boutonJaune; break;
-			    case MAUVE: bouton = boutonMauve; break;
-			}
 
-            if (bouton) {
-                ajoutEffectLumineux(bouton);
-    //             glowNote->start(250);
->>>>>>> 3587cc0c4e18ae21a5f796e4f5c0fb3fc6d94c9e
             }
 
             for (auto& note : *vecteur) {
