@@ -833,69 +833,77 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
 {
     game->gameStruct.chansonEnCours->resetChrono();
 
-    // Créer une boîte de dialogue
-    QMessageBox msgBox;
-    // msgBox.setWindowTitle("Fin de la partie");
-    QString message = QString("\n\nLa partie est terminée !\t\t\t\t - \n\nScore : %1                               \n").arg(game->gameStruct.score);
-    msgBox.setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint);
-    msgBox.setText(message);
-    // QPushButton* replayButton = msgBox.addButton("Rejouer", QMessageBox::AcceptRole);
-    QPushButton* menuButton = msgBox.addButton("Retour au menu", QMessageBox::AcceptRole);
-    // QPushButton* cancelButton = msgBox.addButton("Annuler", QMessageBox::RejectRole); // Bouton personnalisé pour Cancel
+    int score = game->gameStruct.score;
+    int meilleurScore = game->gameStruct.joueur->getMeilleurScore();
+    bool nouveauRecord = score > meilleurScore;
 
-    msgBox.setMinimumSize(800, 400); // largeur, hauteur
+    QDialog dialog;
+    dialog.setWindowFlags(Qt::FramelessWindowHint);
+    dialog.setMinimumSize(900, 500);
+    dialog.setStyleSheet("background-color: #fefbd8;");
 
-    // Appliquer un style CSS (QSS)
-    msgBox.setStyleSheet(R"(
-    QMessageBox {
-        background-color: #FFFD55;
-        font-size: 16px;
-    }
-    QPushButton {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px;
-        border-radius: 8px;
-        min-width: 120px;
-    }
-    QPushButton:hover {
-        background-color: #45a049;
-    }
-)");
+    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+    layout->setAlignment(Qt::AlignCenter);
 
-    if (game->gameStruct.joueur->ScoreMax < game->gameStruct.score) {
-        // sauvegarder le score
-        DAOSqlite* sqlite = DAOSqlite::getInstance();
-        sqlite->updateScoreJoueur(game->gameStruct.joueur->getNomJoueur(), game->gameStruct.score);
-        game->gameStruct.joueur->ScoreMax = game->gameStruct.score;
+    QLabel* title = new QLabel("🎉 Fin de la Partie 🎉");
+    QFont titleFont("Arial", 36, QFont::Bold);
+    title->setFont(titleFont);
+    title->setStyleSheet("color: #333;");
+    title->setAlignment(Qt::AlignCenter);
+    layout->addWidget(title);
+
+    QLabel* scoreLabel = new QLabel(QString("Score : %1").arg(score));
+    QFont scoreFont("Arial", 28);
+    scoreLabel->setFont(scoreFont);
+    scoreLabel->setStyleSheet("color: #444;");
+    scoreLabel->setAlignment(Qt::AlignCenter);
+    layout->addWidget(scoreLabel);
+
+    if (nouveauRecord) {
+        QLabel* recordLabel = new QLabel("🏆 Nouveau Record Personnel !");
+        recordLabel->setFont(QFont("Arial", 28, QFont::Bold));
+        recordLabel->setStyleSheet("color: green;");
+        recordLabel->setAlignment(Qt::AlignCenter);
+        layout->addWidget(recordLabel);
     }
 
-    // Exécuter la boîte de dialogue
-    msgBox.exec();
+    layout->addSpacing(50);
 
-    //if (msgBox.clickedButton() == replayButton) {
-
-    //    QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
-    //}
-    //
-    if (msgBox.clickedButton() == menuButton) {
-        // Nettoyer le layout avant de retourner au menu pour éviter les résidus
-        if (layoutGame) {
-            QLayoutItem* item;
-            while ((item = layoutGame->takeAt(0)) != nullptr) {
-                delete item->widget();
-                delete item;
-            }
+    QPushButton* boutonRetour = new QPushButton("🏠 Retour au menu");
+    boutonRetour->setMinimumSize(300, 80);
+    boutonRetour->setStyleSheet(R"(
+        QPushButton {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 28px;
+            border-radius: 15px;
         }
-        game->gameStruct.chansonEnCours->resetChrono();
-        // Retourner au menu principal avec changerDePage
-        crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()));
-        changerDePage(stack, Menu, game, this);
+        QPushButton:hover {
+            background-color: #45a049;
+        }
+    )");
+    layout->addWidget(boutonRetour, 0, Qt::AlignCenter);
+
+    QObject::connect(boutonRetour, &QPushButton::clicked, &dialog, &QDialog::accept);
+
+    if (nouveauRecord) {
+        DAOSqlite* sqlite = DAOSqlite::getInstance();
+        sqlite->updateScoreJoueur(game->gameStruct.joueur->getNomJoueur(), score);
+        game->gameStruct.joueur->ScoreMax = score;
     }
-    //else if (msgBox.clickedButton() == cancelButton) {
-    //    // Afficher "T'abuses" si Cancel est cliqué
-    //    QMessageBox::information(nullptr, "Sérieux ?", "T'abuses");
-    //}
+
+    dialog.exec();
+
+    if (layoutGame) {
+        QLayoutItem* item;
+        while ((item = layoutGame->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+    }
+    game->gameStruct.chansonEnCours->resetChrono();
+    crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()));
+    changerDePage(stack, Menu, game, this);
 }
 
 void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
