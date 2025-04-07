@@ -438,9 +438,14 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     boiteNotes->setFixedSize((noteWidth * 9 + 15), 700);
   //  QString imagePath = "./images/grid vert 2.png";
     QLabel* imagesBoite = new QLabel(boiteNotes);
+    
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(imagesBoite);
+    opacityEffect->setOpacity(0.7);
+    imagesBoite->setGraphicsEffect(opacityEffect);
 
     imagesBoite->setFixedSize((noteWidth * 9 +15), 700);
     QString imagePath = "./images/grid final.png";
+    
 
     imagesBoite->setStyleSheet(QString(
         "background-image: url(%1);"

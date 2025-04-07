@@ -97,4 +97,5 @@ bool ComBluetooth::recevoirMessage(std::string& msg) {
 
 void ComBluetooth::fushPopre()
 {
+    fermerPort();
 }
