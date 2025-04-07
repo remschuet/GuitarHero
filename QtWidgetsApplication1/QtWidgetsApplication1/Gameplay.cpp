@@ -258,10 +258,16 @@ void Gameplay::affichageNomJoueur(QLabel* label, QHBoxLayout* layout) {
 void Gameplay::ajoutEffectLumineux(QLabel* bouton) {
 	// Ajout d'un effet lumineux sur le bouton
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect(bouton);
-	effect->setBlurRadius(63);
+	effect->setBlurRadius(30);
 	effect->setOffset(0, 0);
-	effect->setColor(Qt::white);
+	effect->setColor(QColor("lightgoldenrodyellow"));
 	bouton->setGraphicsEffect(effect);
+
+    //effet plus lumineux
+	QGraphicsColorizeEffect* colorEffect = new QGraphicsColorizeEffect(bouton);
+	colorEffect->setColor(QColor("lightgoldenrodyellow"));
+	colorEffect->setStrength(1.0); // Ajuster la force de l'effet
+	bouton->setGraphicsEffect(colorEffect);
 }
 
 void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManager* manager, QVBoxLayout* layoutGame, QStackedWidget* stack, QWidget* boiteNotes) {
@@ -494,7 +500,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     //note.positionXQt = 0; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;");
 
-    boutonRouge->setStyleSheet("background-color: tomato; border-radius: 32px;");
+    boutonRouge->setStyleSheet("background-color: #ff4122; border-radius: 32px;");
     boutonRouge->show();
     boutonRouge->setGeometry(0, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonRouge->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
@@ -602,6 +608,16 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         choixBoutonGame();
         });
 
+	QLabel* bouton = nullptr;
+    connect(glowNote, &QTimer::timeout, this, [=]() mutable {
+        if (bouton != nullptr) {
+            bouton->setGraphicsEffect(nullptr);
+        }
+        // bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
+        });
+    //glowNote->setSingleShot(true);
+
+
     connect(timerBonusMuons, &QTimer::timeout, this, [=]() mutable {
         multiplicateurPoint = 1; // revenir à la normale
         bonusActiveMuons = false;
@@ -689,23 +705,19 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         // Appuyé sur une touche
         if (btnGame != UNKNOWN && btnGame != JOYSTICK && btnGame != QUITTER) {
             bool aTouche = false;
-            QLabel* bouton = nullptr;
+
             //ajout l'effet de lueur au bouton presse
-			switch (btnGame) {
-			case ROUGE: ajoutEffectLumineux(boutonRouge); break;
-			case BLEU: ajoutEffectLumineux(boutonBleu); break;
-			case VERT: ajoutEffectLumineux(boutonVert); break;
-			case JAUNE: ajoutEffectLumineux(boutonJaune); break;
-			case MAUVE: ajoutEffectLumineux(boutonMauve); break;
-			}
+            switch (btnGame) {
+            case ROUGE: bouton = boutonRouge; break;
+            case BLEU: bouton = boutonBleu; break;
+            case VERT: bouton = boutonVert; break;
+            case JAUNE: bouton = boutonJaune; break;
+            case MAUVE: bouton = boutonMauve; break;
+            }
 
             if (bouton) {
                 ajoutEffectLumineux(bouton);
-
-                // Retirer l'effet de lueur après 250 ms
-                QTimer::singleShot(250, [bouton]() {
-					bouton->setGraphicsEffect(nullptr); // Retire l'effet de lueur
-                    });
+                //             glowNote->start(250);
             }
 
             for (auto& note : *vecteur) {
