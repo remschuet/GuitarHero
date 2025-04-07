@@ -298,9 +298,9 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
                         case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;"); break;
-                        case BLEU: note.positionXQt = noteWidth * 2 + 7.5; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
                         case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;"); break;
-                        case JAUNE: note.positionXQt = noteWidth * 6 + 7.5;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
                         case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
@@ -411,7 +411,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QLabel* invisible = new QLabel();
    // invisible->setVisible(false);
 
-    invisible->setFixedSize(QT_BLOCINVISIBLE - 70, 100);
+    invisible->setFixedSize(QT_BLOCINVISIBLE + 60, 100);
     invisible->setStyleSheet(QString(
         "background - color: transparent; "
   
@@ -474,7 +474,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     boutonBleu->setStyleSheet("background-color: cyan; border-radius: 32px;");
     boutonBleu->show();
-    boutonBleu->setGeometry(noteWidth * 2 , 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
+    boutonBleu->setGeometry(noteWidth * 2 - 7.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->show();
 
@@ -486,7 +486,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     boutonJaune->setStyleSheet("background-color: gold; border-radius: 32px;");
     boutonJaune->show();
-    boutonJaune->setGeometry(noteWidth * 6, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
+    boutonJaune->setGeometry(noteWidth * 6 +2.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->show();
 
