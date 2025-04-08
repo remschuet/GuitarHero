@@ -418,7 +418,7 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
         QComboBox QAbstractItemView {
             background-color: #222;
             selection-background-color: #00A86B;
-            color: #000;
+            color: #FFFFFF;
         }
 
         QListWidget::item {
@@ -427,7 +427,7 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
 
         QListWidget::item:selected {
             background-color: #00A86B;
-            color: black;
+            color: white;
         }
 
         QPushButton {
