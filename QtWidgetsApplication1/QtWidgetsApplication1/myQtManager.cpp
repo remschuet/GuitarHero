@@ -359,40 +359,138 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     stack->addWidget(pageMenu);
 }
 
+QStringList separerChaines(const QStringList& listeChaines) {
+    QStringList resultat; // Liste pour stocker les premières parties
+    QSet<QString> motsUniques; // Ensemble pour vérifier les doublons
+
+    // Parcourir chaque chaîne de la liste
+    for (const QString& chaine : listeChaines) {
+        // Trouver la position du tiret
+        int position = chaine.indexOf('-');
+
+        QString premierePartie;
+        if (position != -1) {
+            premierePartie = chaine.left(position); // Prend tout avant le tiret
+        }
+        else {
+            premierePartie = chaine; // Si pas de tiret, prendre la chaîne entière
+        }
+
+        // Ajouter seulement si ce mot n'a pas déjà été vu
+        if (!motsUniques.contains(premierePartie)) {
+            motsUniques.insert(premierePartie); // Ajouter au set des mots uniques
+            resultat.append(premierePartie);    // Ajouter à la liste de résultat
+        }
+    }
+
+    return resultat;
+}
+
+
 void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager) {
     QDialog dialog(parent);
-    dialog.setWindowTitle("Sélectionner une musique");
-    dialog.setModal(true);  // Bloque les interactions avec la fenêtre principale
+    dialog.setModal(true);
+    dialog.resize(650, 720);
+    dialog.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+    dialog.setAttribute(Qt::WA_TranslucentBackground);
 
-    // Layout principal
-    QVBoxLayout* layout = new QVBoxLayout(&dialog);
+    dialog.setStyleSheet(R"(
+        QDialog {
+            border-radius: 20px;
+            background-color: rgba(0, 0, 0, 220);
+            color: #FFFFFF;
+        }
 
-    // Liste déroulante pour choisir la difficulté
+        QLabel {
+            font-size: 16px;
+            color: #00A86B;
+            font-weight: bold;
+        }
+
+        QComboBox, QListWidget {
+            background-color: #1a1a1a;
+            color: #FFFFFF;
+            border: 1px solid #00A86B;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        QComboBox QAbstractItemView {
+            background-color: #222;
+            selection-background-color: #00A86B;
+            color: #000;
+        }
+
+        QListWidget::item {
+            padding: 6px;
+        }
+
+        QListWidget::item:selected {
+            background-color: #00A86B;
+            color: black;
+        }
+
+        QPushButton {
+            background-color: #444;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid #00A86B;
+        }
+
+        QPushButton:hover {
+            background-color: #00A86B;
+            color: black;
+        }
+
+        QPushButton#randomMusic {
+            background-color: #00A86B;
+        }
+
+        QPushButton#randomMusic:hover {
+            background-color: #9F30E9;
+            color: black;
+        }
+    )");
+
+    QWidget* container = new QWidget();
+    container->setObjectName("popupContainer");
+    container->setStyleSheet(R"(
+    QWidget#popupContainer {
+        background-color: rgba(0, 0, 0, 300);
+        border-radius: 20px;
+    }
+    )");
+
+    QVBoxLayout* dialogLayout = new QVBoxLayout(&dialog);
+    dialogLayout->setContentsMargins(0, 0, 0, 0);
+    dialogLayout->addWidget(container);
+
+    QVBoxLayout* layout = new QVBoxLayout(container);
+
     QComboBox* comboBox = new QComboBox();
-    comboBox->addItem("Facile");
-    comboBox->addItem("Intermédiaire");
-    comboBox->addItem("Difficile");
-    comboBox->addItem("Expert");
-
+    comboBox->addItems({ "Facile", "Intermédiaire", "Difficile", "Expert" });
     layout->addWidget(new QLabel("Choisissez la difficulté :"));
     layout->addWidget(comboBox);
 
-    // Liste de chansons
+    QComboBox* comboBoxAuteur = new QComboBox();
+    comboBoxAuteur->addItem("Tous");
+    comboBoxAuteur->addItems(separerChaines(CHANSON_FACILE));
+    layout->addWidget(new QLabel("Choisissez votre artiste :"));
+    layout->addWidget(comboBoxAuteur);
+
     QListWidget* listWidget = new QListWidget();
     layout->addWidget(new QLabel("Sélectionnez une musique :"));
     layout->addWidget(listWidget);
 
-    // Bouton pour valider
     QPushButton* btnValider = new QPushButton("Sélectionner");
     layout->addWidget(btnValider);
 
-    // Bouton random
-    QPushButton* randomMusic = new QPushButton("Musique Aleatoire");
+    QPushButton* randomMusic = new QPushButton("Musique Aléatoire");
+    randomMusic->setObjectName("randomMusic");
     layout->addWidget(randomMusic);
 
-    // Remplissage des listes selon la difficulté 
-    //****- A modifier pour avoir les constantes des chansons en fonction des dificultés-****
-    // Remplissage des listes selon la difficulté
     QMap<QString, QStringList> chansons = {
         {"Facile", CHANSON_FACILE},
         {"Intermédiaire", CHANSON_INTERMEDIAIRE},
@@ -400,81 +498,84 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
         {"Expert", CHANSON_EXPERT}
     };
 
-    // Remplir la liste des chansons au début
-    QObject::connect(comboBox, &QComboBox::currentTextChanged, [&](const QString& niveau) {
+    auto updateList = [&](const QString& niveau) {
+        comboBoxAuteur->clear();
+        comboBoxAuteur->addItem("Tous");
+        comboBoxAuteur->addItems(separerChaines(chansons[niveau]));
+
         listWidget->clear();
         listWidget->addItems(chansons[niveau]);
-        });
+        };
 
-    // Charger la liste par défaut (Facile)
-    listWidget->addItems(chansons["Facile"]);
+    auto updateListByAuthor = [&]() {
+        QString niveau = comboBox->currentText();
+        QString auteur = comboBoxAuteur->currentText();
+        listWidget->clear();
 
-    // Gestion du bouton sélection
+        const QStringList& chansonsNiveau = chansons[niveau];
+        if (auteur == "Tous") {
+            listWidget->addItems(chansonsNiveau);
+        }
+        else {
+            for (const QString& chanson : chansonsNiveau) {
+                if (chanson.contains(auteur)) {
+                    listWidget->addItem(chanson);
+                }
+            }
+        }
+        };
+
+    QObject::connect(comboBox, &QComboBox::currentTextChanged, updateList);
+    QObject::connect(comboBoxAuteur, &QComboBox::currentTextChanged, updateListByAuthor);
+
+    updateList("Facile");
+
     QObject::connect(btnValider, &QPushButton::clicked, [&]() {
         QListWidgetItem* selectedItem = listWidget->currentItem();
-        QString niveauChoisi = comboBox->currentText(); // Récupérer le niveau sélectionné
-        if (selectedItem) {
-            QString chansonChoisie = selectedItem->text();
+        QString niveau = comboBox->currentText();
+        if (!selectedItem) return;
 
+        QString chanson = selectedItem->text();
+        QString suffix;
+        if (niveau == "Facile") suffix = "[EasySingle]";
+        else if (niveau == "Intermédiaire") suffix = "[MediumSingle]";
+        else if (niveau == "Difficile") suffix = "[HardSingle]";
+        else if (niveau == "Expert") suffix = "[ExpertSingle]";
 
-            if (niveauChoisi == "Facile") {
-                myQtManager::nomChanson = chansonChoisie.toStdString() + "[EasySingle]";
-            }
-			else if (niveauChoisi == "Intermédiaire") {
-                myQtManager::nomChanson = chansonChoisie.toStdString() + "[MediumSingle]";
-            }
-			else if (niveauChoisi == "Difficile") {
-                myQtManager::nomChanson = chansonChoisie.toStdString() + "[HardSingle]";
-            }
-			else if (niveauChoisi == "Expert") {
-                myQtManager::nomChanson = chansonChoisie.toStdString() + "[ExpertSingle]";
-            }
-            
-            G->gameStruct.chansonEnCours = new Chanson(myQtManager::nomChanson);
+        myQtManager::nomChanson = chanson.toStdString() + suffix.toStdString();
+        G->gameStruct.chansonEnCours = new Chanson(myQtManager::nomChanson);
 
-            qDebug() << "Niveau sélectionné :" << niveauChoisi; // Ajouter le niveau au print
-            qDebug() << "Musique sélectionnée :" << chansonChoisie;
+        qDebug() << "Niveau sélectionné :" << niveau;
+        qDebug() << "Musique sélectionnée :" << chanson;
 
-            // Fermer le popup
-            dialog.accept();
-
-            // Changer de page vers Game
-            changerDePage(stack, Game, G, manager);
-        }
+        dialog.accept();
+        changerDePage(stack, Game, G, manager);
         });
 
     QObject::connect(randomMusic, &QPushButton::clicked, [&]() {
-        QString niveauChoisi = comboBox->currentText();
+        QString niveau = comboBox->currentText();
+        if (!chansons.contains(niveau) || chansons[niveau].isEmpty()) return;
 
-        if (!chansons.contains(niveauChoisi) || chansons[niveauChoisi].isEmpty()) {
-            qDebug() << "Aucune chanson disponible pour le niveau :" << niveauChoisi;
-            return;
-        }
-
-        const QStringList& listeChansons = chansons[niveauChoisi];
+        const QStringList& liste = chansons[niveau];
         srand(time(NULL));
-        QString chansonChoisie = listeChansons[rand() % listeChansons.size()];
+        QString chanson = liste[rand() % liste.size()];
 
-        // Format du nom de chanson utilisé dans le backend
         QString suffix;
-        if (niveauChoisi == "Facile") suffix = "[EasySingle]";
-        else if (niveauChoisi == "Intermédiaire") suffix = "[MediumSingle]";
-        else if (niveauChoisi == "Difficile") suffix = "[HardSingle]";
-        else if (niveauChoisi == "Expert") suffix = "[ExpertSingle]";
+        if (niveau == "Facile") suffix = "[EasySingle]";
+        else if (niveau == "Intermédiaire") suffix = "[MediumSingle]";
+        else if (niveau == "Difficile") suffix = "[HardSingle]";
+        else if (niveau == "Expert") suffix = "[ExpertSingle]";
 
-        myQtManager::nomChanson = chansonChoisie.toStdString() + suffix.toStdString();
-
+        myQtManager::nomChanson = chanson.toStdString() + suffix.toStdString();
         G->gameStruct.chansonEnCours = new Chanson(myQtManager::nomChanson);
 
-        qDebug() << "Niveau sélectionné :" << niveauChoisi;
-        qDebug() << "Musique sélectionnée :" << chansonChoisie;
+        qDebug() << "Niveau sélectionné :" << niveau;
+        qDebug() << "Musique sélectionnée :" << chanson;
 
-        dialog.accept(); // Fermer le popup
-        changerDePage(stack, Game, G, manager); // Aller au jeu
+        dialog.accept();
+        changerDePage(stack, Game, G, manager);
         });
 
-
-    // Affichage de la boîte de dialogue
     dialog.exec();
 }
 
@@ -895,7 +996,7 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     layout->setAlignment(Qt::AlignCenter);
 
     QLabel* title = new QLabel("🎸 Fin de la Partie 🔥");
-    QFont titleFont("Bebas Neue", 40, QFont::Bold); // Police "Bebas Neue" pour un look rock
+    QFont titleFont("Bebas Neue", 40, QFont::Bold); 
     title->setFont(titleFont);
     title->setStyleSheet("color: #FFFFFF; background-color: transparent; text-shadow: 2px 2px 5px #00FF00;"); // Ombre verte pour un effet néon
     title->setAlignment(Qt::AlignCenter);
@@ -1157,7 +1258,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     // Titre
     QLabel* titre = new QLabel("Meilleurs Scores");
     titre->setAlignment(Qt::AlignHCenter);
-    QFont fontTitre("Arial", 18, QFont::Bold); // Taille réduite
+    QFont fontTitre("Bebas Neue", 18, QFont::Bold); // Taille réduite
     titre->setFont(fontTitre);
     titre->setStyleSheet(COULEUR_FOND);
     mainLayout->addWidget(titre);
