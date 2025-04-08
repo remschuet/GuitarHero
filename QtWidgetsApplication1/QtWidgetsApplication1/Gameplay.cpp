@@ -596,10 +596,15 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
 
     affichageMaxScore(maxScoreLabel, scoreLayout);
-    scoreLayout->setSpacing(2);  // Réduit l'espace entre les éléments à 2 pixels (au lieu de la valeur par défaut qui est souvent 6 ou 10)
+    scoreLayout->setAlignment(Qt::AlignTop);
+    scoreLayout->setSpacing(0);  // Réduit l'espace entre les éléments à 2 pixels (au lieu de la valeur par défaut qui est souvent 6 ou 10)
     scoreLayout->setContentsMargins(0, 0, 0, 0);
     progressLayout->setSpacing(1);
     progressLayout->setContentsMargins(0, 0, 0, 0);
+    QLabel* invisible4 = new QLabel();
+    invisible4->setFixedSize(0,100);
+    //invisible4->setStyleSheet();
+  //  scoreLayout->addWidget(invisible4);
     //backbutton
     QPushButton* backButton = new QPushButton("Retour");
     backButton->setStyleSheet(QString(
