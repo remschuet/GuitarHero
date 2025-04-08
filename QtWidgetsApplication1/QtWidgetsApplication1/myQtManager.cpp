@@ -143,7 +143,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
     //// Image de fond
     QLabel* backgroundLabel = new QLabel(page);
-    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-175, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("./images/placeholder_background_login.png");
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(true);
@@ -225,7 +225,7 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
 
     // Image de fond 
     QLabel* backgroundLabel = new QLabel(pageMenu);
-    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-190, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setAlignment(Qt::AlignCenter);
@@ -359,6 +359,34 @@ void myQtManager::qtPageMenu(QWidget* parent, QStackedWidget* stack, Gameplay* G
     stack->addWidget(pageMenu);
 }
 
+QStringList separerChaines(const QStringList& listeChaines) {
+    QStringList resultat; // Liste pour stocker les premières parties
+    QSet<QString> motsUniques; // Ensemble pour vérifier les doublons
+
+    // Parcourir chaque chaîne de la liste
+    for (const QString& chaine : listeChaines) {
+        // Trouver la position du tiret
+        int position = chaine.indexOf('-');
+
+        QString premierePartie;
+        if (position != -1) {
+            premierePartie = chaine.left(position); // Prend tout avant le tiret
+        }
+        else {
+            premierePartie = chaine; // Si pas de tiret, prendre la chaîne entière
+        }
+
+        // Ajouter seulement si ce mot n'a pas déjà été vu
+        if (!motsUniques.contains(premierePartie)) {
+            motsUniques.insert(premierePartie); // Ajouter au set des mots uniques
+            resultat.append(premierePartie);    // Ajouter à la liste de résultat
+        }
+    }
+
+    return resultat;
+}
+
+
 void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget* stack, Gameplay* G, myQtManager* manager) {
     QDialog dialog(parent);
     dialog.setWindowTitle("Sélectionner une musique");
@@ -376,6 +404,16 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
 
     layout->addWidget(new QLabel("Choisissez la difficulté :"));
     layout->addWidget(comboBox);
+    
+    // Liste déroulante pour nom auteur
+    QComboBox* comboBoxAuteur = new QComboBox();
+    comboBoxAuteur->clear();
+    comboBoxAuteur->addItem("Tous");
+    comboBoxAuteur->addItems(separerChaines(CHANSON_FACILE));
+
+    layout->addWidget(new QLabel("Choisissez votre artiste :"));
+    layout->addWidget(comboBoxAuteur);
+
 
     // Liste de chansons
     QListWidget* listWidget = new QListWidget();
@@ -402,8 +440,31 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
 
     // Remplir la liste des chansons au début
     QObject::connect(comboBox, &QComboBox::currentTextChanged, [&](const QString& niveau) {
+        comboBoxAuteur->clear();
+        comboBoxAuteur->addItem("Tous");
+        comboBoxAuteur->addItems(separerChaines(chansons[niveau]));
+
         listWidget->clear();
         listWidget->addItems(chansons[niveau]);
+        });
+
+
+    // Connecte aussi comboBoxAuteur pour gérer la sélection de l’auteur :
+    QObject::connect(comboBoxAuteur, &QComboBox::currentTextChanged, [&](const QString& auteur) {
+        listWidget->clear();
+        const QString& niveau = comboBox->currentText(); // récupère le niveau courant
+        const QStringList& chansonsDuNiveau = chansons[niveau];
+
+        if (auteur == "Tous") {
+            listWidget->addItems(chansonsDuNiveau);
+        }
+        else {
+            for (const QString& chanson : chansonsDuNiveau) {
+                if (chanson.contains(auteur)) {
+                    listWidget->addItem(chanson);
+                }
+            }
+        }
         });
 
     // Charger la liste par défaut (Facile)
@@ -1136,7 +1197,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
 
     // Image de fond 
     QLabel* backgroundLabel = new QLabel(pageMeilleursScores);
-    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-190, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setAlignment(Qt::AlignCenter);
@@ -1179,6 +1240,10 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     sqlite->getMeilleurScore(scores);
 
     for (size_t i = 0; i < 10; ++i) {
+
+        string a = scores[i].first;
+        int b = scores[i].second;
+
         QFrame* scoreCard = new QFrame();
         scoreCard->setStyleSheet("background-color: rgba(128, 128, 128, 0.5); "
             "border: 2px solid transparent; "
@@ -1207,11 +1272,14 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
             scoreCard->setStyleSheet("background-color: rgba(128, 128, 128, 0.5); "
                 "border: 2px solid " + borderColor + "; "
                 "border-radius: 8px; padding: 3px;");
+            
+            DAOSqlite* sqlite = DAOSqlite::getInstance();
+            Joueur* j = sqlite->getJoueur(scores[i].first);
 
             // Image du joueur (taille réduite)
             QLabel* imageLabel = new QLabel();
-            QString imagePath = (G && G->getJoueur() && scores[i].first == G->getJoueur()->getNomJoueur())
-                ? QString::fromStdString(G->getJoueur()->getImage())
+            QString imagePath = (G != nullptr && G->getJoueur() != nullptr)
+                ? QString::fromStdString(j->getImage())
                 : "./images/avatar.jpg";
 
             QPixmap pixmap(imagePath);
