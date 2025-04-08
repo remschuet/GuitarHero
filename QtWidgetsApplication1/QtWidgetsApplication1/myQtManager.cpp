@@ -895,7 +895,7 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     layout->setAlignment(Qt::AlignCenter);
 
     QLabel* title = new QLabel("🎸 Fin de la Partie 🔥");
-    QFont titleFont("Bebas Neue", 40, QFont::Bold); // Police "Bebas Neue" pour un look rock
+    QFont titleFont("Bebas Neue", 40, QFont::Bold); 
     title->setFont(titleFont);
     title->setStyleSheet("color: #FFFFFF; background-color: transparent; text-shadow: 2px 2px 5px #00FF00;"); // Ombre verte pour un effet néon
     title->setAlignment(Qt::AlignCenter);
@@ -1157,7 +1157,7 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     // Titre
     QLabel* titre = new QLabel("Meilleurs Scores");
     titre->setAlignment(Qt::AlignHCenter);
-    QFont fontTitre("Arial", 18, QFont::Bold); // Taille réduite
+    QFont fontTitre("Bebas Neue", 18, QFont::Bold); // Taille réduite
     titre->setFont(fontTitre);
     titre->setStyleSheet(COULEUR_FOND);
     mainLayout->addWidget(titre);

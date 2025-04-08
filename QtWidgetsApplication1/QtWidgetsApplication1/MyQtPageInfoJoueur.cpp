@@ -9,26 +9,20 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
 {
     QWidget* window = new QWidget();
 
-    // Image de fond (comme dans qtPageMenu)
+    // Image de fond
     QLabel* backgroundLabel = new QLabel(window);
     backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setAlignment(Qt::AlignCenter);
 
-    // Appliquer un effet de flou
     QGraphicsBlurEffect* blurEffect = new QGraphicsBlurEffect();
-    blurEffect->setBlurRadius(10); // Ajustez le rayon de flou (5-20 pour un effet léger à fort)
-
-    // Appliquer une opacité
+    blurEffect->setBlurRadius(10);
     QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect();
-    opacityEffect->setOpacity(0.7); // Opacité de 0 (transparent) à 1 (opaque), ici 70% d'opacité
-
-    // Combiner les effets : d'abord l'opacité, puis le flou
+    opacityEffect->setOpacity(0.7);
     backgroundLabel->setGraphicsEffect(opacityEffect);
-    blurEffect->setParent(backgroundLabel); // Nécessaire pour que l'effet soit appliqué après l'opacité
+    blurEffect->setParent(backgroundLabel);
     backgroundLabel->setGraphicsEffect(blurEffect);
-
     backgroundLabel->lower();
 
     QWidget* infoContainer = new QWidget(window);
@@ -38,7 +32,7 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
 
     QWidget* Box = new QWidget(window);
     Box->setStyleSheet("background-color: rgba(0, 0, 0, 150); border-radius: 25px; padding: 20px;");
-    Box->setFixedSize(600, 400);
+    Box->setFixedSize(1100, 700);
 
     QVBoxLayout* BoxLayout = new QVBoxLayout(Box);
     BoxLayout->setAlignment(Qt::AlignCenter);
@@ -58,11 +52,12 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
         score = joueurlog->getMeilleurScore();
     }
 
-    QLabel* titre = new QLabel("INFORMATIONS", infoContainer);
-    myQt_setFont(titre, 40);
-    titre->setAlignment(Qt::AlignCenter);
-    titre->setStyleSheet(
-        "color: white; "
+    // Nouveau layout pour le titre "Informations"
+    QHBoxLayout* titreLayout = new QHBoxLayout();
+    titreLayout->setAlignment(Qt::AlignCenter); // Pour le centrer, mettre Qt::AlignHCenter
+
+    QLabel* titreLabel = new QLabel("Informations", infoContainer);
+    titreLabel->setStyleSheet("color: white; "
         "font-size: 40px; "
         "font-weight: bold; "
         "text-transform: uppercase; "
@@ -73,32 +68,27 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
         "background: linear-gradient(to right, #ff0000, #ff6600, #ffff00, #33cc33, #0099ff, #9900cc); "
         "border-radius: 10px;");
 
+    titreLayout->addWidget(titreLabel);
+    BoxLayout->addLayout(titreLayout);  // On ajoute le titre avant le contenu
+
+    // Layout principal contenant nom/score/photo
     QHBoxLayout* topContentLayout = new QHBoxLayout();
+    topContentLayout->setAlignment(Qt::AlignTop);
 
-    // Layout gauche : Pseudo/Nom et Score Max/Valeur
     QVBoxLayout* leftLayout = new QVBoxLayout();
-    leftLayout->setAlignment(Qt::AlignCenter);
+    leftLayout->setContentsMargins(0, 0, 0, 0);
 
-    // Pseudo et Nom dans une même ligne avec ":"
     QHBoxLayout* nameLayout = new QHBoxLayout();
-    QLabel* pseudoLabel = new QLabel("Pseudo: ", infoContainer);
-    myQt_setFont(pseudoLabel, QT_SUBTITLE);
-    pseudoLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
-
     QLabel* pseudoValue = new QLabel(QString::fromStdString(nom), infoContainer);
     myQt_setFont(pseudoValue, QT_SUBTITLE);
     pseudoValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
+    pseudoValue->setFixedSize(500, 100);
 
     QPushButton* modiferNomJoueur = new QPushButton("✏️", infoContainer);
     modiferNomJoueur->setStyleSheet(QString(
-        "background-color: %1; "
-        "color: %2; "
-        "border: 2px solid %3; "
-        "padding: 5px; "
-        "border-radius: 5px; "
-        "font-size: 16px;"
+        "background-color: %1; color: %2; border: 2px solid %3; padding: 5px; border-radius: 5px; font-size: 16px;"
     ).arg(COULEUR_BOUTON).arg(COULEUR_TEXTE_BOUTON).arg(COULEUR_PSEUDO_SCORE));
-    modiferNomJoueur->setFixedSize(30, 30);
+    modiferNomJoueur->setFixedSize(60, 60);
 
     QObject::connect(modiferNomJoueur, &QPushButton::clicked, [=]() {
         bool ok;
@@ -116,55 +106,43 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
         }
         });
 
-    nameLayout->addWidget(pseudoLabel);
     nameLayout->addWidget(pseudoValue);
     nameLayout->addWidget(modiferNomJoueur);
 
-    // Score Max et Valeur dans une même ligne avec ":"
     QHBoxLayout* scoreLayout = new QHBoxLayout();
-    QLabel* scoreLabel = new QLabel("Score Max: ", infoContainer);
-    myQt_setFont(scoreLabel, QT_SUBTITLE);
-    scoreLabel->setStyleSheet(QString("color: %1;").arg(COULEUR_TEXTE));
-
-    QLabel* scoreValue = new QLabel(QString::number(score), infoContainer);
+    QLabel* scoreValue = new QLabel("Score Max : " + QString::number(score), infoContainer);
     myQt_setFont(scoreValue, QT_SUBTITLE);
     scoreValue->setStyleSheet(QString("color: %1; font-weight: bold;").arg(COULEUR_TEXTE));
-
-    scoreLayout->addWidget(scoreLabel);
+    scoreValue->setFixedSize(500, 100);
     scoreLayout->addWidget(scoreValue);
+    scoreLayout->setAlignment(Qt::AlignLeft);
 
     leftLayout->addLayout(nameLayout);
+    leftLayout->addSpacerItem(new QSpacerItem(0, nameLayout->sizeHint().height() - scoreLayout->sizeHint().height(), QSizePolicy::Minimum, QSizePolicy::Fixed));
     leftLayout->addLayout(scoreLayout);
 
-    // Layout droit : Photo et Bouton
     QVBoxLayout* rightLayout = new QVBoxLayout();
-    rightLayout->setAlignment(Qt::AlignCenter);
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+
+    rightLayout->addSpacerItem(new QSpacerItem(0, pseudoValue->height() / 2, QSizePolicy::Minimum, QSizePolicy::Fixed));
 
     QLabel* imageLabel = new QLabel(infoContainer);
     QPixmap pixmap_profil(imagePath);
+    const int PHOTO_SIZE = 300;
     if (!pixmap_profil.isNull()) {
-        imageLabel->setPixmap(pixmap_profil.scaled(150, 150, Qt::KeepAspectRatio));
+        imageLabel->setPixmap(pixmap_profil.scaled(PHOTO_SIZE, PHOTO_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
     else {
         imageLabel->setText("Image non disponible");
     }
-    // Obtenir la hauteur totale du bloc contenant le nom et le score
-    int heightReference = leftLayout->sizeHint().height();
-
-    // Ajuster la taille de l'image pour correspondre à la hauteur du bloc de texte
-    imageLabel->setPixmap(pixmap_profil.scaledToHeight(heightReference, Qt::SmoothTransformation));
-
+    imageLabel->setFixedSize(PHOTO_SIZE, PHOTO_SIZE);
+    imageLabel->setAlignment(Qt::AlignTop);
 
     QPushButton* modifyButton = new QPushButton("✏️", infoContainer);
     modifyButton->setStyleSheet(QString(
-        "background-color: %1; "
-        "color: %2; "
-        "border: 2px solid %3; "
-        "padding: 5px; "
-        "border-radius: 5px; "
-        "font-size: 16px;"
+        "background-color: %1; color: %2; border: 2px solid %3; padding: 5px; border-radius: 5px; font-size: 17px;"
     ).arg(COULEUR_BOUTON).arg(COULEUR_TEXTE_BOUTON).arg(COULEUR_PSEUDO_SCORE));
-    modifyButton->setFixedSize(30, 30);
+    modifyButton->setFixedSize(60, 60);
 
     QMenu* menu = new QMenu(modifyButton);
     menu->setStyleSheet(R"(
@@ -197,66 +175,56 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
         });
 
     QObject::connect(actionDefaultImage, &QAction::triggered, [G, imageLabel]() {
-        if (G != nullptr && G->getJoueur() != nullptr) {
+        if (G && G->getJoueur()) {
             std::string defaultImagePath = "./images/avatar.jpeg";
             G->getJoueur()->setNouvelleImage();
             QPixmap newPixmap(QString::fromStdString(defaultImagePath));
             if (!newPixmap.isNull()) {
-                imageLabel->setPixmap(newPixmap.scaled(150, 150, Qt::KeepAspectRatio));
-            }
-            else {
-                std::cerr << "Erreur : Impossible de charger l'image par défaut." << std::endl;
+                imageLabel->setPixmap(newPixmap.scaled(300, 300, Qt::KeepAspectRatio));
             }
         }
         });
 
     QObject::connect(actionTakePhoto, &QAction::triggered, [G, imageLabel]() {
-        if (G != nullptr) {
+        if (G) {
             G->PrendreImage();
-            if (G->getJoueur() != nullptr) {
+            if (G->getJoueur()) {
                 QString newImagePath = QString::fromStdString(G->getJoueur()->getImage());
                 QPixmap newPixmap(newImagePath);
                 if (!newPixmap.isNull()) {
-                    imageLabel->setPixmap(newPixmap.scaled(150, 150, Qt::KeepAspectRatio));
-                }
-                else {
-                    std::cerr << "Erreur : Impossible de charger l'image prise." << std::endl;
+                    imageLabel->setPixmap(newPixmap.scaled(300, 300, Qt::KeepAspectRatio));
                 }
             }
         }
         });
 
-    rightLayout->addWidget(imageLabel);
+    rightLayout->addWidget(imageLabel, 0, Qt::AlignTop);
     rightLayout->addWidget(modifyButton, 0, Qt::AlignCenter);
 
     topContentLayout->addLayout(leftLayout);
     topContentLayout->addSpacing(20);
     topContentLayout->addLayout(rightLayout);
 
+    // Ajouter le contenu principal après le titre
     BoxLayout->addLayout(topContentLayout);
-
     BoxLayout->addSpacing(40);
 
     QPushButton* backButton = new QPushButton("Retour", infoContainer);
     backButton->setStyleSheet(QString(
-        "background-color: red; "
-        "color: white; "
-        "border: 2px solid red; "
-        "padding: 10px; "
-        "border-radius: 10px; "
-        "font-size: 18px; "
-        "font-weight: bold;"
+        "background-color: red; color: white; border: 2px solid red; padding: 10px; border-radius: 10px; font-size: 18px; font-weight: bold;"
     ));
+    backButton->setFixedSize(150, 75);
+
     QObject::connect(backButton, &QPushButton::clicked, [stack]() {
         stack->setCurrentIndex(Menu);
         });
+
     BoxLayout->addWidget(backButton, 0, Qt::AlignCenter);
 
     QVBoxLayout* windowLayout = new QVBoxLayout(window);
-    windowLayout->addStretch();  // Espace flexible en haut
-    windowLayout->addWidget(Box, 0, Qt::AlignCenter); // Centre la Box
-    windowLayout->addStretch();  // Espace flexible en bas
-
+    windowLayout->addStretch();
+    windowLayout->addWidget(Box, 0, Qt::AlignCenter);
+    windowLayout->addStretch();
 
     stack->addWidget(window);
 }
