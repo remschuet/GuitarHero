@@ -353,11 +353,11 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
-                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;"); break;
-                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
-                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;"); break;
-                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
-                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;"); break;
+                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px; border: 3px solid black;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;border: 3px solid black;"); break;
+                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;border: 3px solid black;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;border: 3px solid black;"); break;
+                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;border: 3px solid black;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
                 }
