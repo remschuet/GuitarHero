@@ -13,16 +13,19 @@ const std::string CHANSON_1_TXT = "psycho.txt";
 const std::string CHANSON_2_TXT = "Coldplay_Hymn[EasySingle].txt";
 const std::string CHANSON_3_TXT = "Blitzkrieg2022.txt";
 
-const QStringList CHANSON_FACILE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend", "P!nk - So What", "Simple Plan - I'm Just a Kid"};
-const QStringList CHANSON_INTERMEDIAIRE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend", "P!nk - So What", "Simple Plan - I'm Just a Kid" };
-const QStringList CHANSON_DIFFICILE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend", "P!nk - So What", "Simple Plan - I'm Just a Kid" };
-const QStringList CHANSON_EXPERT = { "Billie Eilish - Bad Guy", "Boney M - Rasputin", "Coldplay - Hymn for the Weekend", "Guns N' Roses - Welcome to the Jungle", "Katy Perry - I Kissed a Girl","Natasha Bedingfield - Unwritten", "P!nk - So What","Sheet Music Boss - Rush E",  "Simple Plan - I'm Just a Kid", "Tate McRae - Greedy", "Taylor Swift - I Knew You Were Trouble (Taylor's Version)", "Taylor Swift - We Are Never Ever Getting Back Together", "The Lumineers - Ophelia", "Theory of a Deadman - Rx (Medicate)"};
+const QStringList CHANSON_FACILE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend","Katy Perry - Hot N Cold", "Noisestorm - Crab Rave", "One Republic - Counting Stars" , "P!nk - So What", "Simple Plan - I'm Just a Kid", "The Offspring - Half Truism"};
+const QStringList CHANSON_INTERMEDIAIRE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend","Katy Perry - Hot N Cold", "Les Cowboys Fringants - Les etoiles filantes", "Noisestorm - Crab Rave", "One Republic - Counting Stars" , "P!nk - So What", "Simple Plan - I'm Just a Kid", "The Offspring - Half Truism", "The Offspring - You're Gonna Go Far, Kid"};
+const QStringList CHANSON_DIFFICILE = { "Billie Eilish - Bad Guy", "Coldplay - Hymn for the Weekend", "Katy Perry - Hot N Cold", "Noisestorm - Crab Rave", "One Republic - Counting Stars" , "P!nk - So What", "Simple Plan - I'm Just a Kid", "The Offspring - Half Truism", "The Offspring - You're Gonna Go Far, Kid" };
+const QStringList CHANSON_EXPERT = { "331Erock - Game of Thrones meets metal", "Billie Eilish - Bad Guy", "Blink 182 - All the Small Things", "Blink 182 - EDGING", "Boney M - Rasputin", "Coldplay - Hymn for the Weekend", "Electric Light Orchestra - Mr. Blue Sky ", "FamilyJules - Super Mario Bros. Theme", "Guns N' Roses - Sweet Child o' Mine", "Guns N' Roses - Welcome to the Jungle", "Henry Mancini & His Orchestra - La Panthere Rose theme", "Hozier - Too Sweet ", "Imagine Dragons - Enemy ", "Katy Perry - Hot N Cold", "Katy Perry - I Kissed a Girl", "Macklemore & Ryan Lewis - Can't Hold Us", "Muse - Compliance","Natasha Bedingfield - Unwritten", "Noisestorm - Crab Rave", "Olivia Rodrigo - good 4 u", "One Republic - Counting Stars", "P!nk - So What", "Panic! At The Disco - High Hopes", "Red Hot Chili Peppers - Snow (Hey Oh)", "Rick Astley - Never Gonna Give You Up", "Sheet Music Boss - Rush E",  "Simple Plan - I'm Just a Kid", "Tate McRae - Greedy", "Taylor Swift - I Knew You Were Trouble (Taylor's Version)", "Taylor Swift - We Are Never Ever Getting Back Together", "The Beatles - Hey Jude", "The Beatles - I Want To Hold Your Hand", "The Beatles - Let It Be", "The Lumineers - Ophelia", "The Offspring - Half Truism", "The Offspring - You're Gonna Go Far, Kid", "The Runaways - Cherry Bomb", "Theory of a Deadman - Rx (Medicate)", "Weezer - Buddy Holly", "Wheatus - Teenage Dirtbag"};
+
+const int G_BUFFER_NOTE = 200;
+const int G_BUFFER_NOTE_MOURIR = 400;
 
 const int P_BONNE_NOTE_MIN = 6;
 const int P_BONNE_NOTE_MAX = 9;
 const int P_BONUS_JOYSTICK = 3;
 const int P_MAUVAISE_TOUCHE = -2;
-const int P_MANQUE_NOTE = -1;
+const int P_MANQUE_NOTE = 0;
 const double P_MULTI_POINTS_BONUS_MUONS = 2.0;
 const int P_TEMPS_APPLICABLE_BONUS_MUONS = 4000;
 

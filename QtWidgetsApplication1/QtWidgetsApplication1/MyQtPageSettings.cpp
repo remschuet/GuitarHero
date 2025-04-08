@@ -1,5 +1,7 @@
 ﻿#include "MyQtPageSettings.h"
 #include "MyQtManager.h"
+#include <qDebug>
+#include <conio.h>
 
 MyQtPageSettings::MyQtPageSettings(QStackedWidget* stack, Gameplay* G, myQtManager* manager, QWidget* parent)
     : MyQtPage(stack, G, manager, parent) {
@@ -13,7 +15,7 @@ void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
 
     // Image de fond (comme dans qtPageMenu)
     QLabel* backgroundLabel = new QLabel(pageParametre);
-    backgroundLabel->setGeometry(-275, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-190, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap pixmap("./Images/placeholder_background_login.png");
     backgroundLabel->setPixmap(pixmap);
     backgroundLabel->setAlignment(Qt::AlignCenter);
@@ -120,6 +122,25 @@ void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
         QMessageBox::information(parent, "Langue", "T'abuses"); // Pop-up avec "Abuses"
         });
 
+    QObject::connect(buttons[2], &QPushButton::clicked, [=]() {
+        qDebug("Admin mode ON.");
+        while (!_kbhit()) {
+
+            std::string msg;
+            if (G->comArduino->recevoirMessage(msg)) {
+                try {
+                    json j = json::parse(msg);
+                    qDebug().noquote() << QString::fromStdString(json::parse(msg).dump());
+                }
+                catch (const std::exception& e) {
+                    // qWarning() << "Erreur JSON:" << e.what();
+                }
+            }
+            Sleep(250);
+            QCoreApplication::processEvents();
+        }
+        qDebug() << "Admin mode OFF.";
+        });
     // Connexion du bouton Retour
     QObject::connect(backButton, &QPushButton::clicked, [=]() {
         stack->setCurrentIndex(0);

@@ -353,11 +353,11 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
-                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;"); break;
-                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;"); break;
-                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;"); break;
-                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;"); break;
-                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;"); break;
+                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px; border: 3px solid black;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;border: 3px solid black;"); break;
+                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;border: 3px solid black;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;border: 3px solid black;"); break;
+                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;border: 3px solid black;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
                 }
@@ -366,7 +366,7 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
 
                     int positionY = endY - ((((note.tempsDepart - chrono) * 50) / 250) + noteHeight);
 
-                    note.noteLabel->move(note.positionXQt, positionY);
+                    note.noteLabel->move(note.positionXQt, positionY - (65 / 2));
 
                      if (positionY > endY) {
 
@@ -438,9 +438,14 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     boiteNotes->setFixedSize((noteWidth * 9 + 15), 700);
   //  QString imagePath = "./images/grid vert 2.png";
     QLabel* imagesBoite = new QLabel(boiteNotes);
+    
+    QGraphicsOpacityEffect* opacityEffect = new QGraphicsOpacityEffect(imagesBoite);
+    opacityEffect->setOpacity(0.7);
+    imagesBoite->setGraphicsEffect(opacityEffect);
 
     imagesBoite->setFixedSize((noteWidth * 9 +15), 700);
     QString imagePath = "./images/grid final.png";
+    
 
     imagesBoite->setStyleSheet(QString(
         "background-image: url(%1);"
@@ -764,25 +769,24 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             case MAUVE: bouton = boutonMauve; break;
             }
 
-            if (bouton) {
-                ajoutEffectLumineux(bouton);
-                //             glowNote->start(250);
-
-            }
-
             for (auto& note : *vecteur) {
                 // Si une touche est appuye et que le temps est proche d une note mettre note appuye
                 if (note.couleur == btnGame &&
-                    std::abs(note.tempsDepart - chrono) <= 450 && note.action == INITIALE) {
+                    std::abs(note.tempsDepart - chrono) <= G_BUFFER_NOTE && note.action == INITIALE) {
                     note.action = APPUYE;
                     aTouche = true;
                     gameStruct.score += scoreAleatoire() * multiplicateurPoint;
                     break;
                 }
             }
+            if (bouton) {
+                ajoutEffectLumineux(bouton);
+                //             glowNote->start(250);
+
+            }
             // Si une touche est appuye mais aucune note presente
             if (!aTouche) {
-                // gameStruct.score += P_MAUVAISE_TOUCHE;
+                gameStruct.score += P_MAUVAISE_TOUCHE;
             }
         }
 
@@ -791,7 +795,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
             Note& note = *it;
 
             // Vérifie si la note est expirée et toujours à l'état initial
-            bool noteExpiree = (chrono > note.tempsDepart + note.duree + 400 && note.action == INITIALE);
+            bool noteExpiree = (chrono > note.tempsDepart + note.duree + G_BUFFER_NOTE_MOURIR && note.action == INITIALE);
 
             if (noteExpiree) {
                 // Si elle est affichée dans l'interface Qt, on la retire et libère la mémoire
@@ -1204,22 +1208,22 @@ void Gameplay::choixBoutonGame() {
 
     for (auto it = j.begin(); it != j.end(); ++it) {
 
-        if (it.key() == BTN_BLEU && it.value() == BTN_RELACHE) {
+        if (it.key() == BTN_BLEU && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::BLEU;
         }
-        else if (it.key() == BTN_ROUGE && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_ROUGE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::ROUGE;
         }
-        else if (it.key() == BTN_VERT && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_VERT && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::VERT;
         }
-        else if (it.key() == BTN_JAUNE && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_JAUNE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::JAUNE;
         }
-        else if (it.key() == BTN_MAUVE && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_MAUVE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::MAUVE;
         }
-        else if (it.key() == BTN_QUITTER && it.value() == BTN_RELACHE) {
+        else if (it.key() == BTN_QUITTER && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::QUITTER;
         }
         else if (it.key() == BTN_JOYSTICK) {
