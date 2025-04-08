@@ -1179,6 +1179,10 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
     sqlite->getMeilleurScore(scores);
 
     for (size_t i = 0; i < 10; ++i) {
+
+        string a = scores[i].first;
+        int b = scores[i].second;
+
         QFrame* scoreCard = new QFrame();
         scoreCard->setStyleSheet("background-color: rgba(128, 128, 128, 0.5); "
             "border: 2px solid transparent; "
@@ -1207,11 +1211,14 @@ void myQtManager::qtPageMeilleurScore(QWidget* window, QStackedWidget* stack, Ga
             scoreCard->setStyleSheet("background-color: rgba(128, 128, 128, 0.5); "
                 "border: 2px solid " + borderColor + "; "
                 "border-radius: 8px; padding: 3px;");
+            
+            DAOSqlite* sqlite = DAOSqlite::getInstance();
+            Joueur* j = sqlite->getJoueur(scores[i].first);
 
             // Image du joueur (taille réduite)
             QLabel* imageLabel = new QLabel();
-            QString imagePath = (G && G->getJoueur() && scores[i].first == G->getJoueur()->getNomJoueur())
-                ? QString::fromStdString(G->getJoueur()->getImage())
+            QString imagePath = (G != nullptr && G->getJoueur() != nullptr)
+                ? QString::fromStdString(j->getImage())
                 : "./images/avatar.jpg";
 
             QPixmap pixmap(imagePath);
