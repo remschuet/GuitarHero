@@ -176,11 +176,40 @@ void MyQtPageInfoJoueur::refresh(QStackedWidget* stack, Gameplay* G, myQtManager
 
     QObject::connect(actionDefaultImage, &QAction::triggered, [G, imageLabel]() {
         if (G && G->getJoueur()) {
+            Joueur* joueur = G->getJoueur();
+            std::string previousImagePath = joueur->getImage();
             std::string defaultImagePath = "./images/avatar.jpeg";
-            G->getJoueur()->setNouvelleImage();
-            QPixmap newPixmap(QString::fromStdString(defaultImagePath));
+            std::string playerName = joueur->getNomJoueur();
+
+			//liste des noms dangereux pour la suppression de la database
+			std::set<std::string> dangerousNames = { "admin", "root", "system", "user", "test", "guest", "default", "avatar"};
+
+			QString newImagePath = QString::fromStdString(defaultImagePath);
+
+			if (!previousImagePath.empty() && QFile::exists(QString::fromStdString(previousImagePath))) {
+				if (dangerousNames.find(playerName) == dangerousNames.end()) {
+                    //C,est sécuriatire de supprimer l'ancienne image
+					QFile::remove(QString::fromStdString(previousImagePath));
+				}
+                else {
+                    //réécrire l'image par defaut avec le nom du joueur
+					QPixmap defaultPixmap(QString::fromStdString(defaultImagePath));
+					newImagePath = QString::fromStdString("./images/" + playerName + ".jpeg");
+					defaultPixmap.save(newImagePath);
+					previousImagePath = newImagePath.toStdString();
+                }
+			}
+
+			DAOSqlite* sqlite = DAOSqlite::getInstance();
+			sqlite->updateImageJoueur(playerName, newImagePath.toStdString());
+
+            //G->getJoueur()->setNouvelleImage();
+            QPixmap newPixmap(newImagePath);
             if (!newPixmap.isNull()) {
                 imageLabel->setPixmap(newPixmap.scaled(300, 300, Qt::KeepAspectRatio));
+            }
+            else {
+                imageLabel->setText("Image non disponible");
             }
         }
         });

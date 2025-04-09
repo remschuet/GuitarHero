@@ -133,6 +133,7 @@ void MyQtPageSettings::refresh(QStackedWidget* stack, Gameplay* G, myQtManager* 
                     qDebug().noquote() << QString::fromStdString(json::parse(msg).dump());
                 }
                 catch (const std::exception& e) {
+					qDebug() << "Erreur JSON:" << e.what();
                     // qWarning() << "Erreur JSON:" << e.what();
                 }
             }

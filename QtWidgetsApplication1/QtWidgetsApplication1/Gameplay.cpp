@@ -1214,6 +1214,12 @@ void Gameplay::choixBoutonGame() {
         if (it.key() == BTN_BLEU && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::BLEU;
         }
+		else if (it.key() == BTN_BLEU && it.value() == BTN_RELACHE) {
+			btnGame = CouleurBouton::BLEU;
+		}
+		else if (it.key() == BTN_ROUGE && it.value() == BTN_RELACHE) {
+			btnGame = CouleurBouton::ROUGE;
+		}
         else if (it.key() == BTN_ROUGE && it.value() == BTN_APPUYE) {
             btnGame = CouleurBouton::ROUGE;
         }
