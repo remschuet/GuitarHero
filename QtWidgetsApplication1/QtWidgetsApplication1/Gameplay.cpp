@@ -590,6 +590,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     QProgressBar* barProgression = new QProgressBar(layoutGame->parentWidget());
     barProgression->setOrientation(Qt::Vertical);
+    barProgression->setTextVisible(false);
 
     QHBoxLayout* infolayout = new QHBoxLayout(layoutGame->parentWidget());
     QVBoxLayout* scoreLayout = new QVBoxLayout(layoutGame->parentWidget());
@@ -626,29 +627,26 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
     affichageNomJoueur(nomJoueurLabel, infolayout);
     //progress bar
-
+    barProgression->setRange(0, 100);
+    barProgression->setValue(0);
     barProgression->setFixedHeight(400);
    // progressLayout->setAlignment(Qt::AlignCenter);
-    barProgression->setStyleSheet(R"(
-        QProgressBar {
-            border: 2px solid #444;
-            border-radius: 10px;
-            background-color: #f0f0f0;
-            text-align: center;
-            height: 30px;
-            font-size: 16px;
-            color: #333;
-           
-        }
-
-        QProgressBar::chunk {
-            background: qlineargradient(
-                spread:pad, x1:0, y1:0, x2:1, y2:0,
-                stop:0 #4CAF50, stop:1 #2196F3
-            );
-            border-radius: 10px;
-        }
-    )");
+    barProgression->setStyleSheet(
+        "QProgressBar {"
+        "    border: 2px solid #1a3c34;"
+        "    border-radius: 10px;"
+        "    background-color: #0f2a26;"
+        "    width: 30px;"
+        "}"
+        "QProgressBar::chunk {"
+        "    background: qlineargradient("
+        "        x1: 0, y1: 0, x2: 0, y2: 1,"
+        "        stop: 0 #00ffcc, stop: 1 #00b3b3);"
+        "    border-radius: 8px;" // Coins arrondis
+        "    box-shadow: 0 0 5px #00ffcc;"
+        "    margin: 2px;"
+        "}"
+    );
 
     /******** LOGIQUE DES QTIMER *********/
     
