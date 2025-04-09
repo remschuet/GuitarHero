@@ -353,11 +353,11 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
-                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px; border: 3px solid black;"); break;
-                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;border: 3px solid black;"); break;
-                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;border: 3px solid black;"); break;
-                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;border: 3px solid black;"); break;
-                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;border: 3px solid black;"); break;
+                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : #E83830; border-radius: 25px; border: 3px solid black;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : #056DE0 ; border-radius: 25px;border: 3px solid black;"); break;
+                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : #26CF13; border-radius: 25px;border: 3px solid black;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : #FF6E00; border-radius: 25px;border: 3px solid black;"); break;
+                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : #9EB3C4; border-radius: 25px;border: 3px solid black;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
                 }
@@ -552,31 +552,31 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     //note.positionXQt = 0; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;");
 
-    boutonRouge->setStyleSheet("background-color: #ff4122; border-radius: 32px;");
+    boutonRouge->setStyleSheet("background-color: #C93129; border-radius: 32px;");
     boutonRouge->show();
     boutonRouge->setGeometry(0, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonRouge->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonRouge->show();
 
-    boutonBleu->setStyleSheet("background-color: cyan; border-radius: 32px;");
+    boutonBleu->setStyleSheet("background-color: #044EA1; border-radius: 32px;");
     boutonBleu->show();
     boutonBleu->setGeometry(noteWidth * 2 - 7.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->show();
 
-    boutonVert->setStyleSheet("background-color: lime; border-radius: 32px;");
+    boutonVert->setStyleSheet("background-color: #21B311; border-radius: 32px;");
     boutonVert->show();
     boutonVert->setGeometry(noteWidth * 4, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonVert->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonVert->show();
 
-    boutonJaune->setStyleSheet("background-color: gold; border-radius: 32px;");
+    boutonJaune->setStyleSheet("background-color: #D65C00; border-radius: 32px;");
     boutonJaune->show();
     boutonJaune->setGeometry(noteWidth * 6 +2.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->show();
 
-    boutonMauve->setStyleSheet("background-color: silver; border-radius: 32px;");
+    boutonMauve->setStyleSheet("background-color: #8193A1; border-radius: 32px;");
     boutonMauve->show();
     boutonMauve->setGeometry(noteWidth * 8, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonMauve->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
