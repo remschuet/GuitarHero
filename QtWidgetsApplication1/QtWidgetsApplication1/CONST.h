@@ -49,7 +49,7 @@ const std::string BTN_JOYSTICK = "Mvd";	//
 
 const std::string BAR_GRAPH = "bG2";	//message : 10 caracteres de 0 et 1 1010101010 -> 1 sur deux barres d'allumer
 
-const std::string BTN_BONUS_MUONS = "A CHOISIR";	//BY?
+const std::string BTN_BONUS_MUONS = "Muons";	//BY?
 
 
 /*****************/
