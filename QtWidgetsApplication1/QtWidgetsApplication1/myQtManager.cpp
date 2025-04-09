@@ -471,16 +471,19 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
 
     QComboBox* comboBox = new QComboBox();
     comboBox->addItems({ "Facile", "Intermédiaire", "Difficile", "Expert" });
+    comboBox->setStyleSheet("color : white");
     layout->addWidget(new QLabel("Choisissez la difficulté :"));
     layout->addWidget(comboBox);
 
     QComboBox* comboBoxAuteur = new QComboBox();
     comboBoxAuteur->addItem("Tous");
     comboBoxAuteur->addItems(separerChaines(CHANSON_FACILE));
+    comboBoxAuteur->setStyleSheet("color : white");
     layout->addWidget(new QLabel("Choisissez votre artiste :"));
     layout->addWidget(comboBoxAuteur);
 
     QListWidget* listWidget = new QListWidget();
+	listWidget->setStyleSheet("color : white");
     layout->addWidget(new QLabel("Sélectionnez une musique :"));
     layout->addWidget(listWidget);
 

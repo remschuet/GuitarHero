@@ -353,11 +353,11 @@ void Gameplay::loopGameQT(QLabel* titleLabel, QLabel* ProgressionLabel, myQtMana
                     note.estQtAffiche = true;
                     note.noteLabel->setVisible(true);
                     switch (note.couleur) {
-                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px; border: 3px solid black;"); break;
-                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : blue; border-radius: 25px;border: 3px solid black;"); break;
-                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : green; border-radius: 25px;border: 3px solid black;"); break;
-                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : yellow; border-radius: 25px;border: 3px solid black;"); break;
-                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : purple; border-radius: 25px;border: 3px solid black;"); break;
+                        case ROUGE: note.positionXQt = 7.5; note.noteLabel->setStyleSheet("background-color : #E83830; border-radius: 25px; border: 3px solid black;"); break;
+                        case BLEU: note.positionXQt = noteWidth * 2 ; note.noteLabel->setStyleSheet("background-color : #056DE0 ; border-radius: 25px;border: 3px solid black;"); break;
+                        case VERT: note.positionXQt = noteWidth * 4 + 7.5; note.noteLabel->setStyleSheet("background-color : #26CF13; border-radius: 25px;border: 3px solid black;"); break;
+                        case JAUNE: note.positionXQt = noteWidth * 6 + 10;note.noteLabel->setStyleSheet("background-color : #FF6E00; border-radius: 25px;border: 3px solid black;"); break;
+                        case MAUVE: note.positionXQt = noteWidth * 8 + 7.5;note.noteLabel->setStyleSheet("background-color : #9EB3C4; border-radius: 25px;border: 3px solid black;"); break;
                     }
                     note.noteLabel->setGeometry(100, 100, noteWidth, noteHeight);
                 }
@@ -552,31 +552,31 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     //note.positionXQt = 0; note.noteLabel->setStyleSheet("background-color : red; border-radius: 25px;");
 
-    boutonRouge->setStyleSheet("background-color: #ff4122; border-radius: 32px;");
+    boutonRouge->setStyleSheet("background-color: #C93129; border-radius: 32px;");
     boutonRouge->show();
     boutonRouge->setGeometry(0, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonRouge->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonRouge->show();
 
-    boutonBleu->setStyleSheet("background-color: cyan; border-radius: 32px;");
+    boutonBleu->setStyleSheet("background-color: #044EA1; border-radius: 32px;");
     boutonBleu->show();
     boutonBleu->setGeometry(noteWidth * 2 - 7.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonBleu->show();
 
-    boutonVert->setStyleSheet("background-color: lime; border-radius: 32px;");
+    boutonVert->setStyleSheet("background-color: #21B311; border-radius: 32px;");
     boutonVert->show();
     boutonVert->setGeometry(noteWidth * 4, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonVert->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonVert->show();
 
-    boutonJaune->setStyleSheet("background-color: gold; border-radius: 32px;");
+    boutonJaune->setStyleSheet("background-color: #D65C00; border-radius: 32px;");
     boutonJaune->show();
     boutonJaune->setGeometry(noteWidth * 6 +2.5, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
     boutonJaune->show();
 
-    boutonMauve->setStyleSheet("background-color: silver; border-radius: 32px;");
+    boutonMauve->setStyleSheet("background-color: #8193A1; border-radius: 32px;");
     boutonMauve->show();
     boutonMauve->setGeometry(noteWidth * 8, 700 - (tailleNoteBase + 15) / 2, noteWidth + 15, tailleNoteBase + 15);
     boutonMauve->setFixedSize(noteWidth + 15, tailleNoteBase + 15);
@@ -590,6 +590,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 
     QProgressBar* barProgression = new QProgressBar(layoutGame->parentWidget());
     barProgression->setOrientation(Qt::Vertical);
+    barProgression->setTextVisible(false);
 
     QHBoxLayout* infolayout = new QHBoxLayout(layoutGame->parentWidget());
     QVBoxLayout* scoreLayout = new QVBoxLayout(layoutGame->parentWidget());
@@ -626,29 +627,26 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
     affichageNomJoueur(nomJoueurLabel, infolayout);
     //progress bar
-
+    barProgression->setRange(0, 100);
+    barProgression->setValue(0);
     barProgression->setFixedHeight(400);
    // progressLayout->setAlignment(Qt::AlignCenter);
-    barProgression->setStyleSheet(R"(
-        QProgressBar {
-            border: 2px solid #444;
-            border-radius: 10px;
-            background-color: #f0f0f0;
-            text-align: center;
-            height: 30px;
-            font-size: 16px;
-            color: #333;
-           
-        }
-
-        QProgressBar::chunk {
-            background: qlineargradient(
-                spread:pad, x1:0, y1:0, x2:1, y2:0,
-                stop:0 #4CAF50, stop:1 #2196F3
-            );
-            border-radius: 10px;
-        }
-    )");
+    barProgression->setStyleSheet(
+        "QProgressBar {"
+        "    border: 2px solid #1a3c34;"
+        "    border-radius: 10px;"
+        "    background-color: #0f2a26;"
+        "    width: 30px;"
+        "}"
+        "QProgressBar::chunk {"
+        "    background: qlineargradient("
+        "        x1: 0, y1: 0, x2: 0, y2: 1,"
+        "        stop: 0 #00ffcc, stop: 1 #00b3b3);"
+        "    border-radius: 8px;" // Coins arrondis
+        "    box-shadow: 0 0 5px #00ffcc;"
+        "    margin: 2px;"
+        "}"
+    );
 
     /******** LOGIQUE DES QTIMER *********/
     
