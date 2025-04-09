@@ -985,62 +985,88 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     int meilleurScore = game->gameStruct.joueur->getMeilleurScore();
     bool nouveauRecord = score > meilleurScore;
 
+    // Créer la QDialog
     QDialog dialog;
-    dialog.setWindowFlags(Qt::FramelessWindowHint);
+    dialog.setWindowFlags(Qt::FramelessWindowHint); // Pas de bordure de fenêtre
+    dialog.setAttribute(Qt::WA_TranslucentBackground); // Fond transparent
     dialog.setMinimumSize(900, 500);
-    dialog.setStyleSheet(R"(
-        background-color: rgba(0, 0, 0, 0.8); /* Noir semi-transparent */
-        border-radius: 20px; /* Bords arrondis */
-        border: 2px solid #00FF00; /* Bordure néon verte */
-        box-shadow: 0 0 15px #00FF00; /* Effet de glow */
-    )");
 
+    // Layout principal de la QDialog
     QVBoxLayout* layout = new QVBoxLayout(&dialog);
     layout->setAlignment(Qt::AlignCenter);
 
+    // Créer un widget conteneur pour le contenu avec un fond arrondi
+    QWidget* contentWidget = new QWidget(&dialog);
+    contentWidget->setStyleSheet(
+        "background-color: rgba(15, 42, 38, 0.9);" // Vert foncé semi-transparent (inspiré de #0f2a26)
+        "border-radius: 20px;" // Coins arrondis
+        "box-shadow: 0 0 15px #00ffcc;" // Effet de lueur cyan
+    );
+    QVBoxLayout* contentLayout = new QVBoxLayout(contentWidget);
+    contentLayout->setAlignment(Qt::AlignCenter);
+
+    // Titre
     QLabel* title = new QLabel("🎸 Fin de la Partie 🔥");
-    QFont titleFont("Bebas Neue", 40, QFont::Bold); 
+    QFont titleFont("Bebas Neue", 40, QFont::Bold);
     title->setFont(titleFont);
-    title->setStyleSheet("color: #FFFFFF; background-color: transparent; text-shadow: 2px 2px 5px #00FF00;"); // Ombre verte pour un effet néon
+    title->setStyleSheet(
+        "color: #FFFFFF;" // Texte blanc
+        "background-color: transparent;" // Pas de fond
+        "text-shadow: 2px 2px 5px #00ffcc;" // Ombre cyan
+    );
     title->setAlignment(Qt::AlignCenter);
-    layout->addWidget(title);
+    contentLayout->addWidget(title);
 
+    // Score
     QLabel* scoreLabel = new QLabel(QString("Score : %1").arg(score));
-    QFont scoreFont("Bebas Neue", 32); // Même police pour cohérence
+    QFont scoreFont("Bebas Neue", 32);
     scoreLabel->setFont(scoreFont);
-    scoreLabel->setStyleSheet("color: #E0E0E0; background-color: transparent; text-shadow: 1px 1px 3px #00FF00;");
+    scoreLabel->setStyleSheet(
+        "color: #E0E0E0;" // Texte gris clair
+        "background-color: transparent;"
+        "text-shadow: 1px 1px 3px #00ffcc;" // Ombre cyan
+    );
     scoreLabel->setAlignment(Qt::AlignCenter);
-    layout->addWidget(scoreLabel);
+    contentLayout->addWidget(scoreLabel);
 
+    // Nouveau record
     if (nouveauRecord) {
         QLabel* recordLabel = new QLabel("🏆 Nouveau Record Personnel ! ✨🎉");
         recordLabel->setFont(QFont("Bebas Neue", 28, QFont::Bold));
-        recordLabel->setStyleSheet("color: #00FF00; background-color: transparent; text-shadow: 1px 1px 3px #FFFFFF;"); // Vert néon avec ombre blanche
+        recordLabel->setStyleSheet(
+            "color: #00ffcc;" // Cyan néon
+            "background-color: transparent;"
+            "text-shadow: 1px 1px 3px #FFFFFF;" // Ombre blanche
+        );
         recordLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(recordLabel);
+        contentLayout->addWidget(recordLabel);
     }
 
-    layout->addSpacing(50);
+    contentLayout->addSpacing(50);
 
-    QPushButton* boutonRetour = new QPushButton("🏠 RETOUR AU MENU"); // Texte en majuscules
+    // Bouton Retour (sans ButtonBackground, on revient à un style QSS simple)
+    QPushButton* boutonRetour = new QPushButton("  🏠 RETOUR AU MENU  ");
     boutonRetour->setMinimumSize(300, 80);
-    boutonRetour->setStyleSheet(R"(
-        QPushButton {
-            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4CAF50, stop:1 #2E7D32); /* Dégradé vert */
-            color: white;
-            font-family: 'Bebas Neue';
-            font-size: 28px;
-            font-weight: bold;
-            border-radius: 15px;
-            border: 2px solid #00FF00; /* Bordure néon verte */
-            text-shadow: 1px 1px 3px #000000;
-        }
-        QPushButton:hover {
-            background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #66BB6A, stop:1 #4CAF50); /* Dégradé plus clair au survol */
-            border: 2px solid #FFFFFF; /* Bordure blanche au survol */
-        }
-    )");
-    layout->addWidget(boutonRetour, 0, Qt::AlignCenter);
+    boutonRetour->setStyleSheet(
+        "QPushButton {"
+        "    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #00ffcc, stop:1 #00b3b3);" // Dégradé cyan
+        "    color: white;"
+        "    font-family: 'Bebas Neue';"
+        "    font-size: 28px;"
+        "    font-weight: bold;"
+        "    border-radius: 15px;"
+        "    border: 2px solid #00ffcc;" // Bordure cyan
+        "    text-shadow: 1px 1px 3px #000000;"
+        "}"
+        "QPushButton:hover {"
+        "    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #66e6ff, stop:1 #00ffcc);" // Dégradé plus clair au survol
+        "    border: 2px solid #FFFFFF;" // Bordure blanche au survol
+        "}"
+    );
+    contentLayout->addWidget(boutonRetour, 0, Qt::AlignCenter);
+
+    // Ajouter le conteneur au layout principal
+    layout->addWidget(contentWidget);
 
     QObject::connect(boutonRetour, &QPushButton::clicked, &dialog, &QDialog::accept);
 
@@ -1063,8 +1089,6 @@ void myQtManager::qtPageFinPartie(Gameplay* game, QVBoxLayout* layoutGame, QStac
     crashAvecMessage(QString::fromStdString(game->gameStruct.joueur->getNomJoueur()), game);
     changerDePage(stack, Menu, game, this);
 }
-
-
 
 void myQtManager::qtPageParametres(QWidget* window, QStackedWidget* stack, Gameplay* G, myQtManager* manager)
 {
