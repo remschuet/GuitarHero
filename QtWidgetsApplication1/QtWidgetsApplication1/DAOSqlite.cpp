@@ -98,11 +98,15 @@ Joueur* DAOSqlite::getJoueur(std::string nom) {
 
     // Si le joueur n'existe pas, l'insérer
     if (!joueur) {
-        std::string insertQuery = "INSERT INTO JOUEUR (nom) VALUES (?);";
+        std::string insertQuery = "INSERT INTO JOUEUR (nom, score) VALUES (?, ?);";
         sqlite3_stmt* insertStmt;
 
         if (sqlite3_prepare_v2(db, insertQuery.c_str(), -1, &insertStmt, nullptr) == SQLITE_OK) {
+            int score = rand() % (1200 - 300 + 1) + 300;  // score aléatoire entre 300 et 1200
+
             sqlite3_bind_text(insertStmt, 1, nom.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_int(insertStmt, 2, score);
+
             if (sqlite3_step(insertStmt) != SQLITE_DONE) {
                 std::cerr << "Erreur SQLite (insert) : " << sqlite3_errmsg(db) << std::endl;
             }

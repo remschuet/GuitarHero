@@ -218,7 +218,7 @@ void Gameplay::affichageProgression(QLabel* label, QVBoxLayout* layout) {
 
 }
 void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
-
+ 
     label->setText(QString("Score Actuel : %1").arg(gameStruct.score));
     label->setStyleSheet(
         "color: white; "
@@ -241,6 +241,7 @@ void Gameplay::affichageScoreActuel(QLabel* label, QVBoxLayout* layout) {
 void Gameplay::affichageMaxScore(QLabel* label, QVBoxLayout* layout) {
 
     int maxScore = gameStruct.joueur->getMeilleurScore();
+  
     label->setText(QString("Meilleur Score : %1").arg(maxScore));
     label->setStyleSheet(
         "color: white; "
@@ -488,11 +489,12 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     QLabel* invisible = new QLabel();
    // invisible->setVisible(false);
 
-    invisible->setFixedSize(QT_BLOCINVISIBLE + 60, 100);
+    invisible->setFixedSize(QT_BLOCINVISIBLE + 60, 600);
     invisible->setStyleSheet(QString(
-        "background - color: transparent; "
+        "background - color: red; "
   
     ));
+    invisible->show();
 
 
     //Ajout de layout pour les autres items et ajout au layout principal
@@ -504,10 +506,35 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
 	titreChansonLabel->setFont(QFont("Arial", 17));
     titreChansonLabel->setStyleSheet("color : white; font-weight: bold;");
 	titreChansonLabel->setAlignment(Qt::AlignCenter);
-	titreChansonLabel->setGeometry(0, 0, invisible->width(), invisible->height());
+	titreChansonLabel->setGeometry(0,100, invisible->width(), invisible->height());
     titreChansonLabel->show();
 
+    QLabel* score = new QLabel(invisible);
+    score->setFont(QFont("Arial", 17));
+    score->setStyleSheet("color : white; font-weight: bold;");
+    score->setAlignment(Qt::AlignCenter);
+    score->setGeometry(0, 200, invisible->width(), invisible->height());
+    score->show();
 
+    QLabel* MaxScore = new QLabel(invisible);
+    int maxScore = gameStruct.joueur->getMeilleurScore();
+    MaxScore->setText(QString("Meilleur Score : %1").arg(maxScore));
+    MaxScore->setFont(QFont("Arial", 15));
+    MaxScore->setStyleSheet("color : gold; font-weight: bold;");
+    MaxScore->setAlignment(Qt::AlignCenter);
+    MaxScore->setGeometry(0, 250, invisible->width(), invisible->height());
+    MaxScore->show();
+
+    QLabel* nomJoueur = new QLabel(invisible);
+    QString nomJoueur2 = QString::fromStdString(gameStruct.joueur->getNomJoueur());
+    nomJoueur->setText(QString("%1").arg(nomJoueur2));
+    nomJoueur->setFont(QFont("Arial", 17));
+    nomJoueur->setStyleSheet("color : silver; font-weight: bold;");
+    nomJoueur->setAlignment(Qt::AlignCenter);
+    nomJoueur->setGeometry(0, 0, invisible->width(), invisible->height());
+    nomJoueur->show();
+
+   
     affichageTitre(titleLabel,titleLayout);
     layoutGame->addLayout(titleLayout);
 
@@ -593,10 +620,12 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     barProgression->setTextVisible(false);
 
     QHBoxLayout* infolayout = new QHBoxLayout(layoutGame->parentWidget());
+
     QVBoxLayout* scoreLayout = new QVBoxLayout(layoutGame->parentWidget());
+    
 
 
-    affichageMaxScore(maxScoreLabel, scoreLayout);
+ //   affichageMaxScore(maxScoreLabel, scoreLayout);
     scoreLayout->setAlignment(Qt::AlignTop);
     scoreLayout->setSpacing(0);  // Réduit l'espace entre les éléments à 2 pixels (au lieu de la valeur par défaut qui est souvent 6 ou 10)
     scoreLayout->setContentsMargins(0, 0, 0, 0);
@@ -607,6 +636,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     //invisible4->setStyleSheet();
   //  scoreLayout->addWidget(invisible4);
     //backbutton
+    titleLayout->addLayout(scoreLayout);
     QPushButton* backButton = new QPushButton("Retour");
     backButton->setStyleSheet(QString(
         "background-color: red; "
@@ -625,7 +655,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         });
 
     infolayout->addWidget(backButton, 0, Qt::AlignCenter);
-    affichageNomJoueur(nomJoueurLabel, infolayout);
+   // affichageNomJoueur(nomJoueurLabel, infolayout);
     //progress bar
     barProgression->setRange(0, 100);
     barProgression->setValue(0);
@@ -703,6 +733,8 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
     progressLayout->addWidget(invisible2);
 
     while (inGame) {
+        score->setText(QString("Score Actuel : %1").arg(gameStruct.score));
+      
         QCoreApplication::processEvents();
         long long tempsEcoule = gameStruct.chansonEnCours->getChrono();
         long long pourcentage = (tempsEcoule * 100 / dureeTotale);
@@ -719,7 +751,7 @@ void Gameplay::loopGame(QLabel* titleLabel, QLabel* ProgressionLabel, myQtManage
         progressLayout->addWidget(barProgression,0,Qt::AlignCenter);
         affichageProgression(ProgressionLabel, progressLayout);
 
-        affichageScoreActuel(scoreLabel, scoreLayout);
+  //      affichageScoreActuel(scoreLabel, scoreLayout);
 
         infolayout->insertLayout(0, scoreLayout);
 
