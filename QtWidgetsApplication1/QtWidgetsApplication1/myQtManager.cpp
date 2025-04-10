@@ -143,7 +143,7 @@ void myQtManager::qtPageAccueil(QWidget* parent, QStackedWidget* stack, Gameplay
 
     //// Image de fond
     QLabel* backgroundLabel = new QLabel(page);
-    backgroundLabel->setGeometry(-175, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
+    backgroundLabel->setGeometry(-160, -50, TAILLE_ECRAN_X, TAILLE_ECRAN_Y);
     QPixmap resizedPixmap("./images/placeholder_background_login.png");
     backgroundLabel->setPixmap(resizedPixmap);
     backgroundLabel->setScaledContents(true);
@@ -418,7 +418,7 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
         QComboBox QAbstractItemView {
             background-color: #222;
             selection-background-color: #00A86B;
-            color: #000;
+            color: #FFFFFF;
         }
 
         QListWidget::item {
@@ -427,7 +427,7 @@ void myQtManager::afficherPopupSelectionMusique(QWidget* parent, QStackedWidget*
 
         QListWidget::item:selected {
             background-color: #00A86B;
-            color: black;
+            color: white;
         }
 
         QPushButton {
